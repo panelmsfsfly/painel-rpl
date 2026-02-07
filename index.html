@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel RPL - Dispatch Integrado</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+<style>
+    /* --- ESTILOS GERAIS --- */
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #eef2f5;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+    }
+
+    /* --- CABEÇALHO --- */
+    .header-container {
+        width: 100%;
+        max-width: 1500px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        background: linear-gradient(135deg, #1e3c72, #2a5298);
+        color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .header-title h1 { margin: 0; font-size: 24px; letter-spacing: 1px; }
+    .header-title div { font-size: 13px; opacity: 0.8; margin-top: 5px; }
+
+    .clock-box { text-align: right; }
+    .clock-time {
+        font-family: 'Share Tech Mono', monospace;
+        font-size: 32px;
+        color: #ffda79;
+        text-shadow: 0 0 10px rgba(255,218,121,0.3);
+        line-height: 1;
+    }
+    .clock-date { font-size: 12px; color: #dfe6e9; text-transform: uppercase; margin-top: 4px; font-weight: bold; }
+
+    /* --- CONTROLES --- */
+    .controls-container {
+        width: 100%;
+        max-width: 1500px;
+        background-color: #fff;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .control-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .control-label { font-weight: 800; color: #333; font-size: 12px; text-transform: uppercase; margin-right: 8px; }
+
+    /* Inputs */
+    .sb-input {
+        padding: 8px 12px;
+        border: 2px solid #dfe6e9;
+        border-radius: 4px;
+        font-family: 'Roboto', sans-serif;
+        font-weight: 700;
+        color: #2c3e50;
+        width: 150px;
+        transition: 0.2s;
+    }
+    .sb-input:focus { border-color: #3498db; outline: none; }
+
+    /* Botões */
+    button {
+        cursor: pointer;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        font-family: 'Roboto', sans-serif;
+        font-weight: 700;
+        font-size: 13px;
+        transition: 0.2s;
+        text-transform: uppercase;
+    }
+
+    /* Filtros */
+    .btn-filter { background-color: #f1f2f6; color: #7f8c8d; border: 1px solid #dfe4ea; }
+    .btn-filter:hover { background-color: #dfe4ea; }
+    .btn-filter.active { color: #fff; border-color: transparent; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+    
+    .btn-filter[data-cia="LATAM"].active { background-color: #1B0088; }
+    .btn-filter[data-cia="GOL"].active { background-color: #FF5E00; }
+    .btn-filter[data-cia="AZUL"].active { background-color: #0055A4; }
+    .btn-filter[onclick*="todas"].active { background-color: #2c3e50; }
+
+    /* Botões Numéricos */
+    .btn-draw { background-color: #34495e; color: #fff; min-width: 50px; }
+    .btn-draw:hover { background-color: #27ae60; transform: translateY(-2px); }
+
+    /* Botão SimBrief Tabela */
+    .btn-sb {
+        background-color: #c0392b;
+        color: white;
+        padding: 6px 12px;
+        font-size: 11px;
+        border-radius: 4px;
+        text-decoration: none;
+        display: inline-block;
+    }
+    .btn-sb:hover { background-color: #e74c3c; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+
+    /* --- TABELA --- */
+    .flight-table-container {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        overflow-x: auto;
+        width: 100%;
+        max-width: 1500px;
+        border: 1px solid #e0e0e0;
+        min-height: 250px;
+    }
+    
+    .flight-table { width: 100%; border-collapse: collapse; min-width: 1300px; }
+    
+    .flight-table th {
+        background-color: #ecf0f1;
+        color: #7f8c8d;
+        font-weight: 800;
+        text-transform: uppercase;
+        padding: 15px;
+        text-align: left;
+        font-size: 11px;
+        border-bottom: 2px solid #bdc3c7;
+        white-space: nowrap;
+    }
+
+    .flight-table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #f1f1f1;
+        color: #2c3e50;
+        vertical-align: top;
+        font-size: 13px;
+    }
+    
+    .flight-table tr:hover { background-color: #f8f9fa; }
+
+    /* Colunas */
+    .col-flight { font-family: 'Share Tech Mono', monospace; font-weight: 700; color: #000; font-size: 15px; }
+    .col-time { 
+        font-family: 'Share Tech Mono', monospace; 
+        font-weight: 700; 
+        color: #fff; 
+        background: #2980b9;
+        padding: 4px 8px;
+        border-radius: 4px;
+        text-align: center;
+        width: 60px;
+    }
+    .time-arr { background: #7f8c8d; }
+    .col-fl { font-weight: bold; color: #c0392b; text-align: center; font-family: monospace; }
+    .col-rota { font-family: monospace; font-size: 11px; color: #555; max-width: 250px; word-wrap: break-word; }
+    .col-obs { font-family: monospace; font-size: 10px; color: #777; max-width: 200px; }
+    .cia-badge { padding: 2px 6px; border-radius: 3px; color: white; font-weight: bold; font-size: 10px; text-transform: uppercase; }
+    
+    .msg-box { padding: 50px; text-align: center; color: #bdc3c7; font-style: italic; }
+    #file-debug { position: fixed; bottom: 5px; right: 5px; font-size: 10px; color: #ccc; z-index: 999; }
+
+</style>
+</head>
+<body>
+
+<div class="header-container">
+    <div class="header-title">
+        <h1>PAINEL DE VOOS</h1>
+        <div>OPERAÇÃO REAL (RPL) &bull; HORÁRIO DE BRASÍLIA</div>
+    </div>
+    <div class="clock-box">
+        <div class="clock-time" id="brt-clock">00:00:00</div>
+        <div class="clock-date" id="brt-date">---</div>
+    </div>
+</div>
+
+<div class="controls-container">
+    <div class="control-group">
+        <span class="control-label">1. SimBrief ID / Username:</span>
+        <input type="text" id="sb-id" class="sb-input" placeholder="Ex: 123456" oninput="saveSBID()">
+    </div>
+
+    <div class="control-group">
+        <span class="control-label">2. Filtro CIA:</span>
+        <button class="btn-filter active" onclick="setFilter('todas', this)">Todas</button>
+        <button class="btn-filter" data-cia="LATAM" onclick="setFilter('LATAM', this)">Latam</button>
+        <button class="btn-filter" data-cia="GOL" onclick="setFilter('GOL', this)">Gol</button>
+        <button class="btn-filter" data-cia="AZUL" onclick="setFilter('AZUL', this)">Azul</button>
+    </div>
+
+    <div class="control-group">
+        <span class="control-label">3. Gerar Escala:</span>
+        <button class="btn-draw" onclick="generateRealTimeChain(1)">1</button>
+        <button class="btn-draw" onclick="generateRealTimeChain(2)">2</button>
+        <button class="btn-draw" onclick="generateRealTimeChain(3)">3</button>
+        <button class="btn-draw" onclick="generateRealTimeChain(4)">4</button>
+    </div>
+</div>
+
+<div class="flight-table-container">
+    <table class="flight-table">
+        <thead>
+            <tr>
+                <th style="text-align: center;">Dispatch</th> <th>Voo</th>
+                <th>Cia</th>
+                <th>Origem</th>
+                <th title="Horário de Brasília">Partida</th>
+                <th>Destino</th>
+                <th title="Calculado">Chegada</th>
+                <th style="text-align: center;">FL</th>
+                <th>Rota</th>
+                <th>Observações</th>
+            </tr>
+        </thead>
+        <tbody id="board-content"></tbody>
+    </table>
+    <div id="empty-msg" class="msg-box">Carregando dados dos arquivos...</div>
+</div>
+
+<div id="file-debug"></div>
+
+<script>
+    // --- 1. CONFIGURAÇÕES ---
+    const SIMULATE_DATE = "2026-02-07"; // Sábado
+    
+    const airlineConfig = [
+        { id: 'LATAM', name: 'LATAM', file: 'Cia_TAM_CS.txt', color: '#1B0088' },
+        { id: 'GOL', name: 'GOL', file: 'Cia_GLO_CS.txt', color: '#FF5E00' },
+        { id: 'AZUL', name: 'AZUL', file: 'Cia_AZU_CS.txt', color: '#0055A4' }
+    ];
+
+    let allFlightsDB = [];
+    let currentFilter = 'todas';
+    const TURNAROUND_MINUTES = 45; 
+
+    // --- 2. GERENCIAMENTO DO SIMBRIEF ID ---
+    // Carrega o ID salvo ao abrir a página
+    document.addEventListener("DOMContentLoaded", () => {
+        const savedID = localStorage.getItem("simbrief_id");
+        if (savedID) {
+            document.getElementById("sb-id").value = savedID;
+        }
+    });
+
+    // Salva o ID sempre que o usuário digita
+    function saveSBID() {
+        const id = document.getElementById("sb-id").value;
+        localStorage.setItem("simbrief_id", id);
+    }
+
+    // Função que abre o SimBrief
+    function openSimBrief(flightNum, origin, dest, route, aircraftType) {
+        const sbID = document.getElementById("sb-id").value;
+        
+        if (!sbID) {
+            alert("Por favor, digite seu ID ou Username do SimBrief na caixa de texto acima da tabela.");
+            document.getElementById("sb-id").focus();
+            return;
+        }
+
+        // Separa Cia e Numero (Ex: GLO1234 -> Airline: GLO, FltNum: 1234)
+        // Tentativa de regex simples
+        const airlineCode = flightNum.match(/^[A-Z]+/)[0];
+        const fltNumber = flightNum.match(/\d+/)[0];
+
+        // Monta a URL do SimBrief
+        // Nota: SimBrief aceita 'type' mas precisa ser o código ICAO da aeronave. 
+        // O RPL tem (ex: B738/M). Vamos tentar limpar e mandar.
+        let cleanType = aircraftType.split('/')[0]; // Pega só o B738 antes da barra
+
+        const url = `https://www.simbrief.com/system/dispatch.php?userid=${sbID}&airline=${airlineCode}&fltnum=${fltNumber}&orig=${origin}&dest=${dest}&route=${encodeURIComponent(route)}&type=${cleanType}`;
+        
+        window.open(url, '_blank');
+    }
+
+    // --- 3. RELÓGIO E DATA ---
+    function updateClock() {
+        const now = getSimulationDate(); 
+        const timeOptions = { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+
+        document.getElementById('brt-clock').innerText = now.toLocaleTimeString('pt-BR', timeOptions);
+        document.getElementById('brt-date').innerText = now.toLocaleDateString('pt-BR', dateOptions).toUpperCase();
+    }
+    
+    function getSimulationDate() {
+        const realNow = new Date();
+        // Mês no JS é 0-11, então Fevereiro = 1
+        return new Date(2026, 1, 7, realNow.getHours(), realNow.getMinutes(), realNow.getSeconds());
+    }
+
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // --- 4. CARREGAMENTO ---
+    async function loadAllFiles() {
+        allFlightsDB = [];
+        const debugDiv = document.getElementById('file-debug');
+        
+        const promises = airlineConfig.map(async (airline) => {
+            try {
+                const response = await fetch(airline.file);
+                if (!response.ok) throw new Error("Erro");
+                const text = await response.text();
+                const flights = parseRPLData(text, airline);
+                if (flights.length > 0) {
+                    allFlightsDB = allFlightsDB.concat(flights);
+                    return `${airline.name}: ${flights.length}`;
+                }
+                return `${airline.name}: 0`;
+            } catch (error) {
+                return `${airline.name}: Falha`;
+            }
+        });
+
+        const res = await Promise.all(promises);
+        debugDiv.innerText = res.join(" | ");
+        
+        if (allFlightsDB.length > 0) {
+            document.getElementById('empty-msg').innerText = "Sistema pronto. Selecione a quantidade de voos.";
+        } else {
+            document.getElementById('empty-msg').innerText = "Nenhum voo carregado. Verifique os arquivos .txt";
+        }
+    }
+
+    // --- 5. PARSER ---
+    function parseRPLData(textData, airlineInfo) {
+        const lines = textData.split('\n');
+        const flights = [];
+
+        for (let line of lines) {
+            line = line.trim();
+            if (/^\d{6}\s+\d{6}/.test(line)) {
+                const parts = line.split(/\s+/);
+                const speedIndex = parts.findIndex(p => /^[NM]\d{3,4}$/.test(p));
+
+                if (speedIndex !== -1 && parts.length > speedIndex + 3) {
+                    const validFromStr = parts[0];
+                    const validUntilStr = parts[1];
+                    const daysOp = parts[2];
+                    const ident = parts[3];
+                    const type = parts[4]; // Captura o tipo da aeronave (Ex: A20N/M)
+                    
+                    const adepEobt = parts[speedIndex - 1]; 
+                    const origin = adepEobt.substring(0, 4);
+                    const depTimeUTC = adepEobt.substring(4, 8); 
+                    const fl = parts[speedIndex + 1];
+
+                    let destIndex = -1;
+                    for(let k = speedIndex + 2; k < parts.length; k++) {
+                        if (/^[A-Z]{4}\d{4}$/.test(parts[k])) {
+                            destIndex = k;
+                            break;
+                        }
+                    }
+
+                    if (destIndex !== -1) {
+                        const destEet = parts[destIndex];
+                        const dest = destEet.substring(0, 4);
+                        const eetStr = destEet.substring(4, 8); 
+
+                        const rota = parts.slice(speedIndex + 2, destIndex).join(' ');
+                        const obs = parts.slice(destIndex + 1).join(' ');
+
+                        const depMinUTC = timeStrToMinutes(depTimeUTC);
+                        const durMin = timeStrToMinutes(eetStr);
+                        let arrMinUTC = depMinUTC + durMin;
+                        if (arrMinUTC >= 1440) arrMinUTC -= 1440;
+
+                        const vFrom = parseRPLDate(validFromStr);
+                        const vUntil = parseRPLDate(validUntilStr);
+
+                        flights.push({
+                            airline: airlineInfo,
+                            ident: ident,
+                            type: type, // Salva o tipo
+                            origin: origin,
+                            dest: dest,
+                            depMinUTC: depMinUTC,
+                            arrMinUTC: arrMinUTC,
+                            durMin: durMin,
+                            fl: fl,
+                            rota: rota,
+                            obs: obs,
+                            daysOp: daysOp,
+                            validFrom: vFrom,
+                            validUntil: vUntil
+                        });
+                    }
+                }
+            }
+        }
+        return flights;
+    }
+
+    // --- 6. LÓGICA DE ESCALA ---
+
+    function generateRealTimeChain(chainLength) {
+        const tableBody = document.getElementById('board-content');
+        const msgDiv = document.getElementById('empty-msg');
+        tableBody.innerHTML = '';
+        msgDiv.style.display = 'none';
+
+        const now = getSimulationDate();
+        // Converte hora atual BR para UTC para comparar com RPL (BR + 3h = UTC)
+        const currentUTCMinutes = ((now.getHours() + 3) * 60) + now.getMinutes(); 
+        // Nota: O cálculo acima assume data fixa. Se passar de 24h, o filtro arruma.
+        
+        let validFlightsToday = allFlightsDB.filter(f => isFlightValidToday(f, now));
+
+        if (currentFilter !== 'todas') {
+            validFlightsToday = validFlightsToday.filter(f => f.airline.name === currentFilter);
+        }
+
+        if (validFlightsToday.length === 0) {
+            alert("Nenhum voo operando hoje para a cia selecionada.");
+            return;
+        }
+
+        const minDepTime = currentUTCMinutes + 20; 
+        let availableFirstFlights = validFlightsToday.filter(f => f.depMinUTC >= minDepTime);
+
+        if (availableFirstFlights.length === 0) {
+            availableFirstFlights = validFlightsToday;
+        }
+
+        availableFirstFlights.sort((a,b) => a.depMinUTC - b.depMinUTC);
+        
+        const seedIndex = Math.floor(Math.random() * Math.min(8, availableFirstFlights.length));
+        let currentFlight = availableFirstFlights[seedIndex];
+        
+        let chain = [enrichFlightData(currentFlight)];
+
+        for (let i = 1; i < chainLength; i++) {
+            const prev = chain[i-1];
+            const prevArrMin = prev.arrMinUTC;
+            const minNextDep = prevArrMin + TURNAROUND_MINUTES;
+
+            let candidates = validFlightsToday.filter(f => {
+                return (
+                    f.airline.name === prev.airline.name && 
+                    f.origin === prev.dest && 
+                    f.depMinUTC >= minNextDep 
+                );
+            });
+
+            if (candidates.length === 0) {
+                 candidates = validFlightsToday.filter(f => {
+                    return (
+                        f.airline.name === prev.airline.name && 
+                        f.origin === prev.dest 
+                    );
+                });
+            }
+
+            if (candidates.length > 0) {
+                candidates.sort((a,b) => {
+                    let diffA = a.depMinUTC - minNextDep;
+                    if(diffA < 0) diffA += 1440;
+                    let diffB = b.depMinUTC - minNextDep;
+                    if(diffB < 0) diffB += 1440;
+                    return diffA - diffB;
+                });
+                
+                chain.push(enrichFlightData(candidates[0]));
+            } else {
+                break; 
+            }
+        }
+
+        renderRows(chain);
+    }
+
+    function enrichFlightData(flight) {
+        const depMinBRT = adjustToBRT(flight.depMinUTC);
+        const arrMinBRT = adjustToBRT(flight.arrMinUTC);
+
+        return {
+            ...flight,
+            depDisplay: minutesToTimeStr(depMinBRT),
+            arrDisplay: minutesToTimeStr(arrMinBRT),
+            arrMinUTC: flight.arrMinUTC 
+        };
+    }
+
+    function adjustToBRT(utcMinutes) {
+        let brt = utcMinutes - 180; 
+        if (brt < 0) brt += 1440;
+        return brt;
+    }
+
+    // --- UTILITÁRIOS ---
+    function isFlightValidToday(flight, dateObj) {
+        const checkDate = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
+        const vFrom = flight.validFrom;
+        const vUntil = flight.validUntil;
+        
+        const jsDay = dateObj.getDay(); // 6 (Sábado)
+        const rplIndex = (jsDay === 0) ? 6 : jsDay - 1; 
+        
+        const char = flight.daysOp.charAt(rplIndex);
+        return (char !== '0' && char !== ' ');
+    }
+
+    function parseRPLDate(str) {
+        const d = parseInt(str.substring(0,2));
+        const m = parseInt(str.substring(2,4)) - 1;
+        const y = 2000 + parseInt(str.substring(4,6));
+        return new Date(y, m, d);
+    }
+
+    function timeStrToMinutes(str) {
+        const h = parseInt(str.substring(0,2));
+        const m = parseInt(str.substring(2,4));
+        return (h * 60) + m;
+    }
+
+    function minutesToTimeStr(totalMin) {
+        let h = Math.floor(totalMin / 60);
+        let m = totalMin % 60;
+        if (h >= 24) h -= 24; 
+        return String(h).padStart(2,'0') + ":" + String(m).padStart(2,'0');
+    }
+
+    function renderRows(flights) {
+        const tbody = document.getElementById('board-content');
+        if (flights.length === 0) return;
+
+        flights.forEach(f => {
+            const tr = document.createElement('tr');
+            
+            // Botão SimBrief com chamada dinâmica
+            // Passamos os parametros com aspas simples escapadas para evitar erro de JS
+            const sbButton = `<button class="btn-sb" onclick="openSimBrief('${f.ident}', '${f.origin}', '${f.dest}', '${f.rota.replace(/'/g, "\\'")}', '${f.type}')">SIMBRIEF ↗</button>`;
+
+            tr.innerHTML = `
+                <td style="text-align:center;">${sbButton}</td>
+                <td class="col-flight">${f.ident}</td>
+                <td><span class="cia-badge" style="background-color: ${f.airline.color}">${f.airline.name}</span></td>
+                <td class="col-airport">${f.origin}</td>
+                <td class="col-time">${f.depDisplay}</td>
+                <td class="col-airport">${f.dest}</td>
+                <td class="col-time time-arr">${f.arrDisplay}</td>
+                <td class="col-fl">${f.fl}</td>
+                <td class="col-rota">${f.rota}</td>
+                <td class="col-obs">${f.obs}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function setFilter(cia, btn) {
+        currentFilter = cia;
+        document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('board-content').innerHTML = '';
+        document.getElementById('empty-msg').style.display = 'block';
+    }
+
+    loadAllFiles();
+
+</script>
+</body>
+</html>
