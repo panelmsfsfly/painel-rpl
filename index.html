@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel RPL - Dispatch Integrado</title>
+<title>Painel RPL - Dispatch Integrado 3.2</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
@@ -12,7 +12,7 @@
     body {
         font-family: 'Roboto', sans-serif;
         background-color: #eef2f5;
-        padding: 20px;
+        padding: 10px;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -30,30 +30,31 @@
         margin-bottom: 15px;
         background: linear-gradient(135deg, #1e3c72, #2a5298);
         color: white;
-        padding: 20px;
+        padding: 15px;
         border-radius: 8px;
         box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        box-sizing: border-box;
     }
 
-    .header-title h1 { margin: 0; font-size: 24px; letter-spacing: 1px; }
-    .header-title div { font-size: 13px; opacity: 0.8; margin-top: 5px; }
+    .header-title h1 { margin: 0; font-size: 20px; letter-spacing: 1px; }
+    .header-title div { font-size: 11px; opacity: 0.8; margin-top: 5px; }
 
     .clock-box { text-align: right; }
     .clock-time {
         font-family: 'Share Tech Mono', monospace;
-        font-size: 32px;
+        font-size: 24px;
         color: #ffda79;
         text-shadow: 0 0 10px rgba(255,218,121,0.3);
         line-height: 1;
     }
-    .clock-date { font-size: 12px; color: #dfe6e9; text-transform: uppercase; margin-top: 4px; font-weight: bold; }
+    .clock-date { font-size: 10px; color: #dfe6e9; text-transform: uppercase; margin-top: 4px; font-weight: bold; }
 
     /* --- CONTROLES --- */
     .controls-container {
         width: 100%;
         max-width: 1500px;
         background-color: #fff;
-        padding: 20px;
+        padding: 15px;
         margin-bottom: 20px;
         border-radius: 8px;
         box-shadow: 0 2px 10px rgba(0,0,0,0.05);
@@ -61,16 +62,18 @@
         justify-content: space-between;
         align-items: center;
         flex-wrap: wrap;
-        gap: 20px;
+        gap: 15px;
+        box-sizing: border-box;
     }
 
     .control-group {
         display: flex;
         align-items: center;
         gap: 10px;
+        flex-wrap: wrap;
     }
 
-    .control-label { font-weight: 800; color: #333; font-size: 12px; text-transform: uppercase; margin-right: 8px; }
+    .control-label { font-weight: 800; color: #333; font-size: 12px; text-transform: uppercase; margin-right: 5px; white-space: nowrap; }
 
     /* Inputs */
     .sb-input {
@@ -80,26 +83,40 @@
         font-family: 'Roboto', sans-serif;
         font-weight: 700;
         color: #2c3e50;
-        width: 150px;
+        width: 120px;
         transition: 0.2s;
+        box-sizing: border-box;
     }
     .sb-input:focus { border-color: #3498db; outline: none; }
 
-    /* Botões */
+    /* Botões Gerais */
     button {
         cursor: pointer;
         border: none;
-        padding: 10px 20px;
+        padding: 10px 15px;
         border-radius: 4px;
         font-family: 'Roboto', sans-serif;
         font-weight: 700;
-        font-size: 13px;
+        font-size: 12px;
         transition: 0.2s;
         text-transform: uppercase;
     }
 
+    /* Botão Destaque */
+    .btn-action { background-color: #2980b9; color: white; }
+    .btn-action:hover { background-color: #3498db; }
+    
+    .btn-reset { background-color: #7f8c8d; color: white; }
+    .btn-reset:hover { background-color: #95a5a6; }
+
     /* Filtros */
-    .btn-filter { background-color: #f1f2f6; color: #7f8c8d; border: 1px solid #dfe4ea; }
+    .btn-filter { 
+        background-color: #f1f2f6; 
+        color: #7f8c8d; 
+        border: 1px solid #dfe4ea;
+        flex-grow: 1;
+        text-align: center;
+    }
     .btn-filter:hover { background-color: #dfe4ea; }
     .btn-filter.active { color: #fff; border-color: transparent; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
     
@@ -109,7 +126,12 @@
     .btn-filter[onclick*="todas"].active { background-color: #2c3e50; }
 
     /* Botões Numéricos */
-    .btn-draw { background-color: #34495e; color: #fff; min-width: 50px; }
+    .btn-draw { 
+        background-color: #34495e; 
+        color: #fff; 
+        min-width: 40px; 
+        flex-grow: 1;
+    }
     .btn-draw:hover { background-color: #27ae60; transform: translateY(-2px); }
 
     /* Botão SimBrief Tabela */
@@ -121,6 +143,7 @@
         border-radius: 4px;
         text-decoration: none;
         display: inline-block;
+        white-space: nowrap;
     }
     .btn-sb:hover { background-color: #e74c3c; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 
@@ -134,16 +157,17 @@
         max-width: 1500px;
         border: 1px solid #e0e0e0;
         min-height: 250px;
+        box-sizing: border-box;
     }
     
-    .flight-table { width: 100%; border-collapse: collapse; min-width: 1300px; }
+    .flight-table { width: 100%; border-collapse: collapse; min-width: 1000px; }
     
     .flight-table th {
         background-color: #ecf0f1;
         color: #7f8c8d;
         font-weight: 800;
         text-transform: uppercase;
-        padding: 15px;
+        padding: 12px;
         text-align: left;
         font-size: 11px;
         border-bottom: 2px solid #bdc3c7;
@@ -151,35 +175,185 @@
     }
 
     .flight-table td {
-        padding: 12px 15px;
+        padding: 10px 12px;
         border-bottom: 1px solid #f1f1f1;
         color: #2c3e50;
-        vertical-align: top;
+        vertical-align: middle;
         font-size: 13px;
     }
     
     .flight-table tr:hover { background-color: #f8f9fa; }
 
     /* Colunas */
-    .col-flight { font-family: 'Share Tech Mono', monospace; font-weight: 700; color: #000; font-size: 15px; }
+    .col-flight { font-family: 'Share Tech Mono', monospace; font-weight: 700; color: #000; font-size: 14px; }
     .col-time { 
         font-family: 'Share Tech Mono', monospace; 
         font-weight: 700; 
         color: #fff; 
         background: #2980b9;
-        padding: 4px 8px;
+        padding: 4px 6px;
         border-radius: 4px;
         text-align: center;
-        width: 60px;
+        width: 50px;
+        display: inline-block;
     }
     .time-arr { background: #7f8c8d; }
     .col-fl { font-weight: bold; color: #c0392b; text-align: center; font-family: monospace; }
-    .col-rota { font-family: monospace; font-size: 11px; color: #555; max-width: 250px; word-wrap: break-word; }
-    .col-obs { font-family: monospace; font-size: 10px; color: #777; max-width: 200px; }
-    .cia-badge { padding: 2px 6px; border-radius: 3px; color: white; font-weight: bold; font-size: 10px; text-transform: uppercase; }
+    .col-rota { font-family: monospace; font-size: 11px; color: #555; max-width: 200px; word-wrap: break-word; }
+    .col-obs { font-family: monospace; font-size: 10px; color: #777; max-width: 150px; }
+    .cia-badge { padding: 3px 6px; border-radius: 3px; color: white; font-weight: bold; font-size: 10px; text-transform: uppercase; }
+    .next-day-badge { color: #e74c3c; font-size: 10px; margin-left: 2px; font-weight: bold; }
     
     .msg-box { padding: 50px; text-align: center; color: #bdc3c7; font-style: italic; }
     #file-debug { position: fixed; bottom: 5px; right: 5px; font-size: 10px; color: #ccc; z-index: 999; }
+
+    /* --- SIMBRIEF AO VIVO --- */
+    .sb-live-container {
+        width: 100%;
+        max-width: 1500px;
+        background-color: #fff;
+        padding: 20px;
+        margin-top: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        border: 1px solid #e0e0e0;
+        box-sizing: border-box;
+    }
+
+    .sb-live-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #f1f2f6;
+        padding-bottom: 10px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .sb-live-title { font-size: 18px; font-weight: 900; color: #2c3e50; display: flex; align-items: center; gap: 10px; }
+    .sb-status { font-size: 12px; font-weight: bold; color: #95a5a6; display: block; margin-bottom: 5px;}
+
+    /* OFP RAW HEADER */
+    .sb-raw-header {
+        font-family: 'Share Tech Mono', monospace;
+        font-size: 12px;
+        background-color: #f0f0f0;
+        color: #333;
+        padding: 15px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        white-space: pre-wrap;
+        border-left: 5px solid #2c3e50;
+        line-height: 1.4;
+    }
+
+    /* Grid de Informações */
+    .sb-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+    }
+
+    .sb-card {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 6px;
+        border-left: 4px solid #3498db;
+    }
+
+    .sb-card h3 { margin: 0 0 10px 0; font-size: 12px; color: #7f8c8d; text-transform: uppercase; font-weight: 800; }
+    .sb-data-row { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 13px; color: #2c3e50; }
+    .sb-value { font-weight: bold; font-family: 'Share Tech Mono', monospace; }
+    
+    .perf-header {
+        font-family: 'Share Tech Mono', monospace;
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        font-size: 11px;
+        padding: 4px;
+        margin: 10px 0 5px 0;
+        border-radius: 3px;
+    }
+
+    .metar-box {
+        background-color: #2c3e50;
+        color: #ecf0f1;
+        padding: 10px;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 11px;
+        margin-top: 5px;
+        line-height: 1.4;
+        word-wrap: break-word;
+    }
+
+    .route-text {
+        font-family: monospace;
+        font-size: 11px;
+        color: #34495e;
+        background: #ecf0f1;
+        padding: 8px;
+        border-radius: 4px;
+        word-wrap: break-word;
+    }
+
+    .card-perf { border-left-color: #e74c3c; }
+    .card-metar { border-left-color: #f1c40f; grid-column: span 2; }
+    
+    .card-to-data {
+        border-left-color: #27ae60;
+        grid-column: span 2;
+    }
+
+    .to-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 10px;
+        font-family: 'Share Tech Mono', monospace;
+        font-size: 12px;
+    }
+    
+    .to-table th {
+        background-color: #2c3e50;
+        color: #ecf0f1;
+        padding: 5px;
+        text-align: center;
+        border: 1px solid #34495e;
+        font-weight: normal;
+    }
+
+    .to-table td {
+        background-color: #fff;
+        color: #2c3e50;
+        padding: 8px 5px;
+        text-align: center;
+        border: 1px solid #bdc3c7;
+        font-weight: bold;
+    }
+
+    .to-rmks {
+        background-color: #ecf0f1;
+        padding: 8px;
+        border-radius: 4px;
+        font-family: 'Share Tech Mono', monospace;
+        font-size: 11px;
+        color: #c0392b;
+        border: 1px dashed #bdc3c7;
+        white-space: pre-wrap;
+    }
+
+    @media (max-width: 768px) {
+        .card-metar, .card-to-data { grid-column: span 1; }
+        .header-container { flex-direction: column; text-align: center; gap: 10px; }
+        .controls-container { flex-direction: column; align-items: stretch; gap: 20px; }
+        .control-group { flex-direction: column; align-items: flex-start; width: 100%; }
+        .sb-input { width: 100%; }
+        .btn-filter, .btn-draw { flex: 1 1 auto; margin: 2px; }
+        .button-wrapper { display: flex; width: 100%; gap: 5px; }
+        .sb-live-header { flex-direction: column; align-items: flex-start; }
+    }
 
 </style>
 </head>
@@ -187,7 +361,7 @@
 
 <div class="header-container">
     <div class="header-title">
-        <h1>PAINEL DE VOOS</h1>
+        <h1>PAINEL DE VOOS 3.1</h1>
         <div>OPERAÇÃO REAL (RPL) &bull; HORÁRIO DE BRASÍLIA</div>
     </div>
     <div class="clock-box">
@@ -198,24 +372,32 @@
 
 <div class="controls-container">
     <div class="control-group">
-        <span class="control-label">1. SimBrief ID / Username:</span>
-        <input type="text" id="sb-id" class="sb-input" placeholder="Ex: 123456" oninput="saveSBID()">
+        <span class="control-label">1. SimBrief ID:</span>
+        <input type="text" id="sb-id" class="sb-input" placeholder="User ID" oninput="saveSBID()">
     </div>
 
     <div class="control-group">
         <span class="control-label">2. Filtro CIA:</span>
-        <button class="btn-filter active" onclick="setFilter('todas', this)">Todas</button>
-        <button class="btn-filter" data-cia="LATAM" onclick="setFilter('LATAM', this)">Latam</button>
-        <button class="btn-filter" data-cia="GOL" onclick="setFilter('GOL', this)">Gol</button>
-        <button class="btn-filter" data-cia="AZUL" onclick="setFilter('AZUL', this)">Azul</button>
+        <div class="button-wrapper" style="display:flex; width:100%; gap:5px;">
+            <button class="btn-filter active" onclick="setFilter('todas', this)">Todas</button>
+            <button class="btn-filter" data-cia="LATAM" onclick="setFilter('LATAM', this)">Latam</button>
+            <button class="btn-filter" data-cia="GOL" onclick="setFilter('GOL', this)">Gol</button>
+            <button class="btn-filter" data-cia="AZUL" onclick="setFilter('AZUL', this)">Azul</button>
+        </div>
     </div>
 
     <div class="control-group">
-        <span class="control-label">3. Gerar Escala:</span>
-        <button class="btn-draw" onclick="generateRealTimeChain(1)">1</button>
-        <button class="btn-draw" onclick="generateRealTimeChain(2)">2</button>
-        <button class="btn-draw" onclick="generateRealTimeChain(3)">3</button>
-        <button class="btn-draw" onclick="generateRealTimeChain(4)">4</button>
+        <span class="control-label">3. Gerar Escala (Pernas):</span>
+        <div class="button-wrapper" style="display:flex; width:100%; gap:5px;">
+            <button class="btn-draw" onclick="generateRealTimeChain(1)">1</button>
+            <button class="btn-draw" onclick="generateRealTimeChain(2)">2</button>
+            <button class="btn-draw" onclick="generateRealTimeChain(3)">3</button>
+            <button class="btn-draw" onclick="generateRealTimeChain(4)">4</button>
+        </div>
+    </div>
+    
+    <div class="control-group">
+        <button class="btn-reset" onclick="resetPanel()">Limpar</button>
     </div>
 </div>
 
@@ -236,15 +418,108 @@
         </thead>
         <tbody id="board-content"></tbody>
     </table>
-    <div id="empty-msg" class="msg-box">Carregando dados dos arquivos...</div>
+    <div id="empty-msg" class="msg-box">Carregando dados do servidor...</div>
+</div>
+
+<div class="sb-live-container">
+    <div class="sb-live-header">
+        <div class="sb-live-title">
+            <span>✈️ LIVE DISPATCH (OFP)</span>
+        </div>
+        <div style="text-align: right;">
+            <span id="ofp-status" class="sb-status">Aguardando solicitação...</span>
+            <button class="btn-action" onclick="fetchLatestSimBrief()">CARREGAR ÚLTIMO OFP</button>
+        </div>
+    </div>
+
+    <div id="sb-live-content" style="display: none;">
+        
+        <div id="sb-raw-header" class="sb-raw-header"></div>
+
+        <div class="sb-grid">
+            <div class="sb-card">
+                <h3>Dados do Voo</h3>
+                <div class="sb-data-row"><span>Cia/Voo:</span> <span class="sb-value" id="sb-callsign">---</span></div>
+                <div class="sb-data-row"><span>Aeronave:</span> <span class="sb-value" id="sb-acft">---</span></div>
+                <div class="sb-data-row"><span>Matrícula:</span> <span class="sb-value" id="sb-reg">---</span></div>
+                <div class="sb-data-row"><span>Origem:</span> <span class="sb-value" id="sb-orig">---</span></div>
+                <div class="sb-data-row"><span>Destino:</span> <span class="sb-value" id="sb-dest">---</span></div>
+                <div class="sb-data-row"><span>Alternativo:</span> <span class="sb-value" id="sb-altn">---</span></div>
+                <div class="sb-data-row"><span>Flight Level:</span> <span class="sb-value" id="sb-fl">---</span></div>
+            </div>
+
+            <div class="sb-card card-perf">
+                <h3>Payload & Performance</h3>
+                <div class="sb-data-row"><span>PAX:</span> <span class="sb-value" id="sb-pax">---</span></div>
+                <div class="sb-data-row"><span>Cargo:</span> <span class="sb-value" id="sb-cargo">---</span></div>
+                <div class="sb-data-row"><span>Payload:</span> <span class="sb-value" id="sb-payload">---</span></div>
+                <div class="sb-data-row"><span>ZFW:</span> <span class="sb-value" id="sb-zfw">---</span></div>
+                <div class="sb-data-row"><span>Block Fuel:</span> <span class="sb-value" id="sb-fuel">---</span></div>
+
+                <div class="perf-header">/// TAKEOFF DATA ///</div>
+                <div class="sb-data-row"><span>RWY:</span> <span class="sb-value" id="sb-to-rwy">---</span></div>
+                <div class="sb-data-row"><span>Est TOW:</span> <span class="sb-value" id="sb-tow">---</span></div>
+                
+                <div class="perf-header">/// LANDING DATA ///</div>
+                <div class="sb-data-row"><span>RWY:</span> <span class="sb-value" id="sb-ld-rwy">---</span></div>
+                <div class="sb-data-row"><span>Est LAW:</span> <span class="sb-value" id="sb-law">---</span></div>
+            </div>
+
+            <div class="sb-card card-to-data" id="card-detailed-to" style="display:none;">
+                <h3>/// TAKEOFF DATA (DETAILED) ///</h3>
+                <div style="overflow-x: auto;">
+                    <table class="to-table">
+                        <thead>
+                            <tr>
+                                <th>APT</th> <th>RWY</th> <th>WIND</th> <th>QNH</th> 
+                                <th>FLAP</th> <th>TEMP</th> 
+                                <th style="background:#e67e22; color:white;">V1</th> 
+                                <th style="background:#e67e22; color:white;">VR</th> 
+                                <th style="background:#e67e22; color:white;">V2</th>
+                                <th>LIMIT</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td id="to-apt">-</td> <td id="to-rwy">-</td> <td id="to-wind">-</td> <td id="to-qnh">-</td>
+                                <td id="to-flp">-</td> <td id="to-temp">-</td>
+                                <td id="to-v1" style="color:#d35400;">-</td> 
+                                <td id="to-vr" style="color:#d35400;">-</td> 
+                                <td id="to-v2" style="color:#d35400;">-</td>
+                                <td id="to-lim">-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="to-rmks" id="to-rmks">---</div>
+            </div>
+
+            <div class="sb-card" style="grid-column: span 2;">
+                <h3>Rota Aprovada</h3>
+                <div class="route-text" id="sb-route">---</div>
+                
+                <div style="margin-top: 10px;">
+                    <h3>Meteorologia (METAR Público Ao Vivo)</h3>
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 5px;">
+                        <div><strong style="font-size:10px;">ORIGEM (<span id="icao-orig-lbl"></span>):</strong> <div class="metar-box" id="metar-orig">...</div></div>
+                        <div><strong style="font-size:10px;">DESTINO (<span id="icao-dest-lbl"></span>):</strong> <div class="metar-box" id="metar-dest">...</div></div>
+                        <div><strong style="font-size:10px;">ALTERNATE (<span id="icao-altn-lbl"></span>):</strong> <div class="metar-box" id="metar-altn">...</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div id="file-debug"></div>
 
 <script>
-    // --- 1. CONFIGURAÇÕES ---
-    const SIMULATE_DATE = "2026-02-07"; // Sábado
-    
+    // --- 1. CONFIGURAÇÕES GERAIS ---
+    const USE_REAL_TIME_DATE = true; 
+    const SIMULATE_DATE_FIXED = "2026-02-07"; 
+    const TURNAROUND_MINUTES = 45; 
+
+    // IMPORTANTE: Certifique-se que estes arquivos existem na pasta!
     const airlineConfig = [
         { id: 'LATAM', name: 'LATAM', file: 'Cia_TAM_CS.txt', color: '#1B0088' },
         { id: 'GOL', name: 'GOL', file: 'Cia_GLO_CS.txt', color: '#FF5E00' },
@@ -253,49 +528,309 @@
 
     let allFlightsDB = [];
     let currentFilter = 'todas';
-    const TURNAROUND_MINUTES = 45; 
+    let displayedFlights = [];
 
-    // --- 2. GERENCIAMENTO DO SIMBRIEF ID ---
-    // Carrega o ID salvo ao abrir a página
+    // --- 2. GERENCIAMENTO DO SIMBRIEF (OFP LIVE) ---
     document.addEventListener("DOMContentLoaded", () => {
         const savedID = localStorage.getItem("simbrief_id");
-        if (savedID) {
-            document.getElementById("sb-id").value = savedID;
-        }
+        if (savedID) document.getElementById("sb-id").value = savedID;
     });
 
-    // Salva o ID sempre que o usuário digita
     function saveSBID() {
-        const id = document.getElementById("sb-id").value;
-        localStorage.setItem("simbrief_id", id);
+        localStorage.setItem("simbrief_id", document.getElementById("sb-id").value);
     }
 
-    // Função que abre o SimBrief
-    function openSimBrief(flightNum, origin, dest, route, aircraftType) {
-        const sbID = document.getElementById("sb-id").value;
-        
+    async function fetchLatestSimBrief() {
+        const sbInput = document.getElementById("sb-id");
+        const sbID = sbInput.value ? sbInput.value.trim() : "";
+        const statusSpan = document.getElementById("ofp-status");
+        const contentDiv = document.getElementById("sb-live-content");
+
         if (!sbID) {
-            alert("Por favor, digite seu ID ou Username do SimBrief na caixa de texto acima da tabela.");
+            alert("Por favor, preencha o ID do SimBrief.");
+            sbInput.focus();
+            return;
+        }
+
+        statusSpan.innerText = "Conectando ao SimBrief...";
+        statusSpan.style.color = "#2980b9";
+        contentDiv.style.display = "none";
+
+        const isNumeric = /^\d+$/.test(sbID);
+        const paramName = isNumeric ? "userid" : "username";
+        
+        // URL Direta e Proxy (para contornar CORS)
+        const directUrl = `https://www.simbrief.com/api/xml.fetcher.php?${paramName}=${sbID}&json=1`;
+        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(directUrl)}`;
+
+        let data = null;
+
+        try {
+            let response;
+            try {
+                response = await fetch(directUrl, { cache: 'no-store' });
+                if(!response.ok) throw new Error("Erro Direto");
+            } catch(e) {
+                console.log("Tentativa direta falhou, usando proxy...");
+                response = await fetch(proxyUrl, { cache: 'no-store' });
+            }
+            
+            if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
+
+            const text = await response.text();
+            
+            if (text.includes("Error:") || !text.trim().startsWith("{")) {
+                throw new Error("ID não encontrado ou sem OFP recente.");
+            }
+
+            try {
+                data = JSON.parse(text);
+            } catch (e) {
+                throw new Error("JSON inválido recebido.");
+            }
+
+            if (!data.general) throw new Error("Dados incompletos.");
+
+            renderSimBriefData(data);
+            await renderPublicWeather(data);
+
+            statusSpan.innerText = `OFP Atualizado: ${new Date().toLocaleTimeString()}`;
+            statusSpan.style.color = "#27ae60";
+            contentDiv.style.display = "block";
+
+        } catch (error) {
+            console.error("SimBrief Error:", error);
+            statusSpan.innerText = `Falha: ${error.message}`;
+            statusSpan.style.color = "#c0392b";
+            alert("Erro ao carregar SimBrief. Verifique seu ID e se gerou um voo recentemente.");
+        }
+    }
+
+    function renderSimBriefData(data) {
+        // Safe Checks
+        const safe = (val) => val || "---";
+
+        const callsign = `${data.general.icao_airline}${data.general.flight_number}`;
+        const orig = data.origin.icao_code;
+        const dest = data.destination.icao_code;
+        const reg = data.aircraft.reg;
+        const acft = data.aircraft.icao_code;
+        
+        // Gera o Header RAW estilo TELEX
+        const dateObj = new Date(parseInt(data.params.time_generated) * 1000);
+        const dateStr = dateObj.toLocaleDateString('en-GB', {day: '2-digit', month: 'short', year: 'numeric'}).toUpperCase().replace(/ /g, '');
+        const shortDate = dateStr.substring(0, 7); 
+        
+        const rawHeader = 
+`${callsign} ${dateStr} ${orig}-${dest} ${acft} ${reg} RELEASE ${dateObj.toISOString().substring(11,16).replace(':','')} ${shortDate}
+OFP 1 ${data.origin.name.toUpperCase().substring(0,15)}-DEP ${data.destination.name.toUpperCase().substring(0,15)}
+ATC C/S ${callsign} ${orig}/${data.origin.plan_rwy} ${dest}/${data.destination.plan_rwy} CI ${data.general.costindex}
+GND DIST ${data.general.route_distance} AIR DIST ${data.general.air_distance}
+ESTIMATED TOW ${safe(data.weights.est_tow)} LAW ${safe(data.weights.est_ldw)} ZFW ${safe(data.weights.est_zfw)}
+ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
+
+        document.getElementById("sb-raw-header").innerText = rawHeader;
+
+        // Preenche Cards Básicos
+        document.getElementById("sb-callsign").innerText = callsign;
+        document.getElementById("sb-acft").innerText = data.aircraft.name;
+        document.getElementById("sb-reg").innerText = reg;
+        document.getElementById("sb-orig").innerText = orig;
+        document.getElementById("sb-dest").innerText = dest;
+        document.getElementById("sb-altn").innerText = data.alternate ? data.alternate.icao_code : "N/A";
+        document.getElementById("sb-fl").innerText = safe(data.general.initial_altitude);
+
+        // --- DADOS COMPLETOS DE CARGA ---
+        document.getElementById("sb-pax").innerText = safe(data.weights.pax_count);
+        document.getElementById("sb-cargo").innerText = safe(data.weights.cargo);
+        document.getElementById("sb-payload").innerText = safe(data.weights.payload);
+        document.getElementById("sb-zfw").innerText = safe(data.weights.est_zfw);
+        document.getElementById("sb-fuel").innerText = safe(data.fuel.plan_ramp);
+
+        // Dados de Pista e Peso
+        document.getElementById("sb-to-rwy").innerText = safe(data.origin.plan_rwy);
+        document.getElementById("sb-tow").innerText = safe(data.weights.est_tow);
+        
+        document.getElementById("sb-ld-rwy").innerText = safe(data.destination.plan_rwy);
+        document.getElementById("sb-law").innerText = safe(data.weights.est_ldw);
+
+        // --- PERFORMANCE DETALHADA ---
+        if (data.text && data.text.plan_text) {
+            const detailedTO = extractDetailedTakeoff(data.text.plan_text);
+            const cardDetailed = document.getElementById("card-detailed-to");
+
+            if (detailedTO) {
+                cardDetailed.style.display = "block";
+                document.getElementById("to-apt").innerText = detailedTO.apt;
+                document.getElementById("to-rwy").innerText = detailedTO.rwy;
+                document.getElementById("to-wind").innerText = detailedTO.wind;
+                document.getElementById("to-qnh").innerText = detailedTO.qnh;
+                document.getElementById("to-flp").innerText = detailedTO.flp;
+                document.getElementById("to-temp").innerText = detailedTO.temp;
+                document.getElementById("to-v1").innerText = detailedTO.v1;
+                document.getElementById("to-vr").innerText = detailedTO.vr;
+                document.getElementById("to-v2").innerText = detailedTO.v2;
+                document.getElementById("to-lim").innerText = detailedTO.limit;
+                document.getElementById("to-rmks").innerText = detailedTO.rmks;
+            } else {
+                cardDetailed.style.display = "none";
+            }
+        }
+
+        document.getElementById("sb-route").innerText = safe(data.general.route);
+        
+        document.getElementById("icao-orig-lbl").innerText = orig;
+        document.getElementById("icao-dest-lbl").innerText = dest;
+        document.getElementById("icao-altn-lbl").innerText = data.alternate ? data.alternate.icao_code : "-";
+    }
+
+    function extractDetailedTakeoff(fullText) {
+        if (!fullText) return null;
+
+        // Procura linha de cabeçalho (mais flexível)
+        const headerRegex = /APT.*PRWY.*WIND.*QNH/i;
+        const headerMatch = fullText.match(headerRegex);
+
+        if (!headerMatch) return null;
+
+        const textFromHeader = fullText.substring(headerMatch.index + headerMatch[0].length);
+        const lines = textFromHeader.split('\n');
+
+        let dataLine = "";
+        let lineIndex = 0;
+        
+        // Pega a primeira linha que parece ter dados (comprimento > 10 e não é tracejada)
+        for(let i=0; i < lines.length; i++) {
+            const l = lines[i].trim();
+            if(l.length > 10 && !l.startsWith("---") && !l.startsWith("___")) {
+                dataLine = l;
+                lineIndex = i;
+                break;
+            }
+        }
+
+        if (!dataLine) return null;
+
+        const cols = dataLine.split(/\s+/);
+        
+        // RMKS
+        let remarks = [];
+        for(let i = lineIndex + 1; i < lineIndex + 5; i++) { 
+            if (lines[i]) {
+                const l = lines[i].trim();
+                if (l.includes("---") || l.includes("___") || l.length < 3) break; 
+                remarks.push(l);
+            }
+        }
+
+        const getCol = (idx) => cols[idx] || "-";
+
+        // Assume layout padrão LIDO/SimBrief
+        return {
+            apt: getCol(0),
+            rwy: getCol(1),
+            wind: getCol(3),
+            qnh: getCol(4),
+            flp: getCol(6),
+            temp: getCol(7), 
+            v1: getCol(8),
+            vr: getCol(9),
+            v2: getCol(10),
+            limit: cols[cols.length-1], 
+            rmks: remarks.join("\n")
+        };
+    }
+
+    async function renderPublicWeather(data) {
+        const orig = data.origin.icao_code;
+        const dest = data.destination.icao_code;
+        const altn = data.alternate ? data.alternate.icao_code : null;
+
+        fetchMetarWithFallback(orig, "metar-orig");
+        fetchMetarWithFallback(dest, "metar-dest");
+        if (altn) {
+            fetchMetarWithFallback(altn, "metar-altn");
+        } else {
+            document.getElementById("metar-altn").innerText = "N/A";
+        }
+    }
+
+    async function fetchMetarWithFallback(icao, elementId) {
+        const el = document.getElementById(elementId);
+        el.innerText = "Buscando...";
+
+        try {
+            // Fonte 1: VATSIM (CORS Friendly)
+            const res = await fetch(`https://metar.vatsim.net/metar.php?id=${icao}`);
+            if (res.ok) {
+                const text = await res.text();
+                if (text.trim().length > 10) { 
+                    el.innerText = text.trim();
+                    return;
+                }
+            }
+        } catch(e) {}
+
+        try {
+            // Fonte 2: NOAA via Proxy
+            const proxy = "https://api.allorigins.win/raw?url=";
+            const noaa = `https://tgftp.nws.noaa.gov/data/observations/metar/stations/${icao}.TXT`;
+            const res2 = await fetch(proxy + encodeURIComponent(noaa));
+            
+            if(res2.ok) {
+                const text = await res2.text();
+                const lines = text.split('\n');
+                // NOAA retorna data na linha 1 e METAR na linha 2
+                if(lines.length >= 2) {
+                    el.innerText = lines[1].trim(); 
+                    return;
+                }
+            }
+        } catch(e) {
+            el.innerText = "METAR Indisponível.";
+        }
+    }
+
+    function openSimBriefFromIndex(index) {
+        const flight = displayedFlights[index];
+        if (!flight) return;
+
+        const sbID = document.getElementById("sb-id").value;
+        if (!sbID) {
+            alert("Por favor, digite seu ID do SimBrief para gerar o plano.");
             document.getElementById("sb-id").focus();
             return;
         }
 
-        // Separa Cia e Numero (Ex: GLO1234 -> Airline: GLO, FltNum: 1234)
-        // Tentativa de regex simples
-        const airlineCode = flightNum.match(/^[A-Z]+/)[0];
-        const fltNumber = flightNum.match(/\d+/)[0];
+        const airlineCode = flight.ident.match(/^[A-Z]+/)[0];
+        const fltNumber = flight.ident.match(/\d+/)[0];
+        let cleanType = flight.type.split('/')[0]; 
 
-        // Monta a URL do SimBrief
-        // Nota: SimBrief aceita 'type' mas precisa ser o código ICAO da aeronave. 
-        // O RPL tem (ex: B738/M). Vamos tentar limpar e mandar.
-        let cleanType = aircraftType.split('/')[0]; // Pega só o B738 antes da barra
+        const routeEncoded = encodeURIComponent(flight.rota);
 
-        const url = `https://www.simbrief.com/system/dispatch.php?userid=${sbID}&airline=${airlineCode}&fltnum=${fltNumber}&orig=${origin}&dest=${dest}&route=${encodeURIComponent(route)}&type=${cleanType}`;
+        const url = `https://www.simbrief.com/system/dispatch.php?userid=${sbID}&airline=${airlineCode}&fltnum=${fltNumber}&orig=${flight.origin}&dest=${flight.dest}&route=${routeEncoded}&type=${cleanType}`;
         
         window.open(url, '_blank');
     }
 
+    function resetPanel() {
+        document.getElementById('board-content').innerHTML = '';
+        document.getElementById('empty-msg').style.display = 'block';
+        document.getElementById('empty-msg').innerText = "Painel limpo. Selecione 'Gerar Escala'.";
+        document.getElementById('sb-live-content').style.display = 'none';
+        document.getElementById('ofp-status').innerText = "Aguardando solicitação...";
+        document.getElementById('ofp-status').style.color = "#95a5a6";
+        displayedFlights = [];
+    }
+
     // --- 3. RELÓGIO E DATA ---
+    function getSimulationDate() {
+        if (USE_REAL_TIME_DATE) return new Date();
+        const realNow = new Date();
+        const [y, m, d] = SIMULATE_DATE_FIXED.split('-').map(Number);
+        return new Date(y, m - 1, d, realNow.getHours(), realNow.getMinutes(), realNow.getSeconds());
+    }
+
     function updateClock() {
         const now = getSimulationDate(); 
         const timeOptions = { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
@@ -304,17 +839,10 @@
         document.getElementById('brt-clock').innerText = now.toLocaleTimeString('pt-BR', timeOptions);
         document.getElementById('brt-date').innerText = now.toLocaleDateString('pt-BR', dateOptions).toUpperCase();
     }
-    
-    function getSimulationDate() {
-        const realNow = new Date();
-        // Mês no JS é 0-11, então Fevereiro = 1
-        return new Date(2026, 1, 7, realNow.getHours(), realNow.getMinutes(), realNow.getSeconds());
-    }
-
     setInterval(updateClock, 1000);
     updateClock();
 
-    // --- 4. CARREGAMENTO ---
+    // --- 4. CARREGAMENTO (FETCH) ---
     async function loadAllFiles() {
         allFlightsDB = [];
         const debugDiv = document.getElementById('file-debug');
@@ -322,26 +850,32 @@
         const promises = airlineConfig.map(async (airline) => {
             try {
                 const response = await fetch(airline.file);
-                if (!response.ok) throw new Error("Erro");
+                if (!response.ok) throw new Error("404");
                 const text = await response.text();
                 const flights = parseRPLData(text, airline);
-                if (flights.length > 0) {
-                    allFlightsDB = allFlightsDB.concat(flights);
-                    return `${airline.name}: ${flights.length}`;
-                }
-                return `${airline.name}: 0`;
+                return { status: "OK", flights: flights, name: airline.name };
             } catch (error) {
-                return `${airline.name}: Falha`;
+                return { status: "Erro/Ausente", flights: [], name: airline.name };
             }
         });
 
-        const res = await Promise.all(promises);
-        debugDiv.innerText = res.join(" | ");
+        const results = await Promise.all(promises);
+        
+        const debugTexts = [];
+        results.forEach(res => {
+            if(res.flights.length > 0) {
+                allFlightsDB = allFlightsDB.concat(res.flights);
+            }
+            debugTexts.push(`${res.name}: ${res.status}`);
+        });
+
+        debugDiv.innerText = debugTexts.join(" | ");
         
         if (allFlightsDB.length > 0) {
             document.getElementById('empty-msg').innerText = "Sistema pronto. Selecione a quantidade de voos.";
         } else {
-            document.getElementById('empty-msg').innerText = "Nenhum voo carregado. Verifique os arquivos .txt";
+            document.getElementById('empty-msg').innerHTML = "ERRO: Arquivos de malha (.txt) não encontrados.<br>Certifique-se que Cia_TAM_CS.txt, etc, estão na pasta.";
+            document.getElementById('empty-msg').style.color = "#c0392b";
         }
     }
 
@@ -357,57 +891,56 @@
                 const speedIndex = parts.findIndex(p => /^[NM]\d{3,4}$/.test(p));
 
                 if (speedIndex !== -1 && parts.length > speedIndex + 3) {
-                    const validFromStr = parts[0];
-                    const validUntilStr = parts[1];
-                    const daysOp = parts[2];
-                    const ident = parts[3];
-                    const type = parts[4]; // Captura o tipo da aeronave (Ex: A20N/M)
-                    
-                    const adepEobt = parts[speedIndex - 1]; 
-                    const origin = adepEobt.substring(0, 4);
-                    const depTimeUTC = adepEobt.substring(4, 8); 
-                    const fl = parts[speedIndex + 1];
+                    try {
+                        const validFromStr = parts[0]; 
+                        const validUntilStr = parts[1];
+                        const daysOp = parts[2];
+                        const ident = parts[3];
+                        const type = parts[4];
+                        
+                        const adepEobt = parts[speedIndex - 1]; 
+                        const origin = adepEobt.substring(0, 4);
+                        const depTimeUTC = adepEobt.substring(4, 8); 
+                        const fl = parts[speedIndex + 1];
 
-                    let destIndex = -1;
-                    for(let k = speedIndex + 2; k < parts.length; k++) {
-                        if (/^[A-Z]{4}\d{4}$/.test(parts[k])) {
-                            destIndex = k;
-                            break;
+                        let destIndex = -1;
+                        for(let k = speedIndex + 2; k < parts.length; k++) {
+                            if (/^[A-Z]{4}\d{4}$/.test(parts[k])) {
+                                destIndex = k;
+                                break;
+                            }
                         }
-                    }
 
-                    if (destIndex !== -1) {
-                        const destEet = parts[destIndex];
-                        const dest = destEet.substring(0, 4);
-                        const eetStr = destEet.substring(4, 8); 
+                        if (destIndex !== -1) {
+                            const destEet = parts[destIndex];
+                            const dest = destEet.substring(0, 4);
+                            const eetStr = destEet.substring(4, 8); 
 
-                        const rota = parts.slice(speedIndex + 2, destIndex).join(' ');
-                        const obs = parts.slice(destIndex + 1).join(' ');
+                            const rota = parts.slice(speedIndex + 2, destIndex).join(' ');
+                            const obs = parts.slice(destIndex + 1).join(' ');
 
-                        const depMinUTC = timeStrToMinutes(depTimeUTC);
-                        const durMin = timeStrToMinutes(eetStr);
-                        let arrMinUTC = depMinUTC + durMin;
-                        if (arrMinUTC >= 1440) arrMinUTC -= 1440;
+                            const depMinUTC = timeStrToMinutes(depTimeUTC);
+                            const durMin = timeStrToMinutes(eetStr);
+                            let arrMinUTC = depMinUTC + durMin;
 
-                        const vFrom = parseRPLDate(validFromStr);
-                        const vUntil = parseRPLDate(validUntilStr);
-
-                        flights.push({
-                            airline: airlineInfo,
-                            ident: ident,
-                            type: type, // Salva o tipo
-                            origin: origin,
-                            dest: dest,
-                            depMinUTC: depMinUTC,
-                            arrMinUTC: arrMinUTC,
-                            durMin: durMin,
-                            fl: fl,
-                            rota: rota,
-                            obs: obs,
-                            daysOp: daysOp,
-                            validFrom: vFrom,
-                            validUntil: vUntil
-                        });
+                            // Verifica se é válido hoje (heurística de data simples)
+                            flights.push({
+                                airline: airlineInfo,
+                                ident: ident,
+                                type: type,
+                                origin: origin,
+                                dest: dest,
+                                depMinUTC: depMinUTC,
+                                arrMinUTC: arrMinUTC,
+                                durMin: durMin,
+                                fl: fl,
+                                rota: rota,
+                                obs: obs,
+                                daysOp: daysOp
+                            });
+                        }
+                    } catch(e) {
+                        // Ignora linha com erro de parsing
                     }
                 }
             }
@@ -416,17 +949,21 @@
     }
 
     // --- 6. LÓGICA DE ESCALA ---
-
     function generateRealTimeChain(chainLength) {
         const tableBody = document.getElementById('board-content');
         const msgDiv = document.getElementById('empty-msg');
         tableBody.innerHTML = '';
         msgDiv.style.display = 'none';
 
+        if(allFlightsDB.length === 0) {
+            alert("Os arquivos de malha não foram carregados corretamente.");
+            msgDiv.style.display = 'block';
+            msgDiv.innerText = "Erro: Sem banco de dados.";
+            return;
+        }
+
         const now = getSimulationDate();
-        // Converte hora atual BR para UTC para comparar com RPL (BR + 3h = UTC)
-        const currentUTCMinutes = ((now.getHours() + 3) * 60) + now.getMinutes(); 
-        // Nota: O cálculo acima assume data fixa. Se passar de 24h, o filtro arruma.
+        const currentUTCMinutes = ((now.getUTCHours()) * 60) + now.getUTCMinutes(); 
         
         let validFlightsToday = allFlightsDB.filter(f => isFlightValidToday(f, now));
 
@@ -434,29 +971,33 @@
             validFlightsToday = validFlightsToday.filter(f => f.airline.name === currentFilter);
         }
 
-        if (validFlightsToday.length === 0) {
-            alert("Nenhum voo operando hoje para a cia selecionada.");
-            return;
+        // Buffer de 30 minutos para o primeiro voo
+        let availableFirstFlights = validFlightsToday.filter(f => f.depMinUTC >= currentUTCMinutes + 30);
+
+        // Se não houver voos nas próximas horas, pega qualquer um futuro ou reinicia ciclo
+        if (availableFirstFlights.length === 0 && validFlightsToday.length > 0) {
+            // Tenta pegar voos bem cedo se já passou tudo
+             availableFirstFlights = validFlightsToday;
         }
 
-        const minDepTime = currentUTCMinutes + 20; 
-        let availableFirstFlights = validFlightsToday.filter(f => f.depMinUTC >= minDepTime);
-
         if (availableFirstFlights.length === 0) {
-            availableFirstFlights = validFlightsToday;
+            msgDiv.style.display = 'block';
+            msgDiv.innerText = "Nenhum voo encontrado para os filtros atuais.";
+            return;
         }
 
         availableFirstFlights.sort((a,b) => a.depMinUTC - b.depMinUTC);
         
-        const seedIndex = Math.floor(Math.random() * Math.min(8, availableFirstFlights.length));
+        const seedIndex = Math.floor(Math.random() * Math.min(10, availableFirstFlights.length));
         let currentFlight = availableFirstFlights[seedIndex];
         
         let chain = [enrichFlightData(currentFlight)];
 
         for (let i = 1; i < chainLength; i++) {
             const prev = chain[i-1];
-            const prevArrMin = prev.arrMinUTC;
-            const minNextDep = prevArrMin + TURNAROUND_MINUTES;
+            // Normaliza hora de chegada para buscar próximo voo
+            const prevArrNormalized = prev.arrMinUTC >= 1440 ? prev.arrMinUTC - 1440 : prev.arrMinUTC;
+            const minNextDep = prevArrNormalized + TURNAROUND_MINUTES;
 
             let candidates = validFlightsToday.filter(f => {
                 return (
@@ -467,10 +1008,11 @@
             });
 
             if (candidates.length === 0) {
+                // Tenta achar voo no dia seguinte (início da lista)
                  candidates = validFlightsToday.filter(f => {
                     return (
                         f.airline.name === prev.airline.name && 
-                        f.origin === prev.dest 
+                        f.origin === prev.dest
                     );
                 });
             }
@@ -478,7 +1020,7 @@
             if (candidates.length > 0) {
                 candidates.sort((a,b) => {
                     let diffA = a.depMinUTC - minNextDep;
-                    if(diffA < 0) diffA += 1440;
+                    if(diffA < 0) diffA += 1440; 
                     let diffB = b.depMinUTC - minNextDep;
                     if(diffB < 0) diffB += 1440;
                     return diffA - diffB;
@@ -490,70 +1032,75 @@
             }
         }
 
+        displayedFlights = chain;
         renderRows(chain);
     }
 
     function enrichFlightData(flight) {
-        const depMinBRT = adjustToBRT(flight.depMinUTC);
-        const arrMinBRT = adjustToBRT(flight.arrMinUTC);
+        // Conversão UTC para BRT (UTC-3)
+        // Lógica de módulo 1440 (24h)
+        const toBRT = (utcMinutes) => {
+            let brt = utcMinutes - 180;
+            if (brt < 0) brt += 1440;
+            if (brt >= 1440) brt -= 1440;
+            return brt;
+        };
 
+        const depMinBRT = toBRT(flight.depMinUTC);
+        const arrMinBRT = toBRT(flight.arrMinUTC);
+        
+        // Verifica day change visual
+        let nextDay = false;
+        if (flight.arrMinUTC >= 1440) nextDay = true;
+        
         return {
             ...flight,
             depDisplay: minutesToTimeStr(depMinBRT),
             arrDisplay: minutesToTimeStr(arrMinBRT),
-            arrMinUTC: flight.arrMinUTC 
+            isNextDay: nextDay
         };
-    }
-
-    function adjustToBRT(utcMinutes) {
-        let brt = utcMinutes - 180; 
-        if (brt < 0) brt += 1440;
-        return brt;
     }
 
     // --- UTILITÁRIOS ---
     function isFlightValidToday(flight, dateObj) {
-        const checkDate = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
-        const vFrom = flight.validFrom;
-        const vUntil = flight.validUntil;
-        
-        const jsDay = dateObj.getDay(); // 6 (Sábado)
+        const jsDay = dateObj.getDay(); // 0 (Dom) a 6 (Sab)
+        // RPL format: 1=Mon ... 7=Sun. 
+        // JS: 0=Sun, 1=Mon.
+        // Convert JS to RPL index: Mon(1)->0, Sun(0)->6
         const rplIndex = (jsDay === 0) ? 6 : jsDay - 1; 
         
+        if (rplIndex >= flight.daysOp.length) return false;
         const char = flight.daysOp.charAt(rplIndex);
         return (char !== '0' && char !== ' ');
     }
 
-    function parseRPLDate(str) {
-        const d = parseInt(str.substring(0,2));
-        const m = parseInt(str.substring(2,4)) - 1;
-        const y = 2000 + parseInt(str.substring(4,6));
-        return new Date(y, m, d);
-    }
-
     function timeStrToMinutes(str) {
-        const h = parseInt(str.substring(0,2));
-        const m = parseInt(str.substring(2,4));
+        if(!str) return 0;
+        const h = parseInt(str.substring(0,2), 10);
+        const m = parseInt(str.substring(2,4), 10);
         return (h * 60) + m;
     }
 
     function minutesToTimeStr(totalMin) {
         let h = Math.floor(totalMin / 60);
-        let m = totalMin % 60;
-        if (h >= 24) h -= 24; 
+        let m = Math.floor(totalMin % 60);
+        if (h >= 24) h = h % 24;
         return String(h).padStart(2,'0') + ":" + String(m).padStart(2,'0');
     }
 
     function renderRows(flights) {
         const tbody = document.getElementById('board-content');
-        if (flights.length === 0) return;
+        tbody.innerHTML = '';
+        const fragment = document.createDocumentFragment();
 
-        flights.forEach(f => {
+        flights.forEach((f, index) => {
             const tr = document.createElement('tr');
             
-            // Botão SimBrief com chamada dinâmica
-            // Passamos os parametros com aspas simples escapadas para evitar erro de JS
-            const sbButton = `<button class="btn-sb" onclick="openSimBrief('${f.ident}', '${f.origin}', '${f.dest}', '${f.rota.replace(/'/g, "\\'")}', '${f.type}')">SIMBRIEF ↗</button>`;
+            const sbButton = `<button class="btn-sb" onclick="openSimBriefFromIndex(${index})">SIMBRIEF ↗</button>`;
+            
+            const arrHtml = f.isNextDay 
+                ? `${f.arrDisplay} <span class="next-day-badge">(+1)</span>` 
+                : f.arrDisplay;
 
             tr.innerHTML = `
                 <td style="text-align:center;">${sbButton}</td>
@@ -562,21 +1109,27 @@
                 <td class="col-airport">${f.origin}</td>
                 <td class="col-time">${f.depDisplay}</td>
                 <td class="col-airport">${f.dest}</td>
-                <td class="col-time time-arr">${f.arrDisplay}</td>
+                <td class="col-time time-arr">${arrHtml}</td>
                 <td class="col-fl">${f.fl}</td>
                 <td class="col-rota">${f.rota}</td>
                 <td class="col-obs">${f.obs}</td>
             `;
-            tbody.appendChild(tr);
+            fragment.appendChild(tr);
         });
+
+        tbody.appendChild(fragment);
     }
 
     function setFilter(cia, btn) {
         currentFilter = cia;
         document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
+        // Não reseta o painel automaticamente para dar feedback
+        // resetPanel(); 
+        const msg = document.getElementById('empty-msg');
+        msg.style.display = 'block';
+        msg.innerText = `Filtro ${cia} ativado. Clique em 'Gerar Escala'.`;
         document.getElementById('board-content').innerHTML = '';
-        document.getElementById('empty-msg').style.display = 'block';
     }
 
     loadAllFiles();
