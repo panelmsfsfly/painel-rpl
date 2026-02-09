@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel RPL - Dispatch Integrado 3.7</title>
+<title>Painel RPL - Dispatch Integrado 3.8 (Com Busca)</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
@@ -119,6 +119,12 @@
     }
     .sb-input:focus { border-color: #3498db; outline: none; }
 
+    /* Estilo específico para input de busca */
+    #search-input {
+        border-color: #3498db;
+        color: #2980b9;
+    }
+
     button {
         cursor: pointer;
         border: none;
@@ -135,6 +141,9 @@
     .btn-action { background-color: #2980b9; color: white; }
     .btn-action:hover { background-color: #3498db; }
     
+    .btn-search { background-color: #8e44ad; color: white; }
+    .btn-search:hover { background-color: #9b59b6; }
+
     .btn-reset { background-color: #7f8c8d; color: white; }
     .btn-reset:hover { background-color: #95a5a6; }
 
@@ -396,7 +405,7 @@
 
 <div class="header-container">
     <div class="header-left header-title">
-        <h1>RPL DISPATCH 3.7</h1>
+        <h1>RPL DISPATCH 3.8</h1>
         <div>PARA USO EM SIMULADOR DE VOO DOMÉSTICO</div>
     </div>
     
@@ -435,6 +444,12 @@
             <button class="btn-draw" onclick="generateRealTimeChain(3)">3</button>
             <button class="btn-draw" onclick="generateRealTimeChain(4)">4</button>
         </div>
+    </div>
+
+    <div class="control-group">
+        <span class="control-label">4. Buscar Voo:</span>
+        <input type="text" id="search-input" class="sb-input" placeholder="Ex: 1229" onkeydown="if(event.key==='Enter') manualSearch()">
+        <button class="btn-search" onclick="manualSearch()">BUSCAR</button>
     </div>
     
     <div class="control-group">
@@ -846,7 +861,43 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         document.getElementById('sb-live-content').style.display = 'none';
         document.getElementById('ofp-status').innerText = "Aguardando solicitação...";
         document.getElementById('ofp-status').style.color = "#95a5a6";
+        document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
         displayedFlights = [];
+    }
+
+    // --- NOVA FUNÇÃO DE BUSCA MANUAL ---
+    function manualSearch() {
+        const input = document.getElementById('search-input').value.toUpperCase().trim();
+        if (!input) {
+            alert("Por favor, digite o número do voo (ex: GLO1229).");
+            return;
+        }
+
+        if(allFlightsDB.length === 0) {
+            alert("Aguarde o carregamento do banco de dados ou verifique os arquivos.");
+            return;
+        }
+
+        // Limpa filtros visuais
+        document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
+
+        // Procura em todo o DB (match parcial no IDENT)
+        const matches = allFlightsDB.filter(f => f.ident.includes(input));
+
+        if (matches.length === 0) {
+            alert("Voo não encontrado no banco de dados.");
+            return;
+        }
+
+        // Ordena por horário de saída
+        matches.sort((a,b) => a.depMinUTC - b.depMinUTC);
+
+        // Processa os dados
+        const enrichedResults = matches.map(f => enrichFlightData(f));
+
+        displayedFlights = enrichedResults;
+        renderRows(enrichedResults);
+        document.getElementById('empty-msg').style.display = 'none';
     }
 
     // --- 3. RELÓGIO E DATA ---
@@ -1089,8 +1140,7 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
     }
 
     function enrichFlightData(flight) {
-        // Correção de Bug do Dia Seguinte (Validando por horário BRT)
-        // 1. Calcula tempos BRT brutos
+        // UTC-3 para Brasília
         const toBRT = (utcMinutes) => {
             let brt = utcMinutes - 180;
             if (brt < 0) brt += 1440;
@@ -1101,19 +1151,17 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         const depMinBRT = toBRT(flight.depMinUTC);
         const arrMinBRT = toBRT(flight.arrMinUTC);
         
-        // 2. Calcula tempos UTC brutos para display
+        // UTC Puro (Normalizado para display)
         let depUtcDisp = flight.depMinUTC;
         if(depUtcDisp >= 1440) depUtcDisp -= 1440;
         
         let arrUtcDisp = flight.arrMinUTC;
         if(arrUtcDisp >= 1440) arrUtcDisp -= 1440;
 
-        // 3. Lógica +1 (Comparando apenas horários locais BRT)
-        // Se a chegada for "menor" que a saída (ex: Sai 23h, chega 01h), virou o dia.
         let nextDay = false;
         
-        // Exceção: Voos que cruzam meia noite UTC mas NÃO meia noite BRT (ex: GLO9042)
-        // Lógica simples: Se hora chegada < hora saída, assumimos dia seguinte para voos curtos domésticos
+        // Correção lógica +1 (Baseada em hora local BRT)
+        // Se a chegada for "menor" que a saída no horário local, virou o dia.
         if (arrMinBRT < depMinBRT) {
             nextDay = true;
         }
