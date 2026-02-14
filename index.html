@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel RPL - Dispatch Integrado 3.8 (Com Busca)</title>
+<title>Painel RPL - Dispatch Integrado 4.0 (Busca + Escalas)</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
@@ -119,8 +119,8 @@
     }
     .sb-input:focus { border-color: #3498db; outline: none; }
 
-    /* Estilo específico para input de busca */
-    #search-input {
+    /* Estilo específico para inputs de busca */
+    #search-input, #airport-search {
         border-color: #3498db;
         color: #2980b9;
     }
@@ -405,7 +405,7 @@
 
 <div class="header-container">
     <div class="header-left header-title">
-        <h1>RPL DISPATCH 3.8</h1>
+        <h1>RPL DISPATCH 4.0</h1>
         <div>PARA USO EM SIMULADOR DE VOO DOMÉSTICO</div>
     </div>
     
@@ -437,7 +437,13 @@
     </div>
 
     <div class="control-group">
-        <span class="control-label">3. Gerar Escala (Pernas):</span>
+        <span class="control-label">3. Aeroporto / Início:</span>
+        <input type="text" id="airport-search" class="sb-input" placeholder="Ex: SBSP" onkeydown="if(event.key==='Enter') searchByAirport()">
+        <button class="btn-search" onclick="searchByAirport()">FILTRAR</button>
+    </div>
+
+    <div class="control-group">
+        <span class="control-label">4. Gerar Escala (Pernas):</span>
         <div class="button-wrapper" style="display:flex; width:100%; gap:8px;">
             <button class="btn-draw" onclick="generateRealTimeChain(1)">1</button>
             <button class="btn-draw" onclick="generateRealTimeChain(2)">2</button>
@@ -447,7 +453,7 @@
     </div>
 
     <div class="control-group">
-        <span class="control-label">4. Buscar Voo:</span>
+        <span class="control-label">5. Buscar Voo:</span>
         <input type="text" id="search-input" class="sb-input" placeholder="Ex: 1229" onkeydown="if(event.key==='Enter') manualSearch()">
         <button class="btn-search" onclick="manualSearch()">BUSCAR</button>
     </div>
@@ -865,7 +871,7 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         displayedFlights = [];
     }
 
-    // --- NOVA FUNÇÃO DE BUSCA MANUAL ---
+    // --- FUNÇÃO DE BUSCA MANUAL (NUMERO DE VOO) ---
     function manualSearch() {
         const input = document.getElementById('search-input').value.toUpperCase().trim();
         if (!input) {
@@ -878,10 +884,8 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
             return;
         }
 
-        // Limpa filtros visuais
         document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
 
-        // Procura em todo o DB (match parcial no IDENT)
         const matches = allFlightsDB.filter(f => f.ident.includes(input));
 
         if (matches.length === 0) {
@@ -889,10 +893,55 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
             return;
         }
 
-        // Ordena por horário de saída
         matches.sort((a,b) => a.depMinUTC - b.depMinUTC);
 
-        // Processa os dados
+        const enrichedResults = matches.map(f => enrichFlightData(f));
+
+        displayedFlights = enrichedResults;
+        renderRows(enrichedResults);
+        document.getElementById('empty-msg').style.display = 'none';
+    }
+
+    // --- BUSCA POR AEROPORTO COM FILTRO DE CIA ---
+    function searchByAirport() {
+        const input = document.getElementById('airport-search').value.toUpperCase().trim();
+        
+        if (input.length < 3) {
+            alert("Por favor, digite o código do aeroporto (Ex: SBSP).");
+            return;
+        }
+
+        if(allFlightsDB.length === 0) {
+            alert("Aguarde o carregamento do banco de dados.");
+            return;
+        }
+
+        const now = getSimulationDate();
+        const currentUTCMinutes = ((now.getUTCHours()) * 60) + now.getUTCMinutes(); 
+
+        // Filtra por: Origem + Dia Válido + Horário Futuro + Cia Selecionada
+        const matches = allFlightsDB.filter(f => {
+            
+            // Verifica a Cia Aérea Selecionada
+            const airlineMatch = (currentFilter === 'todas') || (f.airline.name === currentFilter);
+
+            return f.origin === input && 
+                   isFlightValidToday(f, now) && 
+                   f.depMinUTC >= currentUTCMinutes &&
+                   airlineMatch; // Aplica o filtro da Cia
+        });
+
+        if (matches.length === 0) {
+            let ciaMsg = currentFilter === 'todas' ? '' : ` da ${currentFilter}`;
+            alert(`Nenhum voo${ciaMsg} encontrado saindo de ${input} para o restante do dia de hoje.`);
+            document.getElementById('board-content').innerHTML = '';
+            document.getElementById('empty-msg').innerText = `Sem voos partindo de ${input} após ${now.getUTCHours().toString().padStart(2,'0')}:${now.getUTCMinutes().toString().padStart(2,'0')}Z`;
+            document.getElementById('empty-msg').style.display = 'block';
+            return;
+        }
+
+        matches.sort((a,b) => a.depMinUTC - b.depMinUTC);
+
         const enrichedResults = matches.map(f => enrichFlightData(f));
 
         displayedFlights = enrichedResults;
@@ -1056,7 +1105,7 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         return flights;
     }
 
-    // --- 6. LÓGICA DE ESCALA ---
+    // --- 6. LÓGICA DE ESCALA ATUALIZADA (Lê o campo Aeroporto) ---
     function generateRealTimeChain(chainLength) {
         const tableBody = document.getElementById('board-content');
         const msgDiv = document.getElementById('empty-msg');
@@ -1075,24 +1124,35 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         
         let validFlightsToday = allFlightsDB.filter(f => isFlightValidToday(f, now));
 
+        // Aplica o filtro de CIA Aérea
         if (currentFilter !== 'todas') {
             validFlightsToday = validFlightsToday.filter(f => f.airline.name === currentFilter);
         }
 
+        // Verifica se o usuário digitou um aeroporto para FORÇAR o início
+        const forcedOrigin = document.getElementById('airport-search').value.toUpperCase().trim();
+
+        // Filtra os primeiros voos disponíveis
         let availableFirstFlights = validFlightsToday.filter(f => f.depMinUTC >= currentUTCMinutes + 30);
 
-        if (availableFirstFlights.length === 0 && validFlightsToday.length > 0) {
-             availableFirstFlights = validFlightsToday;
+        // SE tiver aeroporto digitado, filtra apenas voos saindo de lá
+        if (forcedOrigin.length >= 3) {
+            availableFirstFlights = availableFirstFlights.filter(f => f.origin === forcedOrigin);
         }
 
+        // Se não houver voos disponíveis com as restrições (horário + cia + aeroporto opcional)
         if (availableFirstFlights.length === 0) {
             msgDiv.style.display = 'block';
-            msgDiv.innerText = "Nenhum voo encontrado para os filtros atuais.";
+            let msg = "Nenhum voo encontrado para os filtros atuais";
+            if(forcedOrigin) msg += ` saindo de ${forcedOrigin}`;
+            msg += " no horário futuro.";
+            msgDiv.innerText = msg;
             return;
         }
 
         availableFirstFlights.sort((a,b) => a.depMinUTC - b.depMinUTC);
         
+        // Sorteia um dos voos disponíveis (ou pega o primeiro se quiser ser mais determinístico)
         const seedIndex = Math.floor(Math.random() * Math.min(10, availableFirstFlights.length));
         let currentFlight = availableFirstFlights[seedIndex];
         
