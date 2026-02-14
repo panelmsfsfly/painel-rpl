@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel RPL - Dispatch Integrado 4.0 (Busca + Escalas)</title>
+<title>Painel RPL - Dispatch Integrado 5.0 (Logbook)</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
@@ -147,6 +147,14 @@
     .btn-reset { background-color: #7f8c8d; color: white; }
     .btn-reset:hover { background-color: #95a5a6; }
 
+    /* Botão Logbook */
+    .btn-logbook { 
+        background-color: #f1c40f; 
+        color: #2c3e50; 
+        border: 2px solid #f39c12;
+    }
+    .btn-logbook:hover { background-color: #f39c12; color: #fff; }
+
     .btn-filter { 
         background-color: #f1f2f6; 
         color: #7f8c8d; 
@@ -252,6 +260,89 @@
     
     .msg-box { padding: 60px; text-align: center; color: #bdc3c7; font-style: italic; font-size: 18px; }
     #file-debug { position: fixed; bottom: 5px; right: 5px; font-size: 12px; color: #ccc; z-index: 999; }
+
+    /* --- LOGBOOK CONTAINER --- */
+    .logbook-container {
+        width: 100%;
+        max-width: 1600px;
+        background-color: #fff;
+        padding: 25px;
+        margin-top: 25px;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        border: 1px solid #e0e0e0;
+        box-sizing: border-box;
+        border-top: 5px solid #f1c40f;
+        display: none; /* Oculto por padrão */
+    }
+
+    .logbook-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+    }
+
+    .logbook-title { font-size: 22px; font-weight: 900; color: #2c3e50; text-transform: uppercase; }
+    
+    .logbook-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: 'Share Tech Mono', monospace;
+    }
+    
+    .logbook-table th { background: #34495e; color: white; padding: 10px; text-align: left; }
+    .logbook-table td { border-bottom: 1px solid #ddd; padding: 10px; color: #333; }
+    .logbook-table tr:nth-child(even) { background-color: #f9f9f9; }
+
+    /* --- TUTORIAL --- */
+    .tutorial-container {
+        width: 100%;
+        max-width: 1600px;
+        background-color: #fff;
+        padding: 20px;
+        margin-top: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        border: 1px solid #e0e0e0;
+        box-sizing: border-box;
+    }
+
+    .tutorial-title {
+        font-size: 16px;
+        font-weight: 900;
+        color: #2c3e50;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .tutorial-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+    }
+
+    .tut-card {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 6px;
+        border-left: 4px solid #bdc3c7;
+    }
+
+    .tut-card h4 { margin: 0 0 8px 0; color: #34495e; font-size: 14px; font-weight: bold; text-transform: uppercase; }
+    .tut-card p { margin: 0; font-size: 13px; color: #7f8c8d; line-height: 1.4; }
+    .tut-icon { font-size: 18px; margin-right: 5px; vertical-align: middle; }
+
+    /* Cores do Tutorial */
+    .tut-escala { border-left-color: #27ae60; }
+    .tut-filtro { border-left-color: #e67e22; }
+    .tut-busca { border-left-color: #8e44ad; }
+    .tut-sb { border-left-color: #c0392b; }
 
     /* --- SIMBRIEF AO VIVO --- */
     .sb-live-container {
@@ -405,7 +496,7 @@
 
 <div class="header-container">
     <div class="header-left header-title">
-        <h1>RPL DISPATCH 4.0</h1>
+        <h1>RPL DISPATCH 5.0</h1>
         <div>PARA USO EM SIMULADOR DE VOO DOMÉSTICO</div>
     </div>
     
@@ -417,6 +508,7 @@
     <div class="header-right clock-box">
         <div class="clock-time" id="brt-clock">00:00:00</div>
         <div class="clock-date" id="brt-date">---</div>
+        <button class="btn-logbook" style="margin-top:10px; padding: 5px 15px; font-weight:bold; cursor:pointer;" onclick="toggleLogbook()">📖 MEU LOGBOOK</button>
     </div>
 </div>
 
@@ -481,6 +573,59 @@
         <tbody id="board-content"></tbody>
     </table>
     <div id="empty-msg" class="msg-box">Carregando dados do servidor...</div>
+</div>
+
+<div id="logbook-section" class="logbook-container">
+    <div class="logbook-header">
+        <div class="logbook-title">📖 Logbook do Piloto</div>
+        <button class="btn-reset" onclick="clearLogbook()">Limpar Histórico</button>
+    </div>
+    <div style="overflow-x:auto;">
+        <table class="logbook-table">
+            <thead>
+                <tr>
+                    <th>Data Registro</th>
+                    <th>Voo</th>
+                    <th>Origem</th>
+                    <th>Destino</th>
+                    <th>Tempo Est.</th>
+                    <th>Aeronave</th>
+                </tr>
+            </thead>
+            <tbody id="logbook-body">
+                </tbody>
+        </table>
+        <div id="logbook-empty" style="padding:20px; text-align:center; color:#999; display:none;">
+            Nenhum voo registrado ainda. Gere um despacho no SimBrief!
+        </div>
+    </div>
+</div>
+
+<div class="tutorial-container">
+    <div class="tutorial-title">
+        <span style="font-size:20px;">💡</span> MINI TUTORIAL DE USO
+    </div>
+    <div class="tutorial-grid">
+        <div class="tut-card tut-escala">
+            <h4><span class="tut-icon">🎲</span> Gerar Escala (Random)</h4>
+            <p>Clique em <strong>1, 2, 3 ou 4</strong> para gerar uma escala aleatória imediata. O sistema escolhe um voo que parte em breve (mínimo 30min no futuro) e monta as pernas seguintes automaticamente.</p>
+        </div>
+        
+        <div class="tut-card tut-filtro">
+            <h4><span class="tut-icon">🎯</span> Filtro por Aeroporto</h4>
+            <p>Quer sair de um lugar específico? Digite o ICAO (ex: <strong>SBSP</strong>) no campo <strong>3</strong> e clique em <strong>FILTRAR</strong>. Ou, digite o aeroporto e depois clique nos botões de perna (1 a 4) para forçar o início da escala lá.</p>
+        </div>
+
+        <div class="tut-card tut-busca">
+            <h4><span class="tut-icon">🔍</span> Buscar Voo Específico</h4>
+            <p>Sabe o número do voo? Digite no campo <strong>5</strong> (apenas números, ex: <strong>1229</strong>) e clique em BUSCAR para ver os dados daquele voo específico na malha.</p>
+        </div>
+
+        <div class="tut-card tut-sb">
+            <h4><span class="tut-icon">📄</span> SimBrief & Logbook</h4>
+            <p>1. Coloque seu ID no campo <strong>1</strong>.<br>2. Clique em <strong>SIMBRIEF ↗</strong>. O voo será aberto no SimBrief e <strong>SALVO AUTOMATICAMENTE</strong> no seu Logbook.<br>3. Clique em "MEU LOGBOOK" no topo para ver seu histórico.</p>
+        </div>
+    </div>
 </div>
 
 <div class="sb-live-container">
@@ -597,6 +742,7 @@
     document.addEventListener("DOMContentLoaded", () => {
         const savedID = localStorage.getItem("simbrief_id");
         if (savedID) document.getElementById("sb-id").value = savedID;
+        renderLogbook(); // Carrega o logbook ao iniciar
     });
 
     function saveSBID() {
@@ -849,6 +995,9 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
             return;
         }
 
+        // SALVAR NO LOGBOOK AUTOMATICAMENTE
+        saveToLogbook(flight);
+
         const airlineCode = flight.ident.match(/^[A-Z]+/)[0];
         const fltNumber = flight.ident.match(/\d+/)[0];
         let cleanType = flight.type.split('/')[0]; 
@@ -947,6 +1096,92 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         displayedFlights = enrichedResults;
         renderRows(enrichedResults);
         document.getElementById('empty-msg').style.display = 'none';
+    }
+
+    // --- LOGBOOK FUNCTIONS ---
+    function saveToLogbook(flight) {
+        // Tenta pegar o logbook existente ou cria um array vazio
+        let logbook = JSON.parse(localStorage.getItem('myPilotLogbook') || '[]');
+        
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('pt-BR');
+        
+        // Remove parte extra do tipo de aeronave (Ex: B738/M -> B738)
+        const acftSimple = flight.type.split('/')[0];
+
+        // Calcula tempo estimado (hh:mm)
+        const durHours = Math.floor(flight.durMin / 60);
+        const durMins = flight.durMin % 60;
+        const durStr = String(durHours).padStart(2,'0') + ":" + String(durMins).padStart(2,'0');
+
+        const entry = {
+            id: Date.now(), // ID único
+            date: dateStr,
+            callsign: flight.ident,
+            dep: flight.origin,
+            arr: flight.dest,
+            time: durStr,
+            acft: acftSimple
+        };
+
+        // Adiciona no topo da lista
+        logbook.unshift(entry);
+        
+        // Salva no navegador
+        localStorage.setItem('myPilotLogbook', JSON.stringify(logbook));
+        
+        // Atualiza a tabela se estiver visível
+        renderLogbook();
+        
+        // Feedback visual discreto (opcional, pode ser alert ou console)
+        console.log("Voo salvo no Logbook:", entry.callsign);
+    }
+
+    function renderLogbook() {
+        const logbook = JSON.parse(localStorage.getItem('myPilotLogbook') || '[]');
+        const tbody = document.getElementById('logbook-body');
+        const emptyMsg = document.getElementById('logbook-empty');
+        
+        tbody.innerHTML = '';
+        
+        if (logbook.length === 0) {
+            emptyMsg.style.display = 'block';
+            return;
+        } else {
+            emptyMsg.style.display = 'none';
+        }
+
+        logbook.forEach(entry => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${entry.date}</td>
+                <td style="font-weight:bold; color:#2980b9;">${entry.callsign}</td>
+                <td>${entry.dep}</td>
+                <td>${entry.arr}</td>
+                <td>${entry.time}</td>
+                <td>${entry.acft}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function toggleLogbook() {
+        const div = document.getElementById('logbook-section');
+        if (div.style.display === 'none' || div.style.display === '') {
+            div.style.display = 'block';
+            renderLogbook();
+            // Rola até o logbook
+            div.scrollIntoView({ behavior: 'smooth' });
+        } else {
+            div.style.display = 'none';
+        }
+    }
+
+    function clearLogbook() {
+        if(confirm("Tem certeza que deseja apagar todo o seu histórico de voos?")) {
+            localStorage.removeItem('myPilotLogbook');
+            renderLogbook();
+        }
     }
 
     // --- 3. RELÓGIO E DATA ---
