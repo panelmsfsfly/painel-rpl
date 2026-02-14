@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel RPL - Dispatch Integrado 5.0 (Logbook)</title>
+<title>Painel RPL - Dispatch Integrado 5.3 (Correção Escalas)</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
@@ -119,11 +119,7 @@
     }
     .sb-input:focus { border-color: #3498db; outline: none; }
 
-    /* Estilo específico para inputs de busca */
-    #search-input, #airport-search {
-        border-color: #3498db;
-        color: #2980b9;
-    }
+    #search-input, #airport-search { border-color: #3498db; color: #2980b9; }
 
     button {
         cursor: pointer;
@@ -147,22 +143,13 @@
     .btn-reset { background-color: #7f8c8d; color: white; }
     .btn-reset:hover { background-color: #95a5a6; }
 
-    /* Botão Logbook */
-    .btn-logbook { 
-        background-color: #f1c40f; 
-        color: #2c3e50; 
-        border: 2px solid #f39c12;
-    }
+    .btn-logbook { background-color: #f1c40f; color: #2c3e50; border: 2px solid #f39c12; }
     .btn-logbook:hover { background-color: #f39c12; color: #fff; }
 
-    .btn-filter { 
-        background-color: #f1f2f6; 
-        color: #7f8c8d; 
-        border: 1px solid #dfe4ea;
-        flex-grow: 1;
-        text-align: center;
-        font-size: 14px;
-    }
+    .btn-delete-entry { background-color: #e74c3c; color: white; padding: 6px 10px; border-radius: 4px; font-size: 12px; }
+    .btn-delete-entry:hover { background-color: #c0392b; }
+
+    .btn-filter { background-color: #f1f2f6; color: #7f8c8d; border: 1px solid #dfe4ea; flex-grow: 1; text-align: center; font-size: 14px; }
     .btn-filter:hover { background-color: #dfe4ea; }
     .btn-filter.active { color: #fff; border-color: transparent; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
     
@@ -171,25 +158,10 @@
     .btn-filter[data-cia="AZUL"].active { background-color: #0055A4; }
     .btn-filter[onclick*="todas"].active { background-color: #2c3e50; }
 
-    .btn-draw { 
-        background-color: #34495e; 
-        color: #fff; 
-        min-width: 50px; 
-        flex-grow: 1;
-        font-size: 15px;
-    }
+    .btn-draw { background-color: #34495e; color: #fff; min-width: 50px; flex-grow: 1; font-size: 15px; }
     .btn-draw:hover { background-color: #27ae60; transform: translateY(-2px); }
 
-    .btn-sb {
-        background-color: #c0392b;
-        color: white;
-        padding: 8px 14px;
-        font-size: 13px;
-        border-radius: 5px;
-        text-decoration: none;
-        display: inline-block;
-        white-space: nowrap;
-    }
+    .btn-sb { background-color: #c0392b; color: white; padding: 8px 14px; font-size: 13px; border-radius: 5px; text-decoration: none; display: inline-block; white-space: nowrap; }
     .btn-sb:hover { background-color: #e74c3c; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 
     /* --- TABELA --- */
@@ -231,6 +203,10 @@
 
     /* Colunas e Células */
     .col-flight { font-family: 'Share Tech Mono', monospace; font-weight: 700; color: #000; font-size: 18px; }
+    
+    .flight-link { color: #2980b9; text-decoration: underline; cursor: pointer; transition: 0.2s; }
+    .flight-link:hover { color: #e74c3c; background-color: #f0f0f0; padding: 2px 4px; border-radius: 4px; text-decoration: none; }
+
     .col-airport { font-weight: bold; font-size: 16px; }
 
     .col-time { 
@@ -261,84 +237,30 @@
     .msg-box { padding: 60px; text-align: center; color: #bdc3c7; font-style: italic; font-size: 18px; }
     #file-debug { position: fixed; bottom: 5px; right: 5px; font-size: 12px; color: #ccc; z-index: 999; }
 
-    /* --- LOGBOOK CONTAINER --- */
+    /* --- LOGBOOK --- */
     .logbook-container {
-        width: 100%;
-        max-width: 1600px;
-        background-color: #fff;
-        padding: 25px;
-        margin-top: 25px;
-        border-radius: 8px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        border: 1px solid #e0e0e0;
-        box-sizing: border-box;
-        border-top: 5px solid #f1c40f;
-        display: none; /* Oculto por padrão */
+        width: 100%; max-width: 1600px; background-color: #fff; padding: 25px; margin-top: 25px;
+        border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; box-sizing: border-box;
+        border-top: 5px solid #f1c40f; display: none;
     }
-
-    .logbook-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-        border-bottom: 1px solid #eee;
-        padding-bottom: 10px;
-    }
-
+    .logbook-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
     .logbook-title { font-size: 22px; font-weight: 900; color: #2c3e50; text-transform: uppercase; }
-    
-    .logbook-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-family: 'Share Tech Mono', monospace;
-    }
-    
+    .logbook-table { width: 100%; border-collapse: collapse; font-family: 'Share Tech Mono', monospace; }
     .logbook-table th { background: #34495e; color: white; padding: 10px; text-align: left; }
     .logbook-table td { border-bottom: 1px solid #ddd; padding: 10px; color: #333; }
     .logbook-table tr:nth-child(even) { background-color: #f9f9f9; }
 
     /* --- TUTORIAL --- */
     .tutorial-container {
-        width: 100%;
-        max-width: 1600px;
-        background-color: #fff;
-        padding: 20px;
-        margin-top: 15px;
-        border-radius: 8px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        border: 1px solid #e0e0e0;
-        box-sizing: border-box;
+        width: 100%; max-width: 1600px; background-color: #fff; padding: 20px; margin-top: 15px;
+        border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; box-sizing: border-box;
     }
-
-    .tutorial-title {
-        font-size: 16px;
-        font-weight: 900;
-        color: #2c3e50;
-        margin-bottom: 15px;
-        text-transform: uppercase;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    
-    .tutorial-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 20px;
-    }
-
-    .tut-card {
-        background: #f8f9fa;
-        padding: 15px;
-        border-radius: 6px;
-        border-left: 4px solid #bdc3c7;
-    }
-
+    .tutorial-title { font-size: 16px; font-weight: 900; color: #2c3e50; margin-bottom: 15px; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
+    .tutorial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .tut-card { background: #f8f9fa; padding: 15px; border-radius: 6px; border-left: 4px solid #bdc3c7; }
     .tut-card h4 { margin: 0 0 8px 0; color: #34495e; font-size: 14px; font-weight: bold; text-transform: uppercase; }
     .tut-card p { margin: 0; font-size: 13px; color: #7f8c8d; line-height: 1.4; }
     .tut-icon { font-size: 18px; margin-right: 5px; vertical-align: middle; }
-
-    /* Cores do Tutorial */
     .tut-escala { border-left-color: #27ae60; }
     .tut-filtro { border-left-color: #e67e22; }
     .tut-busca { border-left-color: #8e44ad; }
@@ -346,148 +268,71 @@
 
     /* --- SIMBRIEF AO VIVO --- */
     .sb-live-container {
-        width: 100%;
-        max-width: 1600px;
-        background-color: #fff;
-        padding: 25px;
-        margin-top: 25px;
-        border-radius: 8px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        border: 1px solid #e0e0e0;
-        box-sizing: border-box;
+        width: 100%; max-width: 1600px; background-color: #fff; padding: 25px; margin-top: 25px;
+        border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; box-sizing: border-box;
     }
-
-    .sb-live-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 25px;
-        border-bottom: 3px solid #f1f2f6;
-        padding-bottom: 15px;
-        flex-wrap: wrap;
-        gap: 15px;
-    }
-
+    .sb-live-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 3px solid #f1f2f6; padding-bottom: 15px; flex-wrap: wrap; gap: 15px; }
     .sb-live-title { font-size: 24px; font-weight: 900; color: #2c3e50; display: flex; align-items: center; gap: 10px; }
     .sb-status { font-size: 15px; font-weight: bold; color: #95a5a6; display: block; margin-bottom: 5px;}
-
-    .sb-raw-header {
-        font-family: 'Share Tech Mono', monospace;
-        font-size: 15px;
-        background-color: #f0f0f0;
-        color: #222;
-        padding: 20px;
-        border-radius: 6px;
-        margin-bottom: 25px;
-        white-space: pre-wrap;
-        border-left: 6px solid #2c3e50;
-        line-height: 1.5;
-    }
-
-    .sb-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 20px;
-    }
-
-    .sb-card {
-        background-color: #f8f9fa;
-        padding: 20px;
-        border-radius: 8px;
-        border-left: 5px solid #3498db;
-    }
-
+    .sb-raw-header { font-family: 'Share Tech Mono', monospace; font-size: 15px; background-color: #f0f0f0; color: #222; padding: 20px; border-radius: 6px; margin-bottom: 25px; white-space: pre-wrap; border-left: 6px solid #2c3e50; line-height: 1.5; }
+    .sb-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+    .sb-card { background-color: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 5px solid #3498db; }
     .sb-card h3 { margin: 0 0 15px 0; font-size: 15px; color: #7f8c8d; text-transform: uppercase; font-weight: 900; letter-spacing: 0.5px; }
     .sb-data-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 16px; color: #2c3e50; border-bottom: 1px dotted #e0e0e0; padding-bottom: 2px;}
     .sb-value { font-weight: bold; font-family: 'Share Tech Mono', monospace; font-size: 18px; color: #000; }
-    
-    .perf-header {
-        font-family: 'Share Tech Mono', monospace;
-        background-color: #333;
-        color: #fff;
-        text-align: center;
-        font-size: 14px;
-        padding: 6px;
-        margin: 15px 0 10px 0;
-        border-radius: 4px;
-        font-weight: bold;
-    }
-
-    .metar-box {
-        background-color: #2c3e50;
-        color: #ecf0f1;
-        padding: 15px;
-        border-radius: 6px;
-        font-family: monospace;
-        font-size: 14px;
-        margin-top: 5px;
-        line-height: 1.5;
-        word-wrap: break-word;
-    }
-
-    .route-text {
-        font-family: monospace;
-        font-size: 14px;
-        color: #34495e;
-        background: #ecf0f1;
-        padding: 15px;
-        border-radius: 6px;
-        word-wrap: break-word;
-        line-height: 1.5;
-    }
-
+    .perf-header { font-family: 'Share Tech Mono', monospace; background-color: #333; color: #fff; text-align: center; font-size: 14px; padding: 6px; margin: 15px 0 10px 0; border-radius: 4px; font-weight: bold; }
+    .metar-box { background-color: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 6px; font-family: monospace; font-size: 14px; margin-top: 5px; line-height: 1.5; word-wrap: break-word; }
+    .route-text { font-family: monospace; font-size: 14px; color: #34495e; background: #ecf0f1; padding: 15px; border-radius: 6px; word-wrap: break-word; line-height: 1.5; }
     .card-perf { border-left-color: #e74c3c; }
     .card-metar { border-left-color: #f1c40f; grid-column: span 2; }
     .card-to-data { border-left-color: #27ae60; grid-column: span 2; }
+    .to-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-family: 'Share Tech Mono', monospace; font-size: 15px; }
+    .to-table th { background-color: #2c3e50; color: #ecf0f1; padding: 8px; text-align: center; border: 1px solid #34495e; font-weight: normal; }
+    .to-table td { background-color: #fff; color: #2c3e50; padding: 10px 8px; text-align: center; border: 1px solid #bdc3c7; font-weight: bold; }
+    .to-rmks { background-color: #ecf0f1; padding: 12px; border-radius: 6px; font-family: 'Share Tech Mono', monospace; font-size: 14px; color: #c0392b; border: 1px dashed #bdc3c7; white-space: pre-wrap; }
 
-    .to-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 15px;
-        font-family: 'Share Tech Mono', monospace;
-        font-size: 15px;
+    /* --- MODAL DETALHES --- */
+    .modal-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.7); z-index: 2000;
+        display: none; justify-content: center; align-items: center;
+        backdrop-filter: blur(4px);
     }
+    .modal-content {
+        background: white; padding: 30px; border-radius: 12px;
+        width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.4); position: relative;
+        animation: slideUp 0.3s ease-out;
+    }
+    @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     
-    .to-table th {
-        background-color: #2c3e50;
-        color: #ecf0f1;
-        padding: 8px;
-        text-align: center;
-        border: 1px solid #34495e;
-        font-weight: normal;
+    .modal-header {
+        border-bottom: 2px solid #f0f0f0; padding-bottom: 15px; margin-bottom: 20px;
+        display: flex; justify-content: space-between; align-items: center;
     }
-
-    .to-table td {
-        background-color: #fff;
-        color: #2c3e50;
-        padding: 10px 8px;
-        text-align: center;
-        border: 1px solid #bdc3c7;
-        font-weight: bold;
+    .modal-title { font-size: 24px; font-weight: 900; color: #2c3e50; text-transform: uppercase; display: flex; align-items: center; gap: 10px; }
+    
+    .close-modal { 
+        cursor: pointer; font-size: 28px; color: #95a5a6; 
+        background: none; border: none; padding: 0; line-height: 1; 
     }
+    .close-modal:hover { color: #e74c3c; }
 
-    .to-rmks {
-        background-color: #ecf0f1;
-        padding: 12px;
-        border-radius: 6px;
-        font-family: 'Share Tech Mono', monospace;
-        font-size: 14px;
-        color: #c0392b;
-        border: 1px dashed #bdc3c7;
-        white-space: pre-wrap;
+    .detail-group { margin-bottom: 15px; }
+    .detail-row { 
+        display: flex; border-bottom: 1px solid #f9f9f9; padding: 10px 0; 
+        align-items: baseline;
     }
-
-    @media (max-width: 900px) {
-        .header-container { flex-direction: column; text-align: center; gap: 15px; }
-        .header-left, .header-center, .header-right { width: 100%; text-align: center; }
-        .center-main-text { font-size: 22px; }
-        .controls-container { flex-direction: column; align-items: stretch; gap: 20px; }
-        .control-group { flex-direction: column; align-items: flex-start; width: 100%; }
-        .sb-input { width: 100%; }
-        .btn-filter, .btn-draw { flex: 1 1 auto; margin: 4px; padding: 15px; }
-        .button-wrapper { display: flex; width: 100%; gap: 10px; flex-wrap: wrap;}
-        .sb-live-header { flex-direction: column; align-items: flex-start; }
-        .card-metar, .card-to-data { grid-column: span 1; }
+    .detail-label { 
+        font-weight: 700; width: 150px; color: #7f8c8d; 
+        text-transform: uppercase; font-size: 13px; 
+    }
+    .detail-val { 
+        font-family: 'Share Tech Mono', monospace; color: #2c3e50; 
+        font-size: 17px; flex: 1; word-break: break-word; font-weight: bold;
+    }
+    .badge-modal {
+        background: #34495e; color: white; padding: 4px 8px; border-radius: 4px; font-size: 14px;
     }
 
 </style>
@@ -496,7 +341,7 @@
 
 <div class="header-container">
     <div class="header-left header-title">
-        <h1>RPL DISPATCH 5.0</h1>
+        <h1>RPL DISPATCH 5.3</h1>
         <div>PARA USO EM SIMULADOR DE VOO DOMÉSTICO</div>
     </div>
     
@@ -578,7 +423,7 @@
 <div id="logbook-section" class="logbook-container">
     <div class="logbook-header">
         <div class="logbook-title">📖 Logbook do Piloto</div>
-        <button class="btn-reset" onclick="clearLogbook()">Limpar Histórico</button>
+        <button class="btn-reset" onclick="clearLogbook()">Limpar Tudo</button>
     </div>
     <div style="overflow-x:auto;">
         <table class="logbook-table">
@@ -590,6 +435,7 @@
                     <th>Destino</th>
                     <th>Tempo Est.</th>
                     <th>Aeronave</th>
+                    <th style="text-align:center;">Ações</th>
                 </tr>
             </thead>
             <tbody id="logbook-body">
@@ -608,17 +454,18 @@
     <div class="tutorial-grid">
         <div class="tut-card tut-escala">
             <h4><span class="tut-icon">🎲</span> Gerar Escala (Random)</h4>
-            <p>Clique em <strong>1, 2, 3 ou 4</strong> para gerar uma escala aleatória imediata. O sistema escolhe um voo que parte em breve (mínimo 30min no futuro) e monta as pernas seguintes automaticamente.</p>
+            <p><strong>SEM AEROPORTO DEFINIDO:</strong> Clique em 1, 2, 3 ou 4. O sistema sorteia um voo de qualquer origem.</p>
+            <p><strong>COM AEROPORTO (CAMPO 3):</strong> O sistema busca uma escala saindo exatamente de lá.</p>
         </div>
         
         <div class="tut-card tut-filtro">
             <h4><span class="tut-icon">🎯</span> Filtro por Aeroporto</h4>
-            <p>Quer sair de um lugar específico? Digite o ICAO (ex: <strong>SBSP</strong>) no campo <strong>3</strong> e clique em <strong>FILTRAR</strong>. Ou, digite o aeroporto e depois clique nos botões de perna (1 a 4) para forçar o início da escala lá.</p>
+            <p>Quer sair de um lugar específico? Digite o ICAO (ex: <strong>SBSP</strong>) no campo <strong>3</strong> e clique em <strong>FILTRAR</strong>.</p>
         </div>
 
         <div class="tut-card tut-busca">
-            <h4><span class="tut-icon">🔍</span> Buscar Voo Específico</h4>
-            <p>Sabe o número do voo? Digite no campo <strong>5</strong> (apenas números, ex: <strong>1229</strong>) e clique em BUSCAR para ver os dados daquele voo específico na malha.</p>
+            <h4><span class="tut-icon">🔍</span> Detalhes do Voo</h4>
+            <p>Clique no <strong>número do voo</strong> (ex: <span style="color:#2980b9; text-decoration:underline;">GLO1234</span>) na tabela para ver a ficha completa com dias de operação e rota detalhada.</p>
         </div>
 
         <div class="tut-card tut-sb">
@@ -714,6 +561,28 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<div id="flight-modal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="modal-title">
+                <span id="modal-cia-badge" class="badge-modal">CIA</span>
+                <span id="modal-flight-num">VOO 1234</span>
+            </div>
+            <button class="close-modal" onclick="closeModal()">×</button>
+        </div>
+        
+        <div id="modal-body">
+            <div class="detail-row"><span class="detail-label">Aeronave:</span> <span class="detail-val" id="md-acft"></span></div>
+             <div class="detail-row"><span class="detail-label">Rota:</span> <span class="detail-val" id="md-route"></span></div>
+             <div class="detail-row"><span class="detail-label">Dep/Arr:</span> <span class="detail-val" id="md-deparr"></span></div>
+             <div class="detail-row"><span class="detail-label">EET (Duração):</span> <span class="detail-val" id="md-eet"></span></div>
+             <div class="detail-row"><span class="detail-label">Nível (FL):</span> <span class="detail-val" id="md-fl"></span></div>
+             <div class="detail-row"><span class="detail-label">Dias Op:</span> <span class="detail-val" id="md-days"></span></div>
+             <div class="detail-row"><span class="detail-label">Observações:</span> <span class="detail-val" id="md-obs"></span></div>
         </div>
     </div>
 </div>
@@ -1100,16 +969,13 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
 
     // --- LOGBOOK FUNCTIONS ---
     function saveToLogbook(flight) {
-        // Tenta pegar o logbook existente ou cria um array vazio
         let logbook = JSON.parse(localStorage.getItem('myPilotLogbook') || '[]');
         
         const now = new Date();
         const dateStr = now.toLocaleDateString('pt-BR');
         
-        // Remove parte extra do tipo de aeronave (Ex: B738/M -> B738)
         const acftSimple = flight.type.split('/')[0];
 
-        // Calcula tempo estimado (hh:mm)
         const durHours = Math.floor(flight.durMin / 60);
         const durMins = flight.durMin % 60;
         const durStr = String(durHours).padStart(2,'0') + ":" + String(durMins).padStart(2,'0');
@@ -1124,16 +990,9 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
             acft: acftSimple
         };
 
-        // Adiciona no topo da lista
         logbook.unshift(entry);
-        
-        // Salva no navegador
         localStorage.setItem('myPilotLogbook', JSON.stringify(logbook));
-        
-        // Atualiza a tabela se estiver visível
         renderLogbook();
-        
-        // Feedback visual discreto (opcional, pode ser alert ou console)
         console.log("Voo salvo no Logbook:", entry.callsign);
     }
 
@@ -1160,9 +1019,23 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
                 <td>${entry.arr}</td>
                 <td>${entry.time}</td>
                 <td>${entry.acft}</td>
+                <td style="text-align:center;">
+                    <button class="btn-delete-entry" onclick="deleteLogbookEntry(${entry.id})">🗑️</button>
+                </td>
             `;
             tbody.appendChild(tr);
         });
+    }
+
+    function deleteLogbookEntry(id) {
+        if(!confirm("Deseja excluir este registro do histórico?")) return;
+        
+        let logbook = JSON.parse(localStorage.getItem('myPilotLogbook') || '[]');
+        // Filtra para remover o item com o ID correspondente
+        logbook = logbook.filter(entry => entry.id !== id);
+        
+        localStorage.setItem('myPilotLogbook', JSON.stringify(logbook));
+        renderLogbook();
     }
 
     function toggleLogbook() {
@@ -1170,7 +1043,6 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         if (div.style.display === 'none' || div.style.display === '') {
             div.style.display = 'block';
             renderLogbook();
-            // Rola até o logbook
             div.scrollIntoView({ behavior: 'smooth' });
         } else {
             div.style.display = 'none';
@@ -1178,10 +1050,56 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
     }
 
     function clearLogbook() {
-        if(confirm("Tem certeza que deseja apagar todo o seu histórico de voos?")) {
+        if(confirm("ATENÇÃO: Isso apagará TODOS os voos do seu histórico. Confirma?")) {
             localStorage.removeItem('myPilotLogbook');
             renderLogbook();
         }
+    }
+
+    // --- MODAL DETALHES ---
+    function showFlightDetails(index) {
+        const f = displayedFlights[index];
+        if (!f) return;
+
+        // Preenche o Modal
+        document.getElementById('modal-cia-badge').innerText = f.airline.name;
+        document.getElementById('modal-cia-badge').style.backgroundColor = f.airline.color;
+        document.getElementById('modal-flight-num').innerText = f.ident;
+        
+        document.getElementById('md-acft').innerText = f.type;
+        document.getElementById('md-route').innerText = f.rota;
+        document.getElementById('md-deparr').innerText = `${f.origin} (${f.depDisplayUTC}z) -> ${f.dest} (${f.arrDisplayUTC}z)`;
+        document.getElementById('md-eet').innerText = minutesToTimeStr(f.durMin).replace(':', 'h ') + 'm';
+        document.getElementById('md-fl').innerText = f.fl;
+        document.getElementById('md-days').innerText = formatDaysOp(f.daysOp);
+        document.getElementById('md-obs').innerText = f.obs;
+
+        // Mostra o Modal
+        document.getElementById('flight-modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('flight-modal').style.display = 'none';
+    }
+    
+    // Fecha modal clicando fora
+    window.onclick = function(event) {
+        const modal = document.getElementById('flight-modal');
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    function formatDaysOp(daysStr) {
+        if (!daysStr) return "N/A";
+        const labels = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+        let active = [];
+        for (let i = 0; i < daysStr.length; i++) {
+            if (daysStr[i] !== ' ' && daysStr[i] !== '0') {
+                active.push(labels[i]);
+            }
+        }
+        return active.length > 0 ? active.join(', ') : "Não especificado";
     }
 
     // --- 3. RELÓGIO E DATA ---
@@ -1367,16 +1285,38 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         // Verifica se o usuário digitou um aeroporto para FORÇAR o início
         const forcedOrigin = document.getElementById('airport-search').value.toUpperCase().trim();
 
-        // Filtra os primeiros voos disponíveis
-        let availableFirstFlights = validFlightsToday.filter(f => f.depMinUTC >= currentUTCMinutes + 30);
+        // INÍCIO DA LÓGICA HÍBRIDA (ALEATÓRIO vs FIXO)
+        let candidates = [];
 
-        // SE tiver aeroporto digitado, filtra apenas voos saindo de lá
         if (forcedOrigin.length >= 3) {
-            availableFirstFlights = availableFirstFlights.filter(f => f.origin === forcedOrigin);
+            // LÓGICA 1: COM AEROPORTO DEFINIDO (Força a origem)
+            candidates = validFlightsToday.filter(f => f.origin === forcedOrigin);
+            
+            // Filtro de tempo (Futuro)
+            let futureCandidates = candidates.filter(f => f.depMinUTC >= currentUTCMinutes + 30);
+            
+            // Se não houver voos futuros, tenta pegar voos imediatos (fallback)
+            if (futureCandidates.length > 0) {
+                candidates = futureCandidates;
+            } else {
+                // Se ainda assim não houver voos, mantém vazio para mostrar erro
+                candidates = []; 
+                // Opcional: Se quiser mostrar voos passados, remova a linha acima
+            }
+
+        } else {
+            // LÓGICA 2: SEM AEROPORTO (Aleatório / Qualquer Origem)
+            // Filtra APENAS por tempo (Futuro + 30min)
+            candidates = validFlightsToday.filter(f => f.depMinUTC >= currentUTCMinutes + 30);
+            
+            // Fallback: Se não houver voos > 30min (ex: final do dia), tenta pegar voos imediatos (> 0min)
+            if (candidates.length === 0) {
+                candidates = validFlightsToday.filter(f => f.depMinUTC >= currentUTCMinutes);
+            }
         }
 
-        // Se não houver voos disponíveis com as restrições (horário + cia + aeroporto opcional)
-        if (availableFirstFlights.length === 0) {
+        // Se não houver voos disponíveis com as restrições
+        if (candidates.length === 0) {
             msgDiv.style.display = 'block';
             let msg = "Nenhum voo encontrado para os filtros atuais";
             if(forcedOrigin) msg += ` saindo de ${forcedOrigin}`;
@@ -1385,11 +1325,14 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
             return;
         }
 
-        availableFirstFlights.sort((a,b) => a.depMinUTC - b.depMinUTC);
+        // Ordena por horário
+        candidates.sort((a,b) => a.depMinUTC - b.depMinUTC);
         
-        // Sorteia um dos voos disponíveis (ou pega o primeiro se quiser ser mais determinístico)
-        const seedIndex = Math.floor(Math.random() * Math.min(10, availableFirstFlights.length));
-        let currentFlight = availableFirstFlights[seedIndex];
+        // Sorteia um dos voos disponíveis (Seed Aleatório)
+        // Se for filtro específico, pega o primeiro. Se for aleatório, pega um dos primeiros 10.
+        const poolSize = Math.min(15, candidates.length);
+        const seedIndex = Math.floor(Math.random() * poolSize);
+        let currentFlight = candidates[seedIndex];
         
         let chain = [enrichFlightData(currentFlight)];
 
@@ -1398,7 +1341,7 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
             const prevArrNormalized = prev.arrMinUTC >= 1440 ? prev.arrMinUTC - 1440 : prev.arrMinUTC;
             const minNextDep = prevArrNormalized + TURNAROUND_MINUTES;
 
-            let candidates = validFlightsToday.filter(f => {
+            let nextLegCandidates = validFlightsToday.filter(f => {
                 return (
                     f.airline.name === prev.airline.name && 
                     f.origin === prev.dest && 
@@ -1406,8 +1349,9 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
                 );
             });
 
-            if (candidates.length === 0) {
-                 candidates = validFlightsToday.filter(f => {
+            // Tenta achar voo mesmo que a hora estoure o dia (simplificado)
+            if (nextLegCandidates.length === 0) {
+                 nextLegCandidates = validFlightsToday.filter(f => {
                     return (
                         f.airline.name === prev.airline.name && 
                         f.origin === prev.dest
@@ -1415,8 +1359,8 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
                 });
             }
 
-            if (candidates.length > 0) {
-                candidates.sort((a,b) => {
+            if (nextLegCandidates.length > 0) {
+                nextLegCandidates.sort((a,b) => {
                     let diffA = a.depMinUTC - minNextDep;
                     if(diffA < 0) diffA += 1440; 
                     let diffB = b.depMinUTC - minNextDep;
@@ -1424,7 +1368,7 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
                     return diffA - diffB;
                 });
                 
-                chain.push(enrichFlightData(candidates[0]));
+                chain.push(enrichFlightData(nextLegCandidates[0]));
             } else {
                 break; 
             }
@@ -1520,7 +1464,7 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
 
             tr.innerHTML = `
                 <td style="text-align:center;">${sbButton}</td>
-                <td class="col-flight">${f.ident}</td>
+                <td class="col-flight"><span class="flight-link" onclick="showFlightDetails(${index})">${f.ident}</span></td>
                 <td><span class="cia-badge" style="background-color: ${f.airline.color}">${f.airline.name}</span></td>
                 <td class="col-airport">${f.origin}</td>
                 <td class="col-time">${depCell}</td>
