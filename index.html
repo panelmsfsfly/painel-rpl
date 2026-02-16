@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel RPL - Dispatch Integrado 5.3 (Correção Escalas)</title>
+<title>Painel RPL - Dispatch Integrado 5.5 (Stats)</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
@@ -39,7 +39,7 @@
 
     .header-left { flex: 1; text-align: left; }
     .header-center { flex: 2; text-align: center; }
-    .header-right { flex: 1; text-align: right; }
+    .header-right { flex: 1; text-align: right; display: flex; flex-direction: column; align-items: flex-end; }
 
     .header-title h1 { margin: 0; font-size: 22px; letter-spacing: 1px; opacity: 0.95; font-weight: 900; }
     .header-title div { 
@@ -143,7 +143,14 @@
     .btn-reset { background-color: #7f8c8d; color: white; }
     .btn-reset:hover { background-color: #95a5a6; }
 
-    .btn-logbook { background-color: #f1c40f; color: #2c3e50; border: 2px solid #f39c12; }
+    .btn-logbook { 
+        background-color: #f1c40f; 
+        color: #2c3e50; 
+        border: 2px solid #f39c12;
+        margin-top: 10px;
+        padding: 8px 20px;
+        font-weight: bold;
+    }
     .btn-logbook:hover { background-color: #f39c12; color: #fff; }
 
     .btn-delete-entry { background-color: #e74c3c; color: white; padding: 6px 10px; border-radius: 4px; font-size: 12px; }
@@ -245,6 +252,15 @@
     }
     .logbook-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
     .logbook-title { font-size: 22px; font-weight: 900; color: #2c3e50; text-transform: uppercase; }
+    
+    /* ESTATÍSTICAS */
+    .logbook-stats {
+        background-color: #2980b9; color: white;
+        padding: 10px 15px; border-radius: 6px; margin-bottom: 20px;
+        font-family: 'Share Tech Mono', monospace; font-size: 16px;
+        display: flex; gap: 20px; font-weight: bold;
+    }
+
     .logbook-table { width: 100%; border-collapse: collapse; font-family: 'Share Tech Mono', monospace; }
     .logbook-table th { background: #34495e; color: white; padding: 10px; text-align: left; }
     .logbook-table td { border-bottom: 1px solid #ddd; padding: 10px; color: #333; }
@@ -335,13 +351,36 @@
         background: #34495e; color: white; padding: 4px 8px; border-radius: 4px; font-size: 14px;
     }
 
+    /* --- RESPONSIVIDADE (MOBILE FIX) --- */
+    @media (max-width: 900px) {
+        .header-container { flex-direction: column; text-align: center; gap: 10px; height: auto; }
+        .header-left, .header-center, .header-right { width: 100%; text-align: center; align-items: center; }
+        .header-right { justify-content: center; margin-top: 10px; }
+        .btn-logbook { width: 80%; margin-top: 15px; font-size: 14px; }
+        .header-title h1 { font-size: 20px; }
+        .center-main-text { font-size: 18px; line-height: 1.2; }
+        .center-sub-text { font-size: 14px; }
+        .clock-time { font-size: 32px; }
+        .controls-container { flex-direction: column; align-items: stretch; gap: 20px; }
+        .control-group { flex-direction: column; align-items: flex-start; width: 100%; }
+        .control-label { margin-bottom: 5px; }
+        .sb-input { width: 100%; }
+        .button-wrapper { display: flex; width: 100%; gap: 10px; flex-wrap: wrap;}
+        .btn-filter, .btn-draw, .btn-search, .btn-reset { flex: 1 1 auto; padding: 12px; }
+        .sb-live-header { flex-direction: column; align-items: flex-start; }
+        .card-metar, .card-to-data { grid-column: span 1; }
+        .modal-content { width: 95%; padding: 20px; }
+        .detail-row { flex-direction: column; }
+        .detail-label { width: 100%; margin-bottom: 2px; }
+    }
+
 </style>
 </head>
 <body>
 
 <div class="header-container">
     <div class="header-left header-title">
-        <h1>RPL DISPATCH 5.3</h1>
+        <h1>RPL DISPATCH 5.5</h1>
         <div>PARA USO EM SIMULADOR DE VOO DOMÉSTICO</div>
     </div>
     
@@ -353,7 +392,7 @@
     <div class="header-right clock-box">
         <div class="clock-time" id="brt-clock">00:00:00</div>
         <div class="clock-date" id="brt-date">---</div>
-        <button class="btn-logbook" style="margin-top:10px; padding: 5px 15px; font-weight:bold; cursor:pointer;" onclick="toggleLogbook()">📖 MEU LOGBOOK</button>
+        <button class="btn-logbook" onclick="toggleLogbook()">📖 MEU LOGBOOK</button>
     </div>
 </div>
 
@@ -425,6 +464,12 @@
         <div class="logbook-title">📖 Logbook do Piloto</div>
         <button class="btn-reset" onclick="clearLogbook()">Limpar Tudo</button>
     </div>
+    
+    <div class="logbook-stats">
+        <span>✈️ Total Voos: <span id="stats-count">0</span></span>
+        <span style="border-left: 2px solid rgba(255,255,255,0.3); padding-left: 20px;">⏱️ Total Horas: <span id="stats-hours">00h 00m</span></span>
+    </div>
+
     <div style="overflow-x:auto;">
         <table class="logbook-table">
             <thead>
@@ -1001,6 +1046,18 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         const tbody = document.getElementById('logbook-body');
         const emptyMsg = document.getElementById('logbook-empty');
         
+        // CALCULO ESTATISTICAS
+        let totalMinutes = 0;
+        logbook.forEach(e => {
+            const parts = e.time.split(':');
+            totalMinutes += (parseInt(parts[0]) * 60) + parseInt(parts[1]);
+        });
+        const totalH = Math.floor(totalMinutes / 60);
+        const totalM = totalMinutes % 60;
+        
+        document.getElementById('stats-count').innerText = logbook.length;
+        document.getElementById('stats-hours').innerText = `${String(totalH).padStart(2,'0')}h ${String(totalM).padStart(2,'0')}m`;
+
         tbody.innerHTML = '';
         
         if (logbook.length === 0) {
