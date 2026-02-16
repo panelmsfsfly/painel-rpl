@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel RPL - Dispatch Integrado 5.5 (Stats)</title>
+<title>Painel RPL - Dispatch Integrado 5.6 (Enhanced)</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
@@ -118,6 +118,7 @@
         box-sizing: border-box;
     }
     .sb-input:focus { border-color: #3498db; outline: none; }
+    .sb-input:disabled { background-color: #f0f0f0; cursor: not-allowed; }
 
     #search-input, #airport-search { border-color: #3498db; color: #2980b9; }
 
@@ -132,6 +133,12 @@
         transition: 0.2s;
         text-transform: uppercase;
         letter-spacing: 0.5px;
+    }
+    button:disabled {
+        background-color: #bdc3c7 !important;
+        color: #7f8c8d !important;
+        cursor: wait;
+        transform: none !important;
     }
 
     .btn-action { background-color: #2980b9; color: white; }
@@ -170,6 +177,12 @@
 
     .btn-sb { background-color: #c0392b; color: white; padding: 8px 14px; font-size: 13px; border-radius: 5px; text-decoration: none; display: inline-block; white-space: nowrap; }
     .btn-sb:hover { background-color: #e74c3c; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+
+    .btn-backup { background-color: #27ae60; color: white; margin-left: 10px; font-size: 12px; padding: 8px 12px;}
+    .btn-backup:hover { background-color: #2ecc71; }
+    
+    .btn-restore { background-color: #8e44ad; color: white; margin-left: 5px; font-size: 12px; padding: 8px 12px;}
+    .btn-restore:hover { background-color: #9b59b6; }
 
     /* --- TABELA --- */
     .flight-table-container {
@@ -250,7 +263,7 @@
         border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; box-sizing: border-box;
         border-top: 5px solid #f1c40f; display: none;
     }
-    .logbook-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+    .logbook-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; flex-wrap: wrap; gap: 10px; }
     .logbook-title { font-size: 22px; font-weight: 900; color: #2c3e50; text-transform: uppercase; }
     
     /* ESTATÍSTICAS */
@@ -380,7 +393,7 @@
 
 <div class="header-container">
     <div class="header-left header-title">
-        <h1>RPL DISPATCH 5.5</h1>
+        <h1>RPL DISPATCH 5.6</h1>
         <div>PARA USO EM SIMULADOR DE VOO DOMÉSTICO</div>
     </div>
     
@@ -462,7 +475,12 @@
 <div id="logbook-section" class="logbook-container">
     <div class="logbook-header">
         <div class="logbook-title">📖 Logbook do Piloto</div>
-        <button class="btn-reset" onclick="clearLogbook()">Limpar Tudo</button>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <input type="file" id="backup-file-input" style="display: none;" onchange="restoreLogbook(event)">
+            <button class="btn-backup" onclick="backupLogbook()">⬇️ Backup</button>
+            <button class="btn-restore" onclick="document.getElementById('backup-file-input').click()">⬆️ Restaurar</button>
+            <button class="btn-reset" onclick="clearLogbook()">Limpar Tudo</button>
+        </div>
     </div>
     
     <div class="logbook-stats">
@@ -652,6 +670,18 @@
     let displayedFlights = [];
     let validityUpdated = false;
 
+    // --- FUNÇÕES AUXILIARES SEGURAS ---
+    // Tenta ler o localStorage sem quebrar a aplicação se o JSON estiver inválido
+    function getSafeStorage(key) {
+        try {
+            const data = localStorage.getItem(key);
+            return data ? JSON.parse(data) : [];
+        } catch (e) {
+            console.error(`Erro ao ler storage para ${key}:`, e);
+            return [];
+        }
+    }
+
     // --- 2. GERENCIAMENTO DO SIMBRIEF (OFP LIVE) ---
     document.addEventListener("DOMContentLoaded", () => {
         const savedID = localStorage.getItem("simbrief_id");
@@ -683,6 +713,7 @@
         const paramName = isNumeric ? "userid" : "username";
         
         const directUrl = `https://www.simbrief.com/api/xml.fetcher.php?${paramName}=${sbID}&json=1`;
+        // Usando allorigins como proxy principal
         const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(directUrl)}`;
 
         let data = null;
@@ -690,6 +721,7 @@
         try {
             let response;
             try {
+                // Tenta direto primeiro (caso CORS mude no futuro ou esteja local)
                 response = await fetch(directUrl, { cache: 'no-store' });
                 if(!response.ok) throw new Error("Erro Direto");
             } catch(e) {
@@ -749,7 +781,7 @@ GND DIST ${data.general.route_distance} AIR DIST ${data.general.air_distance}
 ESTIMATED TOW ${safe(data.weights.est_tow)} LAW ${safe(data.weights.est_ldw)} ZFW ${safe(data.weights.est_zfw)}
 ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
 
-        document.getElementById("sb-raw-header").innerText = rawHeader;
+        document.getElementById("sb-raw-header").textContent = rawHeader;
 
         document.getElementById("sb-callsign").innerText = callsign;
         document.getElementById("sb-acft").innerText = data.aircraft.name;
@@ -787,13 +819,13 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
                 document.getElementById("to-vr").innerText = detailedTO.vr;
                 document.getElementById("to-v2").innerText = detailedTO.v2;
                 document.getElementById("to-lim").innerText = detailedTO.limit;
-                document.getElementById("to-rmks").innerText = detailedTO.rmks;
+                document.getElementById("to-rmks").textContent = detailedTO.rmks; // Safer than innerText for unknown text blocks
             } else {
                 cardDetailed.style.display = "none";
             }
         }
 
-        document.getElementById("sb-route").innerText = safe(data.general.route);
+        document.getElementById("sb-route").textContent = safe(data.general.route);
         
         document.getElementById("icao-orig-lbl").innerText = orig;
         document.getElementById("icao-dest-lbl").innerText = dest;
@@ -936,9 +968,12 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
 
     // --- FUNÇÃO DE BUSCA MANUAL (NUMERO DE VOO) ---
     function manualSearch() {
-        const input = document.getElementById('search-input').value.toUpperCase().trim();
-        if (!input) {
-            alert("Por favor, digite o número do voo (ex: GLO1229).");
+        const rawInput = document.getElementById('search-input').value;
+        // Sanitização: remove espaços e garante uppercase
+        const input = rawInput ? rawInput.toUpperCase().replace(/\s+/g, '') : "";
+
+        if (input.length < 3) {
+            alert("Por favor, digite pelo menos 3 caracteres do voo (ex: GLO1229).");
             return;
         }
 
@@ -967,7 +1002,8 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
 
     // --- BUSCA POR AEROPORTO COM FILTRO DE CIA ---
     function searchByAirport() {
-        const input = document.getElementById('airport-search').value.toUpperCase().trim();
+        const rawInput = document.getElementById('airport-search').value;
+        const input = rawInput ? rawInput.toUpperCase().trim() : "";
         
         if (input.length < 3) {
             alert("Por favor, digite o código do aeroporto (Ex: SBSP).");
@@ -1014,7 +1050,7 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
 
     // --- LOGBOOK FUNCTIONS ---
     function saveToLogbook(flight) {
-        let logbook = JSON.parse(localStorage.getItem('myPilotLogbook') || '[]');
+        let logbook = getSafeStorage('myPilotLogbook');
         
         const now = new Date();
         const dateStr = now.toLocaleDateString('pt-BR');
@@ -1042,7 +1078,7 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
     }
 
     function renderLogbook() {
-        const logbook = JSON.parse(localStorage.getItem('myPilotLogbook') || '[]');
+        const logbook = getSafeStorage('myPilotLogbook');
         const tbody = document.getElementById('logbook-body');
         const emptyMsg = document.getElementById('logbook-empty');
         
@@ -1087,7 +1123,7 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
     function deleteLogbookEntry(id) {
         if(!confirm("Deseja excluir este registro do histórico?")) return;
         
-        let logbook = JSON.parse(localStorage.getItem('myPilotLogbook') || '[]');
+        let logbook = getSafeStorage('myPilotLogbook');
         // Filtra para remover o item com o ID correspondente
         logbook = logbook.filter(entry => entry.id !== id);
         
@@ -1113,6 +1149,65 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         }
     }
 
+    // --- BACKUP E RESTORE (NOVO) ---
+    function backupLogbook() {
+        const logbookData = getSafeStorage('myPilotLogbook');
+        const sbID = localStorage.getItem('simbrief_id') || "";
+
+        const backupData = {
+            version: "5.6",
+            date: new Date().toISOString(),
+            simbrief_id: sbID,
+            logbook: logbookData
+        };
+
+        const dataStr = JSON.stringify(backupData, null, 2);
+        const blob = new Blob([dataStr], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `backup_rpl_logbook_${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    function restoreLogbook(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const data = JSON.parse(e.target.result);
+                
+                if (data.logbook && Array.isArray(data.logbook)) {
+                    if(confirm(`Encontrados ${data.logbook.length} voos no backup. Deseja substituir seu histórico atual?`)) {
+                        localStorage.setItem('myPilotLogbook', JSON.stringify(data.logbook));
+                        
+                        if (data.simbrief_id) {
+                            localStorage.setItem('simbrief_id', data.simbrief_id);
+                            document.getElementById('sb-id').value = data.simbrief_id;
+                        }
+                        
+                        renderLogbook();
+                        alert("Backup restaurado com sucesso!");
+                    }
+                } else {
+                    alert("O arquivo não parece ser um backup válido deste sistema.");
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Erro ao ler o arquivo. Verifique se é um JSON válido.");
+            }
+            // Limpa o input para permitir carregar o mesmo arquivo novamente se necessário
+            event.target.value = '';
+        };
+        reader.readAsText(file);
+    }
+
     // --- MODAL DETALHES ---
     function showFlightDetails(index) {
         const f = displayedFlights[index];
@@ -1124,12 +1219,12 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         document.getElementById('modal-flight-num').innerText = f.ident;
         
         document.getElementById('md-acft').innerText = f.type;
-        document.getElementById('md-route').innerText = f.rota;
+        document.getElementById('md-route').textContent = f.rota; // textContent para segurança
         document.getElementById('md-deparr').innerText = `${f.origin} (${f.depDisplayUTC}z) -> ${f.dest} (${f.arrDisplayUTC}z)`;
         document.getElementById('md-eet').innerText = minutesToTimeStr(f.durMin).replace(':', 'h ') + 'm';
         document.getElementById('md-fl').innerText = f.fl;
         document.getElementById('md-days').innerText = formatDaysOp(f.daysOp);
-        document.getElementById('md-obs').innerText = f.obs;
+        document.getElementById('md-obs').textContent = f.obs; // textContent para segurança
 
         // Mostra o Modal
         document.getElementById('flight-modal').style.display = 'flex';
@@ -1183,38 +1278,48 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         allFlightsDB = [];
         const debugDiv = document.getElementById('file-debug');
         
-        const promises = airlineConfig.map(async (airline) => {
-            try {
-                const response = await fetch(airline.file);
-                if (!response.ok) throw new Error("404");
-                const text = await response.text();
-                
-                checkValidityDate(text);
+        // Desativa botões durante carregamento
+        const allButtons = document.querySelectorAll('button');
+        allButtons.forEach(btn => btn.disabled = true);
+        document.getElementById('empty-msg').innerText = "Carregando malha aérea... Por favor aguarde.";
 
-                const flights = parseRPLData(text, airline);
-                return { status: "OK", flights: flights, name: airline.name };
-            } catch (error) {
-                return { status: "Erro/Ausente", flights: [], name: airline.name };
+        try {
+            const promises = airlineConfig.map(async (airline) => {
+                try {
+                    const response = await fetch(airline.file);
+                    if (!response.ok) throw new Error("404");
+                    const text = await response.text();
+                    
+                    checkValidityDate(text);
+
+                    const flights = parseRPLData(text, airline);
+                    return { status: "OK", flights: flights, name: airline.name };
+                } catch (error) {
+                    return { status: "Erro/Ausente", flights: [], name: airline.name };
+                }
+            });
+
+            const results = await Promise.all(promises);
+            
+            const debugTexts = [];
+            results.forEach(res => {
+                if(res.flights.length > 0) {
+                    allFlightsDB = allFlightsDB.concat(res.flights);
+                }
+                debugTexts.push(`${res.name}: ${res.status}`);
+            });
+
+            debugDiv.innerText = debugTexts.join(" | ");
+            
+            if (allFlightsDB.length > 0) {
+                document.getElementById('empty-msg').innerText = "Sistema pronto. Selecione a quantidade de voos.";
+            } else {
+                document.getElementById('empty-msg').innerHTML = "ERRO: Arquivos de malha (.txt) não encontrados.<br>Certifique-se que Cia_TAM_CS.txt, etc, estão na pasta.";
+                document.getElementById('empty-msg').style.color = "#c0392b";
             }
-        });
-
-        const results = await Promise.all(promises);
-        
-        const debugTexts = [];
-        results.forEach(res => {
-            if(res.flights.length > 0) {
-                allFlightsDB = allFlightsDB.concat(res.flights);
-            }
-            debugTexts.push(`${res.name}: ${res.status}`);
-        });
-
-        debugDiv.innerText = debugTexts.join(" | ");
-        
-        if (allFlightsDB.length > 0) {
-            document.getElementById('empty-msg').innerText = "Sistema pronto. Selecione a quantidade de voos.";
-        } else {
-            document.getElementById('empty-msg').innerHTML = "ERRO: Arquivos de malha (.txt) não encontrados.<br>Certifique-se que Cia_TAM_CS.txt, etc, estão na pasta.";
-            document.getElementById('empty-msg').style.color = "#c0392b";
+        } finally {
+            // Reativa botões
+            allButtons.forEach(btn => btn.disabled = false);
         }
     }
 
@@ -1256,14 +1361,15 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
 
         for (let line of lines) {
             line = line.trim();
+            // Validação mínima da linha para evitar erros de substring
+            if (line.length < 50) continue;
+
             if (/^\d{6}\s+\d{6}/.test(line)) {
                 const parts = line.split(/\s+/);
                 const speedIndex = parts.findIndex(p => /^[NM]\d{3,4}$/.test(p));
 
                 if (speedIndex !== -1 && parts.length > speedIndex + 3) {
                     try {
-                        const validFromStr = parts[0]; 
-                        const validUntilStr = parts[1];
                         const daysOp = parts[2];
                         const ident = parts[3];
                         const type = parts[4];
@@ -1340,7 +1446,8 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         }
 
         // Verifica se o usuário digitou um aeroporto para FORÇAR o início
-        const forcedOrigin = document.getElementById('airport-search').value.toUpperCase().trim();
+        const rawForcedOrigin = document.getElementById('airport-search').value;
+        const forcedOrigin = rawForcedOrigin ? rawForcedOrigin.toUpperCase().trim() : "";
 
         // INÍCIO DA LÓGICA HÍBRIDA (ALEATÓRIO vs FIXO)
         let candidates = [];
@@ -1356,9 +1463,7 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
             if (futureCandidates.length > 0) {
                 candidates = futureCandidates;
             } else {
-                // Se ainda assim não houver voos, mantém vazio para mostrar erro
                 candidates = []; 
-                // Opcional: Se quiser mostrar voos passados, remova a linha acima
             }
 
         } else {
@@ -1436,7 +1541,7 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
     }
 
     function enrichFlightData(flight) {
-        // UTC-3 para Brasília
+        // UTC-3 para Brasília (HARDCODED)
         const toBRT = (utcMinutes) => {
             let brt = utcMinutes - 180;
             if (brt < 0) brt += 1440;
@@ -1547,6 +1652,7 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         document.getElementById('board-content').innerHTML = '';
     }
 
+    // Inicializa carregamento
     loadAllFiles();
 
 </script>
