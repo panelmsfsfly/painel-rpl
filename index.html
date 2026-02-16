@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel RPL - Dispatch Integrado 5.6 (Enhanced)</title>
+<title>Painel RPL - Dispatch Integrado 5.7 (Roster & Scheduler)</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
@@ -178,6 +178,9 @@
     .btn-sb { background-color: #c0392b; color: white; padding: 8px 14px; font-size: 13px; border-radius: 5px; text-decoration: none; display: inline-block; white-space: nowrap; }
     .btn-sb:hover { background-color: #e74c3c; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 
+    .btn-schedule { background-color: #2ecc71; color: white; padding: 8px 14px; font-size: 13px; border-radius: 5px; margin-left: 5px; }
+    .btn-schedule:hover { background-color: #27ae60; }
+
     .btn-backup { background-color: #27ae60; color: white; margin-left: 10px; font-size: 12px; padding: 8px 12px;}
     .btn-backup:hover { background-color: #2ecc71; }
     
@@ -256,6 +259,15 @@
     
     .msg-box { padding: 60px; text-align: center; color: #bdc3c7; font-style: italic; font-size: 18px; }
     #file-debug { position: fixed; bottom: 5px; right: 5px; font-size: 12px; color: #ccc; z-index: 999; }
+
+    /* --- ROSTER / AGENDAMENTO --- */
+    .roster-container {
+        width: 100%; max-width: 1600px; background-color: #fff; padding: 25px; margin-top: 25px;
+        border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; box-sizing: border-box;
+        border-top: 5px solid #2ecc71;
+    }
+    .roster-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+    .roster-title { font-size: 20px; font-weight: 900; color: #27ae60; text-transform: uppercase; }
 
     /* --- LOGBOOK --- */
     .logbook-container {
@@ -393,7 +405,7 @@
 
 <div class="header-container">
     <div class="header-left header-title">
-        <h1>RPL DISPATCH 5.6</h1>
+        <h1>RPL DISPATCH 5.7</h1>
         <div>PARA USO EM SIMULADOR DE VOO DOMÉSTICO</div>
     </div>
     
@@ -456,7 +468,7 @@
     <table class="flight-table">
         <thead>
             <tr>
-                <th style="text-align: center;">Dispatch</th> <th>Voo</th>
+                <th style="text-align: center;">Dispatch / Agendar</th> <th>Voo</th>
                 <th>Cia</th>
                 <th>Origem</th>
                 <th title="Horário ZULO / BRASÍLIA">Partida (Z / BRT)</th>
@@ -470,6 +482,33 @@
         <tbody id="board-content"></tbody>
     </table>
     <div id="empty-msg" class="msg-box">Carregando dados do servidor...</div>
+</div>
+
+<div id="roster-section" class="roster-container">
+    <div class="roster-header">
+        <div class="roster-title">📅 Minha Escala (Roster)</div>
+        <div style="font-size: 13px; color:#777;">Planeje seus próximos voos aqui</div>
+    </div>
+    
+    <div style="overflow-x:auto;">
+        <table class="logbook-table">
+            <thead>
+                <tr>
+                    <th>Data Agendada</th>
+                    <th>Voo</th>
+                    <th>Origem</th>
+                    <th>Destino</th>
+                    <th>Aeronave</th>
+                    <th style="text-align:center;">Ações</th>
+                </tr>
+            </thead>
+            <tbody id="roster-body">
+            </tbody>
+        </table>
+        <div id="roster-empty" style="padding:20px; text-align:center; color:#999; display:block;">
+            Nenhum voo agendado. Clique no ícone 📅 na tabela de busca.
+        </div>
+    </div>
 </div>
 
 <div id="logbook-section" class="logbook-container">
@@ -516,9 +555,8 @@
     </div>
     <div class="tutorial-grid">
         <div class="tut-card tut-escala">
-            <h4><span class="tut-icon">🎲</span> Gerar Escala (Random)</h4>
-            <p><strong>SEM AEROPORTO DEFINIDO:</strong> Clique em 1, 2, 3 ou 4. O sistema sorteia um voo de qualquer origem.</p>
-            <p><strong>COM AEROPORTO (CAMPO 3):</strong> O sistema busca uma escala saindo exatamente de lá.</p>
+            <h4><span class="tut-icon">📅</span> Agendar Voos (Novo)</h4>
+            <p>Encontre um voo na tabela e clique no ícone 📅. Escolha a data e ele será salvo na sua <strong>Escala (Roster)</strong> para despachar depois.</p>
         </div>
         
         <div class="tut-card tut-filtro">
@@ -533,7 +571,7 @@
 
         <div class="tut-card tut-sb">
             <h4><span class="tut-icon">📄</span> SimBrief & Logbook</h4>
-            <p>1. Coloque seu ID no campo <strong>1</strong>.<br>2. Clique em <strong>SIMBRIEF ↗</strong>. O voo será aberto no SimBrief e <strong>SALVO AUTOMATICAMENTE</strong> no seu Logbook.<br>3. Clique em "MEU LOGBOOK" no topo para ver seu histórico.</p>
+            <p>1. Coloque seu ID no campo <strong>1</strong>.<br>2. Clique em <strong>SIMBRIEF ↗</strong>. O voo será aberto no SimBrief e <strong>SALVO AUTOMATICAMENTE</strong> no seu Logbook.</p>
         </div>
     </div>
 </div>
@@ -687,6 +725,7 @@
         const savedID = localStorage.getItem("simbrief_id");
         if (savedID) document.getElementById("sb-id").value = savedID;
         renderLogbook(); // Carrega o logbook ao iniciar
+        renderRoster(); // Carrega a escala
     });
 
     function saveSBID() {
@@ -819,7 +858,7 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
                 document.getElementById("to-vr").innerText = detailedTO.vr;
                 document.getElementById("to-v2").innerText = detailedTO.v2;
                 document.getElementById("to-lim").innerText = detailedTO.limit;
-                document.getElementById("to-rmks").textContent = detailedTO.rmks; // Safer than innerText for unknown text blocks
+                document.getElementById("to-rmks").textContent = detailedTO.rmks; 
             } else {
                 cardDetailed.style.display = "none";
             }
@@ -930,10 +969,8 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         }
     }
 
-    function openSimBriefFromIndex(index) {
-        const flight = displayedFlights[index];
-        if (!flight) return;
-
+    // --- ABRIR SIMBRIEF ---
+    function openSimBriefWithData(flight) {
         const sbID = document.getElementById("sb-id").value;
         if (!sbID) {
             alert("Por favor, digite seu ID do SimBrief para gerar o plano.");
@@ -955,6 +992,12 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         window.open(url, '_blank');
     }
 
+    function openSimBriefFromIndex(index) {
+        const flight = displayedFlights[index];
+        if (!flight) return;
+        openSimBriefWithData(flight);
+    }
+
     function resetPanel() {
         document.getElementById('board-content').innerHTML = '';
         document.getElementById('empty-msg').style.display = 'block';
@@ -969,7 +1012,6 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
     // --- FUNÇÃO DE BUSCA MANUAL (NUMERO DE VOO) ---
     function manualSearch() {
         const rawInput = document.getElementById('search-input').value;
-        // Sanitização: remove espaços e garante uppercase
         const input = rawInput ? rawInput.toUpperCase().replace(/\s+/g, '') : "";
 
         if (input.length < 3) {
@@ -1018,16 +1060,13 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         const now = getSimulationDate();
         const currentUTCMinutes = ((now.getUTCHours()) * 60) + now.getUTCMinutes(); 
 
-        // Filtra por: Origem + Dia Válido + Horário Futuro + Cia Selecionada
         const matches = allFlightsDB.filter(f => {
-            
-            // Verifica a Cia Aérea Selecionada
             const airlineMatch = (currentFilter === 'todas') || (f.airline.name === currentFilter);
 
             return f.origin === input && 
                    isFlightValidToday(f, now) && 
                    f.depMinUTC >= currentUTCMinutes &&
-                   airlineMatch; // Aplica o filtro da Cia
+                   airlineMatch; 
         });
 
         if (matches.length === 0) {
@@ -1046,6 +1085,92 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         displayedFlights = enrichedResults;
         renderRows(enrichedResults);
         document.getElementById('empty-msg').style.display = 'none';
+    }
+
+    // --- ROSTER / AGENDAMENTO FUNCTIONS (NOVO) ---
+    function scheduleFlight(index) {
+        const flight = displayedFlights[index];
+        if (!flight) return;
+
+        // Pergunta data (padrão hoje)
+        const today = new Date().toISOString().split('T')[0];
+        const dateInput = prompt("Para qual data deseja agendar este voo? (AAAA-MM-DD)", today);
+        
+        if (!dateInput) return; // Cancelado
+
+        let roster = getSafeStorage('myPilotRoster');
+        
+        const entry = {
+            id: Date.now(),
+            scheduledDate: dateInput,
+            flightData: flight
+        };
+
+        roster.push(entry);
+        
+        // Ordena por data
+        roster.sort((a, b) => new Date(a.scheduledDate) - new Date(b.scheduledDate));
+        
+        localStorage.setItem('myPilotRoster', JSON.stringify(roster));
+        renderRoster();
+        alert(`Voo ${flight.ident} agendado para ${dateInput}!`);
+    }
+
+    function renderRoster() {
+        const roster = getSafeStorage('myPilotRoster');
+        const tbody = document.getElementById('roster-body');
+        const emptyMsg = document.getElementById('roster-empty');
+
+        tbody.innerHTML = '';
+        
+        if (roster.length === 0) {
+            emptyMsg.style.display = 'block';
+            return;
+        } else {
+            emptyMsg.style.display = 'none';
+        }
+
+        roster.forEach(entry => {
+            const f = entry.flightData;
+            const tr = document.createElement('tr');
+            
+            // Format Date PT-BR
+            const dateParts = entry.scheduledDate.split('-');
+            const dateFmt = `${dateParts[2]}/${dateParts[1]}`;
+
+            tr.innerHTML = `
+                <td style="font-weight:bold; color:#27ae60;">${dateFmt}</td>
+                <td style="font-weight:bold; color:#2980b9;">${f.ident}</td>
+                <td>${f.origin}</td>
+                <td>${f.dest}</td>
+                <td>${f.type.split('/')[0]}</td>
+                <td style="text-align:center;">
+                    <button class="btn-sb" style="padding:4px 8px; font-size:11px;" onclick="dispatchRosterFlight(${entry.id})">DESPACHAR</button>
+                    <button class="btn-delete-entry" onclick="deleteRosterEntry(${entry.id})">❌</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function dispatchRosterFlight(id) {
+        const roster = getSafeStorage('myPilotRoster');
+        const entry = roster.find(e => e.id === id);
+        
+        if (entry) {
+            openSimBriefWithData(entry.flightData);
+            // Opcional: Remover do agendamento após despachar?
+            // deleteRosterEntry(id); 
+        }
+    }
+
+    function deleteRosterEntry(id) {
+        if(!confirm("Remover este voo da sua escala?")) return;
+        
+        let roster = getSafeStorage('myPilotRoster');
+        roster = roster.filter(e => e.id !== id);
+        localStorage.setItem('myPilotRoster', JSON.stringify(roster));
+        renderRoster();
     }
 
     // --- LOGBOOK FUNCTIONS ---
@@ -1074,7 +1199,6 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         logbook.unshift(entry);
         localStorage.setItem('myPilotLogbook', JSON.stringify(logbook));
         renderLogbook();
-        console.log("Voo salvo no Logbook:", entry.callsign);
     }
 
     function renderLogbook() {
@@ -1124,7 +1248,6 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         if(!confirm("Deseja excluir este registro do histórico?")) return;
         
         let logbook = getSafeStorage('myPilotLogbook');
-        // Filtra para remover o item com o ID correspondente
         logbook = logbook.filter(entry => entry.id !== id);
         
         localStorage.setItem('myPilotLogbook', JSON.stringify(logbook));
@@ -1149,16 +1272,18 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         }
     }
 
-    // --- BACKUP E RESTORE (NOVO) ---
+    // --- BACKUP E RESTORE ---
     function backupLogbook() {
         const logbookData = getSafeStorage('myPilotLogbook');
+        const rosterData = getSafeStorage('myPilotRoster');
         const sbID = localStorage.getItem('simbrief_id') || "";
 
         const backupData = {
-            version: "5.6",
+            version: "5.7",
             date: new Date().toISOString(),
             simbrief_id: sbID,
-            logbook: logbookData
+            logbook: logbookData,
+            roster: rosterData
         };
 
         const dataStr = JSON.stringify(backupData, null, 2);
@@ -1167,7 +1292,7 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         
         const a = document.createElement('a');
         a.href = url;
-        a.download = `backup_rpl_logbook_${new Date().toISOString().split('T')[0]}.json`;
+        a.download = `backup_rpl_data_${new Date().toISOString().split('T')[0]}.json`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -1184,8 +1309,12 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
                 const data = JSON.parse(e.target.result);
                 
                 if (data.logbook && Array.isArray(data.logbook)) {
-                    if(confirm(`Encontrados ${data.logbook.length} voos no backup. Deseja substituir seu histórico atual?`)) {
+                    if(confirm(`Backup encontrado. Restaurar dados?`)) {
                         localStorage.setItem('myPilotLogbook', JSON.stringify(data.logbook));
+                        
+                        if (data.roster) {
+                            localStorage.setItem('myPilotRoster', JSON.stringify(data.roster));
+                        }
                         
                         if (data.simbrief_id) {
                             localStorage.setItem('simbrief_id', data.simbrief_id);
@@ -1193,16 +1322,16 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
                         }
                         
                         renderLogbook();
+                        renderRoster();
                         alert("Backup restaurado com sucesso!");
                     }
                 } else {
-                    alert("O arquivo não parece ser um backup válido deste sistema.");
+                    alert("Arquivo inválido.");
                 }
             } catch (err) {
                 console.error(err);
-                alert("Erro ao ler o arquivo. Verifique se é um JSON válido.");
+                alert("Erro ao ler o arquivo.");
             }
-            // Limpa o input para permitir carregar o mesmo arquivo novamente se necessário
             event.target.value = '';
         };
         reader.readAsText(file);
@@ -1213,20 +1342,18 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         const f = displayedFlights[index];
         if (!f) return;
 
-        // Preenche o Modal
         document.getElementById('modal-cia-badge').innerText = f.airline.name;
         document.getElementById('modal-cia-badge').style.backgroundColor = f.airline.color;
         document.getElementById('modal-flight-num').innerText = f.ident;
         
         document.getElementById('md-acft').innerText = f.type;
-        document.getElementById('md-route').textContent = f.rota; // textContent para segurança
+        document.getElementById('md-route').textContent = f.rota; 
         document.getElementById('md-deparr').innerText = `${f.origin} (${f.depDisplayUTC}z) -> ${f.dest} (${f.arrDisplayUTC}z)`;
         document.getElementById('md-eet').innerText = minutesToTimeStr(f.durMin).replace(':', 'h ') + 'm';
         document.getElementById('md-fl').innerText = f.fl;
         document.getElementById('md-days').innerText = formatDaysOp(f.daysOp);
-        document.getElementById('md-obs').textContent = f.obs; // textContent para segurança
+        document.getElementById('md-obs').textContent = f.obs;
 
-        // Mostra o Modal
         document.getElementById('flight-modal').style.display = 'flex';
     }
 
@@ -1234,7 +1361,6 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         document.getElementById('flight-modal').style.display = 'none';
     }
     
-    // Fecha modal clicando fora
     window.onclick = function(event) {
         const modal = document.getElementById('flight-modal');
         if (event.target == modal) {
@@ -1278,7 +1404,6 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         allFlightsDB = [];
         const debugDiv = document.getElementById('file-debug');
         
-        // Desativa botões durante carregamento
         const allButtons = document.querySelectorAll('button');
         allButtons.forEach(btn => btn.disabled = true);
         document.getElementById('empty-msg').innerText = "Carregando malha aérea... Por favor aguarde.";
@@ -1318,7 +1443,6 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
                 document.getElementById('empty-msg').style.color = "#c0392b";
             }
         } finally {
-            // Reativa botões
             allButtons.forEach(btn => btn.disabled = false);
         }
     }
@@ -1361,7 +1485,6 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
 
         for (let line of lines) {
             line = line.trim();
-            // Validação mínima da linha para evitar erros de substring
             if (line.length < 50) continue;
 
             if (/^\d{6}\s+\d{6}/.test(line)) {
@@ -1421,7 +1544,7 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         return flights;
     }
 
-    // --- 6. LÓGICA DE ESCALA ATUALIZADA (Lê o campo Aeroporto) ---
+    // --- 6. LÓGICA DE ESCALA ---
     function generateRealTimeChain(chainLength) {
         const tableBody = document.getElementById('board-content');
         const msgDiv = document.getElementById('empty-msg');
@@ -1440,26 +1563,19 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         
         let validFlightsToday = allFlightsDB.filter(f => isFlightValidToday(f, now));
 
-        // Aplica o filtro de CIA Aérea
         if (currentFilter !== 'todas') {
             validFlightsToday = validFlightsToday.filter(f => f.airline.name === currentFilter);
         }
 
-        // Verifica se o usuário digitou um aeroporto para FORÇAR o início
         const rawForcedOrigin = document.getElementById('airport-search').value;
         const forcedOrigin = rawForcedOrigin ? rawForcedOrigin.toUpperCase().trim() : "";
 
-        // INÍCIO DA LÓGICA HÍBRIDA (ALEATÓRIO vs FIXO)
         let candidates = [];
 
         if (forcedOrigin.length >= 3) {
-            // LÓGICA 1: COM AEROPORTO DEFINIDO (Força a origem)
             candidates = validFlightsToday.filter(f => f.origin === forcedOrigin);
-            
-            // Filtro de tempo (Futuro)
             let futureCandidates = candidates.filter(f => f.depMinUTC >= currentUTCMinutes + 30);
             
-            // Se não houver voos futuros, tenta pegar voos imediatos (fallback)
             if (futureCandidates.length > 0) {
                 candidates = futureCandidates;
             } else {
@@ -1467,17 +1583,12 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
             }
 
         } else {
-            // LÓGICA 2: SEM AEROPORTO (Aleatório / Qualquer Origem)
-            // Filtra APENAS por tempo (Futuro + 30min)
             candidates = validFlightsToday.filter(f => f.depMinUTC >= currentUTCMinutes + 30);
-            
-            // Fallback: Se não houver voos > 30min (ex: final do dia), tenta pegar voos imediatos (> 0min)
             if (candidates.length === 0) {
                 candidates = validFlightsToday.filter(f => f.depMinUTC >= currentUTCMinutes);
             }
         }
 
-        // Se não houver voos disponíveis com as restrições
         if (candidates.length === 0) {
             msgDiv.style.display = 'block';
             let msg = "Nenhum voo encontrado para os filtros atuais";
@@ -1487,11 +1598,8 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
             return;
         }
 
-        // Ordena por horário
         candidates.sort((a,b) => a.depMinUTC - b.depMinUTC);
         
-        // Sorteia um dos voos disponíveis (Seed Aleatório)
-        // Se for filtro específico, pega o primeiro. Se for aleatório, pega um dos primeiros 10.
         const poolSize = Math.min(15, candidates.length);
         const seedIndex = Math.floor(Math.random() * poolSize);
         let currentFlight = candidates[seedIndex];
@@ -1511,7 +1619,6 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
                 );
             });
 
-            // Tenta achar voo mesmo que a hora estoure o dia (simplificado)
             if (nextLegCandidates.length === 0) {
                  nextLegCandidates = validFlightsToday.filter(f => {
                     return (
@@ -1529,7 +1636,6 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
                     if(diffB < 0) diffB += 1440;
                     return diffA - diffB;
                 });
-                
                 chain.push(enrichFlightData(nextLegCandidates[0]));
             } else {
                 break; 
@@ -1541,7 +1647,6 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
     }
 
     function enrichFlightData(flight) {
-        // UTC-3 para Brasília (HARDCODED)
         const toBRT = (utcMinutes) => {
             let brt = utcMinutes - 180;
             if (brt < 0) brt += 1440;
@@ -1552,7 +1657,6 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         const depMinBRT = toBRT(flight.depMinUTC);
         const arrMinBRT = toBRT(flight.arrMinUTC);
         
-        // UTC Puro (Normalizado para display)
         let depUtcDisp = flight.depMinUTC;
         if(depUtcDisp >= 1440) depUtcDisp -= 1440;
         
@@ -1561,8 +1665,6 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
 
         let nextDay = false;
         
-        // Correção lógica +1 (Baseada em hora local BRT)
-        // Se a chegada for "menor" que a saída no horário local, virou o dia.
         if (arrMinBRT < depMinBRT) {
             nextDay = true;
         }
@@ -1608,7 +1710,9 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         flights.forEach((f, index) => {
             const tr = document.createElement('tr');
             
+            // Botões de Ação
             const sbButton = `<button class="btn-sb" onclick="openSimBriefFromIndex(${index})">SIMBRIEF ↗</button>`;
+            const scheduleButton = `<button class="btn-schedule" title="Agendar este voo" onclick="scheduleFlight(${index})">📅</button>`;
             
             const arrHtml = f.isNextDay 
                 ? `<span class="time-brt">${f.arrDisplay}</span> <span class="next-day-badge">(+1)</span>` 
@@ -1625,7 +1729,10 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
             `;
 
             tr.innerHTML = `
-                <td style="text-align:center;">${sbButton}</td>
+                <td style="text-align:center; white-space:nowrap;">
+                    ${sbButton}
+                    ${scheduleButton}
+                </td>
                 <td class="col-flight"><span class="flight-link" onclick="showFlightDetails(${index})">${f.ident}</span></td>
                 <td><span class="cia-badge" style="background-color: ${f.airline.color}">${f.airline.name}</span></td>
                 <td class="col-airport">${f.origin}</td>
@@ -1652,7 +1759,6 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         document.getElementById('board-content').innerHTML = '';
     }
 
-    // Inicializa carregamento
     loadAllFiles();
 
 </script>
