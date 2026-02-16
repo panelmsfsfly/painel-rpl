@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel RPL - Dispatch Integrado 5.7 (Roster & Scheduler)</title>
+<title>Painel RPL - Dispatch Integrado 5.8 (Pro Roster)</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
@@ -180,6 +180,9 @@
 
     .btn-schedule { background-color: #2ecc71; color: white; padding: 8px 14px; font-size: 13px; border-radius: 5px; margin-left: 5px; }
     .btn-schedule:hover { background-color: #27ae60; }
+    
+    .btn-remove-roster { background-color: #e74c3c; color: white; padding: 8px 14px; font-size: 13px; border-radius: 5px; margin-left: 5px; }
+    .btn-remove-roster:hover { background-color: #c0392b; }
 
     .btn-backup { background-color: #27ae60; color: white; margin-left: 10px; font-size: 12px; padding: 8px 12px;}
     .btn-backup:hover { background-color: #2ecc71; }
@@ -187,7 +190,7 @@
     .btn-restore { background-color: #8e44ad; color: white; margin-left: 5px; font-size: 12px; padding: 8px 12px;}
     .btn-restore:hover { background-color: #9b59b6; }
 
-    /* --- TABELA --- */
+    /* --- TABELA (Compartilhada entre Principal e Roster) --- */
     .flight-table-container {
         background-color: #fff;
         border-radius: 8px;
@@ -196,8 +199,9 @@
         width: 100%;
         max-width: 1600px;
         border: 1px solid #e0e0e0;
-        min-height: 250px;
+        min-height: 100px;
         box-sizing: border-box;
+        margin-bottom: 25px;
     }
     
     .flight-table { width: 100%; border-collapse: collapse; min-width: 1200px; }
@@ -261,7 +265,7 @@
     #file-debug { position: fixed; bottom: 5px; right: 5px; font-size: 12px; color: #ccc; z-index: 999; }
 
     /* --- ROSTER / AGENDAMENTO --- */
-    .roster-container {
+    .roster-section-container {
         width: 100%; max-width: 1600px; background-color: #fff; padding: 25px; margin-top: 25px;
         border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; box-sizing: border-box;
         border-top: 5px solid #2ecc71;
@@ -405,7 +409,7 @@
 
 <div class="header-container">
     <div class="header-left header-title">
-        <h1>RPL DISPATCH 5.7</h1>
+        <h1>RPL DISPATCH 5.8</h1>
         <div>PARA USO EM SIMULADOR DE VOO DOMÉSTICO</div>
     </div>
     
@@ -484,29 +488,32 @@
     <div id="empty-msg" class="msg-box">Carregando dados do servidor...</div>
 </div>
 
-<div id="roster-section" class="roster-container">
+<div id="roster-section" class="roster-section-container">
     <div class="roster-header">
         <div class="roster-title">📅 Minha Escala (Roster)</div>
         <div style="font-size: 13px; color:#777;">Planeje seus próximos voos aqui</div>
     </div>
     
-    <div style="overflow-x:auto;">
-        <table class="logbook-table">
+    <div class="flight-table-container" style="box-shadow:none; border:none; margin:0;">
+        <table class="flight-table">
             <thead>
                 <tr>
-                    <th>Data Agendada</th>
-                    <th>Voo</th>
+                    <th style="text-align: center;">Ações</th> <th>Voo</th>
+                    <th>Cia</th>
                     <th>Origem</th>
+                    <th title="Horário ZULO / BRASÍLIA">Partida (Z / BRT)</th>
                     <th>Destino</th>
-                    <th>Aeronave</th>
-                    <th style="text-align:center;">Ações</th>
+                    <th title="Calculado ZULO / BRASÍLIA">Chegada (Z / BRT)</th>
+                    <th style="text-align: center;">FL</th>
+                    <th>Rota</th>
+                    <th>Observações</th>
                 </tr>
             </thead>
             <tbody id="roster-body">
             </tbody>
         </table>
         <div id="roster-empty" style="padding:20px; text-align:center; color:#999; display:block;">
-            Nenhum voo agendado. Clique no ícone 📅 na tabela de busca.
+            Nenhum voo agendado. Clique no ícone 📅 na tabela de busca para adicionar.
         </div>
     </div>
 </div>
@@ -556,7 +563,7 @@
     <div class="tutorial-grid">
         <div class="tut-card tut-escala">
             <h4><span class="tut-icon">📅</span> Agendar Voos (Novo)</h4>
-            <p>Encontre um voo na tabela e clique no ícone 📅. Escolha a data e ele será salvo na sua <strong>Escala (Roster)</strong> para despachar depois.</p>
+            <p>Encontre um voo na tabela e clique no ícone 📅. Ele será salvo na sua <strong>Escala (Roster)</strong> com o horário do plano.</p>
         </div>
         
         <div class="tut-card tut-filtro">
@@ -1092,28 +1099,24 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         const flight = displayedFlights[index];
         if (!flight) return;
 
-        // Pergunta data (padrão hoje)
-        const today = new Date().toISOString().split('T')[0];
-        const dateInput = prompt("Para qual data deseja agendar este voo? (AAAA-MM-DD)", today);
-        
-        if (!dateInput) return; // Cancelado
-
+        // Sem prompt. Pega direto o voo enriquecido (com horários já calculados)
         let roster = getSafeStorage('myPilotRoster');
         
         const entry = {
             id: Date.now(),
-            scheduledDate: dateInput,
             flightData: flight
         };
 
         roster.push(entry);
         
-        // Ordena por data
-        roster.sort((a, b) => new Date(a.scheduledDate) - new Date(b.scheduledDate));
+        // Ordena por horário de saída
+        roster.sort((a, b) => a.flightData.depMinUTC - b.flightData.depMinUTC);
         
         localStorage.setItem('myPilotRoster', JSON.stringify(roster));
         renderRoster();
-        alert(`Voo ${flight.ident} agendado para ${dateInput}!`);
+        // Feedback visual sutil opcional, ou alerta
+        // alert(`Voo ${flight.ident} adicionado à escala!`);
+        document.getElementById('roster-section').scrollIntoView({behavior: 'smooth'});
     }
 
     function renderRoster() {
@@ -1134,20 +1137,39 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
             const f = entry.flightData;
             const tr = document.createElement('tr');
             
-            // Format Date PT-BR
-            const dateParts = entry.scheduledDate.split('-');
-            const dateFmt = `${dateParts[2]}/${dateParts[1]}`;
+            // Botões da Roster: Remove em vez de Agendar
+            const sbButton = `<button class="btn-sb" onclick="dispatchRosterFlight(${entry.id})">DESPACHAR ↗</button>`;
+            const removeButton = `<button class="btn-remove-roster" title="Remover da escala" onclick="deleteRosterEntry(${entry.id})">❌</button>`;
 
+            const arrHtml = f.isNextDay 
+                ? `<span class="time-brt">${f.arrDisplay}</span> <span class="next-day-badge">(+1)</span>` 
+                : `<span class="time-brt">${f.arrDisplay}</span>`;
+
+            const depCell = `
+                <div class="time-utc">${f.depDisplayUTC}Z</div>
+                <div class="time-brt">${f.depDisplay}</div>
+            `;
+            
+            const arrCell = `
+                <div class="time-utc">${f.arrDisplayUTC}Z</div>
+                <div>${arrHtml}</div>
+            `;
+
+            // Mesma estrutura da tabela principal
             tr.innerHTML = `
-                <td style="font-weight:bold; color:#27ae60;">${dateFmt}</td>
-                <td style="font-weight:bold; color:#2980b9;">${f.ident}</td>
-                <td>${f.origin}</td>
-                <td>${f.dest}</td>
-                <td>${f.type.split('/')[0]}</td>
-                <td style="text-align:center;">
-                    <button class="btn-sb" style="padding:4px 8px; font-size:11px;" onclick="dispatchRosterFlight(${entry.id})">DESPACHAR</button>
-                    <button class="btn-delete-entry" onclick="deleteRosterEntry(${entry.id})">❌</button>
+                <td style="text-align:center; white-space:nowrap;">
+                    ${sbButton}
+                    ${removeButton}
                 </td>
+                <td class="col-flight">${f.ident}</td>
+                <td><span class="cia-badge" style="background-color: ${f.airline.color}">${f.airline.name}</span></td>
+                <td class="col-airport">${f.origin}</td>
+                <td class="col-time">${depCell}</td>
+                <td class="col-airport">${f.dest}</td>
+                <td class="col-time time-arr">${arrCell}</td>
+                <td class="col-fl">${f.fl}</td>
+                <td class="col-rota">${f.rota}</td>
+                <td class="col-obs">${f.obs}</td>
             `;
             tbody.appendChild(tr);
         });
@@ -1156,11 +1178,8 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
     function dispatchRosterFlight(id) {
         const roster = getSafeStorage('myPilotRoster');
         const entry = roster.find(e => e.id === id);
-        
         if (entry) {
             openSimBriefWithData(entry.flightData);
-            // Opcional: Remover do agendamento após despachar?
-            // deleteRosterEntry(id); 
         }
     }
 
@@ -1279,7 +1298,7 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         const sbID = localStorage.getItem('simbrief_id') || "";
 
         const backupData = {
-            version: "5.7",
+            version: "5.8",
             date: new Date().toISOString(),
             simbrief_id: sbID,
             logbook: logbookData,
