@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel RPL - Dispatch Integrado 5.8 (Pro Roster)</title>
+<title>Painel RPL - Dispatch Integrado 5.10 (SimBrief Fix)</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
@@ -120,7 +120,8 @@
     .sb-input:focus { border-color: #3498db; outline: none; }
     .sb-input:disabled { background-color: #f0f0f0; cursor: not-allowed; }
 
-    #search-input, #airport-search { border-color: #3498db; color: #2980b9; }
+    #search-input { border-color: #3498db; color: #2980b9; }
+    #airport-search, #destination-search { border-color: #3498db; color: #2980b9; }
 
     button {
         cursor: pointer;
@@ -409,7 +410,7 @@
 
 <div class="header-container">
     <div class="header-left header-title">
-        <h1>RPL DISPATCH 5.8</h1>
+        <h1>RPL DISPATCH 5.10</h1>
         <div>PARA USO EM SIMULADOR DE VOO DOMÉSTICO</div>
     </div>
     
@@ -442,8 +443,12 @@
     </div>
 
     <div class="control-group">
-        <span class="control-label">3. Aeroporto / Início:</span>
-        <input type="text" id="airport-search" class="sb-input" placeholder="Ex: SBSP" onkeydown="if(event.key==='Enter') searchByAirport()">
+        <span class="control-label">3. Rota (DEP / ARR):</span>
+        <div style="display:flex; align-items:center; gap:5px;">
+            <input type="text" id="airport-search" class="sb-input" style="width:110px;" placeholder="Origem" onkeydown="if(event.key==='Enter') searchByAirport()">
+            <span style="font-weight:bold; color:#95a5a6;">➜</span>
+            <input type="text" id="destination-search" class="sb-input" style="width:110px;" placeholder="Destino (Opc)" onkeydown="if(event.key==='Enter') searchByAirport()">
+        </div>
         <button class="btn-search" onclick="searchByAirport()">FILTRAR</button>
     </div>
 
@@ -567,8 +572,9 @@
         </div>
         
         <div class="tut-card tut-filtro">
-            <h4><span class="tut-icon">🎯</span> Filtro por Aeroporto</h4>
-            <p>Quer sair de um lugar específico? Digite o ICAO (ex: <strong>SBSP</strong>) no campo <strong>3</strong> e clique em <strong>FILTRAR</strong>.</p>
+            <h4><span class="tut-icon">🎯</span> Filtro de Rota</h4>
+            <p><strong>Origem:</strong> Obrigatório (ex: SBSP).<br>
+            <strong>Destino:</strong> Opcional. Se deixar vazio, mostra todos os destinos a partir da origem.</p>
         </div>
 
         <div class="tut-card tut-busca">
@@ -976,7 +982,7 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         }
     }
 
-    // --- ABRIR SIMBRIEF ---
+    // --- ABRIR SIMBRIEF COM HORÁRIO ZULU ---
     function openSimBriefWithData(flight) {
         const sbID = document.getElementById("sb-id").value;
         if (!sbID) {
@@ -988,13 +994,27 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         // SALVAR NO LOGBOOK AUTOMATICAMENTE
         saveToLogbook(flight);
 
+        // 1. DADOS BÁSICOS
         const airlineCode = flight.ident.match(/^[A-Z]+/)[0];
         const fltNumber = flight.ident.match(/\d+/)[0];
         let cleanType = flight.type.split('/')[0]; 
-
         const routeEncoded = encodeURIComponent(flight.rota);
 
-        const url = `https://www.simbrief.com/system/dispatch.php?userid=${sbID}&airline=${airlineCode}&fltnum=${fltNumber}&orig=${flight.origin}&dest=${flight.dest}&route=${routeEncoded}&type=${cleanType}`;
+        // 2. CÁLCULO DO HORÁRIO (ZULU)
+        let hours = Math.floor(flight.depMinUTC / 60);
+        let minutes = flight.depMinUTC % 60;
+        if (hours >= 24) hours = hours % 24;
+
+        // 3. CÁLCULO DA DATA (DDMMMYY)
+        const dateObj = new Date(); 
+        const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+        const day = String(dateObj.getUTCDate()).padStart(2, '0');
+        const month = monthNames[dateObj.getUTCMonth()];
+        const year = String(dateObj.getUTCFullYear()).slice(-2); 
+        const sbDate = `${day}${month}${year}`;
+
+        // 4. MONTAGEM DA URL FINAL
+        const url = `https://www.simbrief.com/system/dispatch.php?userid=${sbID}&airline=${airlineCode}&fltnum=${fltNumber}&orig=${flight.origin}&dest=${flight.dest}&route=${routeEncoded}&type=${cleanType}&date=${sbDate}&deph=${hours}&depm=${minutes}`;
         
         window.open(url, '_blank');
     }
@@ -1049,13 +1069,17 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         document.getElementById('empty-msg').style.display = 'none';
     }
 
-    // --- BUSCA POR AEROPORTO COM FILTRO DE CIA ---
+    // --- BUSCA POR ROTA (ORIGEM E/OU DESTINO) ---
     function searchByAirport() {
-        const rawInput = document.getElementById('airport-search').value;
-        const input = rawInput ? rawInput.toUpperCase().trim() : "";
+        const rawOrig = document.getElementById('airport-search').value;
+        const orig = rawOrig ? rawOrig.toUpperCase().trim() : "";
         
-        if (input.length < 3) {
-            alert("Por favor, digite o código do aeroporto (Ex: SBSP).");
+        const rawDest = document.getElementById('destination-search').value;
+        const dest = rawDest ? rawDest.toUpperCase().trim() : "";
+        
+        // Validação: Pelo menos a origem é obrigatória para começar
+        if (orig.length < 3) {
+            alert("Por favor, digite pelo menos o código da Origem (Ex: SBSP).");
             return;
         }
 
@@ -1069,8 +1093,11 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
 
         const matches = allFlightsDB.filter(f => {
             const airlineMatch = (currentFilter === 'todas') || (f.airline.name === currentFilter);
+            
+            // Lógica de Filtro:
+            const routeMatch = (f.origin === orig) && (dest ? f.dest === dest : true);
 
-            return f.origin === input && 
+            return routeMatch && 
                    isFlightValidToday(f, now) && 
                    f.depMinUTC >= currentUTCMinutes &&
                    airlineMatch; 
@@ -1078,9 +1105,12 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
 
         if (matches.length === 0) {
             let ciaMsg = currentFilter === 'todas' ? '' : ` da ${currentFilter}`;
-            alert(`Nenhum voo${ciaMsg} encontrado saindo de ${input} para o restante do dia de hoje.`);
+            let routeMsg = dest ? `de ${orig} para ${dest}` : `saindo de ${orig}`;
+            
+            alert(`Nenhum voo${ciaMsg} encontrado ${routeMsg} para o restante do dia de hoje.`);
+            
             document.getElementById('board-content').innerHTML = '';
-            document.getElementById('empty-msg').innerText = `Sem voos partindo de ${input} após ${now.getUTCHours().toString().padStart(2,'0')}:${now.getUTCMinutes().toString().padStart(2,'0')}Z`;
+            document.getElementById('empty-msg').innerText = `Sem voos encontrados na rota solicitada após ${now.getUTCHours().toString().padStart(2,'0')}:${now.getUTCMinutes().toString().padStart(2,'0')}Z`;
             document.getElementById('empty-msg').style.display = 'block';
             return;
         }
@@ -1298,7 +1328,7 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         const sbID = localStorage.getItem('simbrief_id') || "";
 
         const backupData = {
-            version: "5.8",
+            version: "5.10",
             date: new Date().toISOString(),
             simbrief_id: sbID,
             logbook: logbookData,
