@@ -3,713 +3,571 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel RPL - Dispatch Integrado 5.10 (SimBrief Fix)</title>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<title>RPL Dispatch 6.2 - Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-    /* --- ESTILOS GERAIS --- */
+    /* --- VARIÁVEIS E RESET --- */
+    :root {
+        --bg-body: #f3f5f9;
+        --bg-card: #ffffff;
+        --text-main: #2d3748;
+        --text-muted: #718096;
+        --primary: #4e73df; /* Azul Dashboard */
+        --accent-purple: #6f42c1;
+        --accent-cyan: #36b9cc;
+        --accent-green: #1cc88a;
+        --accent-red: #e74a3b;
+        --accent-orange: #f6c23e;
+        --shadow-sm: 0 2px 4px rgba(0,0,0,0.02);
+        --shadow-md: 0 4px 6px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.08);
+        --radius: 12px;
+    }
+
+    * { box-sizing: border-box; outline: none; }
+
     body {
-        font-family: 'Roboto', sans-serif;
-        background-color: #eef2f5;
-        padding: 10px;
+        font-family: 'Inter', sans-serif;
+        background-color: var(--bg-body);
+        color: var(--text-main);
+        padding: 20px;
+        margin: 0;
         display: flex;
         flex-direction: column;
         align-items: center;
         min-height: 100vh;
-        margin: 0;
-        font-size: 16px;
+        font-size: 14px;
+    }
+
+    /* --- LAYOUT WRAPPER --- */
+    .dashboard-wrapper {
+        width: 100%;
+        max-width: 1400px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    /* --- ESTILO DE CARDS --- */
+    .card-panel {
+        background-color: var(--bg-card);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-md);
+        padding: 25px;
+        width: 100%;
+        border: 1px solid rgba(0,0,0,0.03);
     }
 
     /* --- CABEÇALHO --- */
     .header-container {
-        width: 100%;
-        max-width: 1600px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 20px;
-        background: linear-gradient(135deg, #1e3c72, #2a5298);
-        color: white;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        box-sizing: border-box;
+        background: var(--bg-card);
+        border-radius: var(--radius);
+        padding: 20px 30px;
+        box-shadow: var(--shadow-md);
     }
 
-    .header-left { flex: 1; text-align: left; }
-    .header-center { flex: 2; text-align: center; }
-    .header-right { flex: 1; text-align: right; display: flex; flex-direction: column; align-items: flex-end; }
-
-    .header-title h1 { margin: 0; font-size: 22px; letter-spacing: 1px; opacity: 0.95; font-weight: 900; }
-    .header-title div { 
-        font-size: 13px; 
-        color: #ffda79; 
-        font-weight: bold;
+    .header-title h1 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 800;
+        color: var(--primary);
+        letter-spacing: -0.5px;
+    }
+    .header-title div {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-muted);
         text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-top: 6px; 
+        margin-top: 4px;
     }
 
+    .center-info { text-align: center; }
     .center-main-text {
-        font-size: 28px;
-        font-weight: 900;
-        letter-spacing: 2px;
+        font-weight: 700;
+        font-size: 16px;
+        color: var(--text-main);
         text-transform: uppercase;
-        margin-bottom: 8px;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
     }
     .center-sub-text {
-        font-family: 'Share Tech Mono', monospace;
-        font-size: 18px;
-        color: #dfe6e9;
-        background: rgba(0,0,0,0.25);
-        padding: 4px 12px;
-        border-radius: 4px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        color: var(--text-muted);
+        background: #f1f3f9;
+        padding: 4px 10px;
+        border-radius: 6px;
+        margin-top: 5px;
         display: inline-block;
     }
 
+    .clock-box { text-align: right; }
     .clock-time {
-        font-family: 'Share Tech Mono', monospace;
-        font-size: 36px;
-        color: #fff;
-        text-shadow: 0 0 10px rgba(255,255,255,0.3);
-        line-height: 1;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--text-main);
+        letter-spacing: -1px;
     }
-    .clock-date { font-size: 14px; color: #dfe6e9; text-transform: uppercase; margin-top: 6px; font-weight: bold; }
+    .clock-date { font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
 
     /* --- CONTROLES --- */
-    .controls-container {
-        width: 100%;
-        max-width: 1600px;
-        background-color: #fff;
-        padding: 20px;
-        margin-bottom: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
+    .controls-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         gap: 20px;
-        box-sizing: border-box;
+        align-items: end;
     }
 
     .control-group {
         display: flex;
-        align-items: center;
-        gap: 12px;
-        flex-wrap: wrap;
+        flex-direction: column;
+        gap: 8px;
     }
 
-    .control-label { font-weight: 800; color: #333; font-size: 15px; text-transform: uppercase; margin-right: 5px; white-space: nowrap; }
-
-    /* Inputs e Botões */
-    .sb-input {
-        padding: 10px 14px;
-        border: 2px solid #dfe6e9;
-        border-radius: 6px;
-        font-family: 'Roboto', sans-serif;
+    .control-label {
+        font-size: 11px;
         font-weight: 700;
-        color: #2c3e50;
-        font-size: 16px;
-        width: 140px;
-        transition: 0.2s;
-        box-sizing: border-box;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        letter-spacing: 0.5px;
     }
-    .sb-input:focus { border-color: #3498db; outline: none; }
-    .sb-input:disabled { background-color: #f0f0f0; cursor: not-allowed; }
 
-    #search-input { border-color: #3498db; color: #2980b9; }
-    #airport-search, #destination-search { border-color: #3498db; color: #2980b9; }
+    .sb-input {
+        background: #f8f9fc;
+        border: 1px solid #e3e6f0;
+        border-radius: 8px;
+        padding: 10px 15px;
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        color: var(--text-main);
+        width: 100%;
+        transition: all 0.2s;
+    }
+    .sb-input:focus {
+        border-color: var(--primary);
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(78, 115, 223, 0.1);
+    }
 
+    /* Botões Modernos */
     button {
         cursor: pointer;
         border: none;
-        padding: 12px 18px;
-        border-radius: 6px;
-        font-family: 'Roboto', sans-serif;
-        font-weight: 800;
-        font-size: 14px;
-        transition: 0.2s;
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-family: 'Inter', sans-serif;
+        font-weight: 700;
+        font-size: 12px;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
     }
-    button:disabled {
-        background-color: #bdc3c7 !important;
-        color: #7f8c8d !important;
-        cursor: wait;
-        transform: none !important;
-    }
+    button:active { transform: translateY(1px); }
 
-    .btn-action { background-color: #2980b9; color: white; }
-    .btn-action:hover { background-color: #3498db; }
-    
-    .btn-search { background-color: #8e44ad; color: white; }
-    .btn-search:hover { background-color: #9b59b6; }
+    .btn-action { background: var(--primary); color: white; }
+    .btn-action:hover { background: #3b5cb8; box-shadow: 0 4px 12px rgba(78, 115, 223, 0.3); }
 
-    .btn-reset { background-color: #7f8c8d; color: white; }
-    .btn-reset:hover { background-color: #95a5a6; }
+    .btn-search { background: var(--accent-purple); color: white; height: 38px; }
+    .btn-search:hover { background: #5a32a3; box-shadow: 0 4px 12px rgba(111, 66, 193, 0.3); }
+
+    .btn-reset { background: #e2e6ea; color: var(--text-muted); }
+    .btn-reset:hover { background: #dbe0e5; color: var(--text-main); }
 
     .btn-logbook { 
-        background-color: #f1c40f; 
-        color: #2c3e50; 
-        border: 2px solid #f39c12;
-        margin-top: 10px;
-        padding: 8px 20px;
-        font-weight: bold;
+        background: #fff; 
+        color: var(--text-main); 
+        border: 1px solid #e3e6f0;
+        font-size: 11px;
+        padding: 6px 12px;
+        margin-top: 5px;
     }
-    .btn-logbook:hover { background-color: #f39c12; color: #fff; }
+    .btn-logbook:hover { border-color: var(--primary); color: var(--primary); }
 
-    .btn-delete-entry { background-color: #e74c3c; color: white; padding: 6px 10px; border-radius: 4px; font-size: 12px; }
-    .btn-delete-entry:hover { background-color: #c0392b; }
-
-    .btn-filter { background-color: #f1f2f6; color: #7f8c8d; border: 1px solid #dfe4ea; flex-grow: 1; text-align: center; font-size: 14px; }
-    .btn-filter:hover { background-color: #dfe4ea; }
-    .btn-filter.active { color: #fff; border-color: transparent; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-    
-    .btn-filter[data-cia="LATAM"].active { background-color: #1B0088; }
-    .btn-filter[data-cia="GOL"].active { background-color: #FF5E00; }
-    .btn-filter[data-cia="AZUL"].active { background-color: #0055A4; }
-    .btn-filter[onclick*="todas"].active { background-color: #2c3e50; }
-
-    .btn-draw { background-color: #34495e; color: #fff; min-width: 50px; flex-grow: 1; font-size: 15px; }
-    .btn-draw:hover { background-color: #27ae60; transform: translateY(-2px); }
-
-    .btn-sb { background-color: #c0392b; color: white; padding: 8px 14px; font-size: 13px; border-radius: 5px; text-decoration: none; display: inline-block; white-space: nowrap; }
-    .btn-sb:hover { background-color: #e74c3c; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-
-    .btn-schedule { background-color: #2ecc71; color: white; padding: 8px 14px; font-size: 13px; border-radius: 5px; margin-left: 5px; }
-    .btn-schedule:hover { background-color: #27ae60; }
-    
-    .btn-remove-roster { background-color: #e74c3c; color: white; padding: 8px 14px; font-size: 13px; border-radius: 5px; margin-left: 5px; }
-    .btn-remove-roster:hover { background-color: #c0392b; }
-
-    .btn-backup { background-color: #27ae60; color: white; margin-left: 10px; font-size: 12px; padding: 8px 12px;}
-    .btn-backup:hover { background-color: #2ecc71; }
-    
-    .btn-restore { background-color: #8e44ad; color: white; margin-left: 5px; font-size: 12px; padding: 8px 12px;}
-    .btn-restore:hover { background-color: #9b59b6; }
-
-    /* --- TABELA (Compartilhada entre Principal e Roster) --- */
-    .flight-table-container {
-        background-color: #fff;
-        border-radius: 8px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        overflow-x: auto;
-        width: 100%;
-        max-width: 1600px;
-        border: 1px solid #e0e0e0;
-        min-height: 100px;
-        box-sizing: border-box;
-        margin-bottom: 25px;
+    /* Filtros CIA */
+    .filter-wrapper { display: flex; gap: 5px; background: #f8f9fc; padding: 4px; border-radius: 8px; }
+    .btn-filter {
+        flex: 1;
+        background: transparent;
+        color: var(--text-muted);
+        padding: 8px;
+        font-size: 11px;
+        border-radius: 6px;
     }
+    .btn-filter:hover { background: rgba(0,0,0,0.03); }
+    .btn-filter.active { background: white; color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
     
-    .flight-table { width: 100%; border-collapse: collapse; min-width: 1200px; }
+    .btn-filter[data-cia="LATAM"].active { color: #1B0088; font-weight: 800; }
+    .btn-filter[data-cia="GOL"].active { color: #FF5E00; font-weight: 800; }
+    .btn-filter[data-cia="AZUL"].active { color: #0055A4; font-weight: 800; }
+
+    /* Pernas */
+    .legs-wrapper { display: flex; gap: 5px; }
+    .btn-draw { flex: 1; background: var(--text-main); color: white; }
+    .btn-draw:hover { background: var(--primary); }
+
+    /* Botões Tabela */
+    .btn-sb { background: var(--accent-red); color: white; padding: 6px 10px; font-size: 11px; border-radius: 6px; }
+    .btn-sb:hover { background: #c0392b; box-shadow: 0 2px 8px rgba(231, 74, 59, 0.3); }
+
+    .btn-schedule { background: var(--accent-cyan); color: white; padding: 6px 10px; font-size: 14px; border-radius: 6px; }
+    .btn-schedule:hover { background: #2c9faf; }
+
+    .btn-remove { background: #e74a3b; color: white; padding: 6px 10px; border-radius: 6px; font-size: 11px; }
+
+    /* --- TABELAS --- */
+    .flight-table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 1000px; }
     
     .flight-table th {
-        background-color: #ecf0f1;
-        color: #576574;
-        font-weight: 900;
+        background: #f8f9fc;
+        color: var(--text-muted);
+        font-weight: 700;
         text-transform: uppercase;
-        padding: 15px;
+        font-size: 11px;
+        padding: 15px 20px;
         text-align: left;
-        font-size: 14px;
-        border-bottom: 3px solid #bdc3c7;
-        white-space: nowrap;
+        border-bottom: 1px solid #e3e6f0;
+        letter-spacing: 0.5px;
     }
+    .flight-table th:first-child { border-top-left-radius: var(--radius); }
+    .flight-table th:last-child { border-top-right-radius: var(--radius); }
 
     .flight-table td {
-        padding: 12px 15px;
-        border-bottom: 1px solid #f1f1f1;
-        color: #2c3e50;
+        padding: 15px 20px;
+        border-bottom: 1px solid #f1f3f9;
+        color: var(--text-main);
         vertical-align: middle;
-        font-size: 15px;
+        font-size: 13px;
+        background: white;
+        transition: background 0.2s;
     }
-    
-    .flight-table tr:hover { background-color: #f8f9fa; }
+    .flight-table tr:last-child td { border-bottom: none; }
+    .flight-table tr:hover td { background: #fafbfc; }
 
-    /* Colunas e Células */
-    .col-flight { font-family: 'Share Tech Mono', monospace; font-weight: 700; color: #000; font-size: 18px; }
-    
-    .flight-link { color: #2980b9; text-decoration: underline; cursor: pointer; transition: 0.2s; }
-    .flight-link:hover { color: #e74c3c; background-color: #f0f0f0; padding: 2px 4px; border-radius: 4px; text-decoration: none; }
+    /* Colunas Específicas */
+    .col-flight { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--primary); font-size: 14px; cursor: pointer; }
+    .col-flight:hover { text-decoration: underline; }
 
-    .col-airport { font-weight: bold; font-size: 16px; }
-
-    .col-time { 
-        font-family: 'Share Tech Mono', monospace; 
-        font-weight: 700; 
-        color: #fff; 
-        background: #2980b9;
-        padding: 6px 10px;
-        border-radius: 6px;
-        text-align: center;
-        min-width: 80px;
-        display: inline-flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-    .time-arr { background: #7f8c8d; }
-    
-    .time-utc { font-size: 13px; opacity: 0.8; margin-bottom: 2px; color: #e1e1e1; }
-    .time-brt { font-size: 19px; line-height: 1; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
-
-    .col-fl { font-weight: bold; color: #c0392b; text-align: center; font-family: monospace; font-size: 16px; }
-    .col-rota { font-family: monospace; font-size: 14px; color: #444; max-width: 250px; word-wrap: break-word; line-height: 1.4; }
-    .col-obs { font-family: monospace; font-size: 13px; color: #666; max-width: 180px; }
-    .cia-badge { padding: 5px 8px; border-radius: 4px; color: white; font-weight: bold; font-size: 12px; text-transform: uppercase; }
-    .next-day-badge { color: #f1c40f; font-size: 11px; margin-left: 4px; font-weight: 900; }
-    
-    .msg-box { padding: 60px; text-align: center; color: #bdc3c7; font-style: italic; font-size: 18px; }
-    #file-debug { position: fixed; bottom: 5px; right: 5px; font-size: 12px; color: #ccc; z-index: 999; }
-
-    /* --- ROSTER / AGENDAMENTO --- */
-    .roster-section-container {
-        width: 100%; max-width: 1600px; background-color: #fff; padding: 25px; margin-top: 25px;
-        border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; box-sizing: border-box;
-        border-top: 5px solid #2ecc71;
-    }
-    .roster-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-    .roster-title { font-size: 20px; font-weight: 900; color: #27ae60; text-transform: uppercase; }
-
-    /* --- LOGBOOK --- */
-    .logbook-container {
-        width: 100%; max-width: 1600px; background-color: #fff; padding: 25px; margin-top: 25px;
-        border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; box-sizing: border-box;
-        border-top: 5px solid #f1c40f; display: none;
-    }
-    .logbook-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; flex-wrap: wrap; gap: 10px; }
-    .logbook-title { font-size: 22px; font-weight: 900; color: #2c3e50; text-transform: uppercase; }
-    
-    /* ESTATÍSTICAS */
-    .logbook-stats {
-        background-color: #2980b9; color: white;
-        padding: 10px 15px; border-radius: 6px; margin-bottom: 20px;
-        font-family: 'Share Tech Mono', monospace; font-size: 16px;
-        display: flex; gap: 20px; font-weight: bold;
+    .cia-badge { 
+        padding: 4px 8px; border-radius: 6px; color: white; 
+        font-weight: 700; font-size: 10px; text-transform: uppercase; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
-    .logbook-table { width: 100%; border-collapse: collapse; font-family: 'Share Tech Mono', monospace; }
-    .logbook-table th { background: #34495e; color: white; padding: 10px; text-align: left; }
-    .logbook-table td { border-bottom: 1px solid #ddd; padding: 10px; color: #333; }
-    .logbook-table tr:nth-child(even) { background-color: #f9f9f9; }
+    .col-airport { font-weight: 700; font-size: 14px; color: var(--text-main); }
+
+    /* Time Pills */
+    .time-pill {
+        display: inline-flex; flex-direction: column; align-items: center; justify-content: center;
+        background: var(--text-main); color: white;
+        padding: 5px 12px; border-radius: 8px; min-width: 70px;
+    }
+    .time-pill.arr { background: var(--text-muted); }
+    .tp-utc { font-size: 10px; opacity: 0.7; font-family: 'JetBrains Mono'; margin-bottom: 2px; }
+    .tp-local { font-size: 15px; font-weight: 700; font-family: 'JetBrains Mono'; line-height: 1; }
+
+    .col-fl { font-family: 'JetBrains Mono'; font-weight: 700; color: var(--text-main); background: #f1f3f9; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
+    .col-rota { font-family: 'JetBrains Mono'; font-size: 11px; color: var(--text-muted); max-width: 250px; line-height: 1.4; }
+
+    /* --- ROSTER --- */
+    .roster-header { 
+        display: flex; justify-content: space-between; align-items: center; 
+        margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #f1f3f9; 
+    }
+    .section-title { font-size: 18px; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
+    .section-badge { background: var(--accent-cyan); color: white; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+
+    /* --- WIDGETS --- */
+    .stats-grid {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 25px;
+    }
+    .stat-card {
+        background: #fff; border: 1px solid #f1f3f9; border-radius: 12px; padding: 20px;
+        display: flex; align-items: center; gap: 15px;
+    }
+    .stat-icon { 
+        width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        font-size: 20px;
+    }
+    .icon-blue { background: rgba(78, 115, 223, 0.1); color: var(--primary); }
+    .icon-green { background: rgba(28, 200, 138, 0.1); color: var(--accent-green); }
+    
+    .stat-info h4 { margin: 0; font-size: 12px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; }
+    .stat-info p { margin: 5px 0 0 0; font-size: 22px; font-weight: 800; color: var(--text-main); font-family: 'JetBrains Mono'; }
 
     /* --- TUTORIAL --- */
-    .tutorial-container {
-        width: 100%; max-width: 1600px; background-color: #fff; padding: 20px; margin-top: 15px;
-        border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; box-sizing: border-box;
+    .tutorial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+    .tut-card { 
+        background: #fff; padding: 20px; border-radius: 12px; border: 1px solid #f1f3f9;
+        transition: transform 0.2s;
     }
-    .tutorial-title { font-size: 16px; font-weight: 900; color: #2c3e50; margin-bottom: 15px; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
-    .tutorial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-    .tut-card { background: #f8f9fa; padding: 15px; border-radius: 6px; border-left: 4px solid #bdc3c7; }
-    .tut-card h4 { margin: 0 0 8px 0; color: #34495e; font-size: 14px; font-weight: bold; text-transform: uppercase; }
-    .tut-card p { margin: 0; font-size: 13px; color: #7f8c8d; line-height: 1.4; }
-    .tut-icon { font-size: 18px; margin-right: 5px; vertical-align: middle; }
-    .tut-escala { border-left-color: #27ae60; }
-    .tut-filtro { border-left-color: #e67e22; }
-    .tut-busca { border-left-color: #8e44ad; }
-    .tut-sb { border-left-color: #c0392b; }
+    .tut-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+    .tut-card h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 14px; font-weight: 700; }
+    .tut-card p { margin: 0; font-size: 12px; color: var(--text-muted); line-height: 1.5; }
 
-    /* --- SIMBRIEF AO VIVO --- */
-    .sb-live-container {
-        width: 100%; max-width: 1600px; background-color: #fff; padding: 25px; margin-top: 25px;
-        border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; box-sizing: border-box;
-    }
-    .sb-live-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 3px solid #f1f2f6; padding-bottom: 15px; flex-wrap: wrap; gap: 15px; }
-    .sb-live-title { font-size: 24px; font-weight: 900; color: #2c3e50; display: flex; align-items: center; gap: 10px; }
-    .sb-status { font-size: 15px; font-weight: bold; color: #95a5a6; display: block; margin-bottom: 5px;}
-    .sb-raw-header { font-family: 'Share Tech Mono', monospace; font-size: 15px; background-color: #f0f0f0; color: #222; padding: 20px; border-radius: 6px; margin-bottom: 25px; white-space: pre-wrap; border-left: 6px solid #2c3e50; line-height: 1.5; }
-    .sb-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-    .sb-card { background-color: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 5px solid #3498db; }
-    .sb-card h3 { margin: 0 0 15px 0; font-size: 15px; color: #7f8c8d; text-transform: uppercase; font-weight: 900; letter-spacing: 0.5px; }
-    .sb-data-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 16px; color: #2c3e50; border-bottom: 1px dotted #e0e0e0; padding-bottom: 2px;}
-    .sb-value { font-weight: bold; font-family: 'Share Tech Mono', monospace; font-size: 18px; color: #000; }
-    .perf-header { font-family: 'Share Tech Mono', monospace; background-color: #333; color: #fff; text-align: center; font-size: 14px; padding: 6px; margin: 15px 0 10px 0; border-radius: 4px; font-weight: bold; }
-    .metar-box { background-color: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 6px; font-family: monospace; font-size: 14px; margin-top: 5px; line-height: 1.5; word-wrap: break-word; }
-    .route-text { font-family: monospace; font-size: 14px; color: #34495e; background: #ecf0f1; padding: 15px; border-radius: 6px; word-wrap: break-word; line-height: 1.5; }
-    .card-perf { border-left-color: #e74c3c; }
-    .card-metar { border-left-color: #f1c40f; grid-column: span 2; }
-    .card-to-data { border-left-color: #27ae60; grid-column: span 2; }
-    .to-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-family: 'Share Tech Mono', monospace; font-size: 15px; }
-    .to-table th { background-color: #2c3e50; color: #ecf0f1; padding: 8px; text-align: center; border: 1px solid #34495e; font-weight: normal; }
-    .to-table td { background-color: #fff; color: #2c3e50; padding: 10px 8px; text-align: center; border: 1px solid #bdc3c7; font-weight: bold; }
-    .to-rmks { background-color: #ecf0f1; padding: 12px; border-radius: 6px; font-family: 'Share Tech Mono', monospace; font-size: 14px; color: #c0392b; border: 1px dashed #bdc3c7; white-space: pre-wrap; }
-
-    /* --- MODAL DETALHES --- */
+    /* --- MODAL --- */
     .modal-overlay {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.7); z-index: 2000;
+        background: rgba(0,0,0,0.6); z-index: 2000;
         display: none; justify-content: center; align-items: center;
-        backdrop-filter: blur(4px);
+        backdrop-filter: blur(5px);
     }
     .modal-content {
-        background: white; padding: 30px; border-radius: 12px;
-        width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.4); position: relative;
+        background: white; padding: 30px; border-radius: 16px;
+        width: 90%; max-width: 600px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.2);
         animation: slideUp 0.3s ease-out;
     }
     @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     
-    .modal-header {
-        border-bottom: 2px solid #f0f0f0; padding-bottom: 15px; margin-bottom: 20px;
-        display: flex; justify-content: space-between; align-items: center;
-    }
-    .modal-title { font-size: 24px; font-weight: 900; color: #2c3e50; text-transform: uppercase; display: flex; align-items: center; gap: 10px; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #f1f3f9; }
+    .modal-title { font-size: 20px; font-weight: 800; color: var(--text-main); }
+    .close-modal { font-size: 24px; color: var(--text-muted); background: none; padding: 0; }
     
-    .close-modal { 
-        cursor: pointer; font-size: 28px; color: #95a5a6; 
-        background: none; border: none; padding: 0; line-height: 1; 
-    }
-    .close-modal:hover { color: #e74c3c; }
+    .detail-row { display: flex; padding: 12px 0; border-bottom: 1px dashed #e3e6f0; }
+    .detail-label { width: 140px; font-weight: 600; color: var(--text-muted); font-size: 12px; text-transform: uppercase; }
+    .detail-val { flex: 1; font-family: 'JetBrains Mono'; font-weight: 700; color: var(--text-main); }
 
-    .detail-group { margin-bottom: 15px; }
-    .detail-row { 
-        display: flex; border-bottom: 1px solid #f9f9f9; padding: 10px 0; 
-        align-items: baseline;
-    }
-    .detail-label { 
-        font-weight: 700; width: 150px; color: #7f8c8d; 
-        text-transform: uppercase; font-size: 13px; 
-    }
-    .detail-val { 
-        font-family: 'Share Tech Mono', monospace; color: #2c3e50; 
-        font-size: 17px; flex: 1; word-break: break-word; font-weight: bold;
-    }
-    .badge-modal {
-        background: #34495e; color: white; padding: 4px 8px; border-radius: 4px; font-size: 14px;
-    }
-
-    /* --- RESPONSIVIDADE (MOBILE FIX) --- */
+    /* Responsive */
     @media (max-width: 900px) {
-        .header-container { flex-direction: column; text-align: center; gap: 10px; height: auto; }
-        .header-left, .header-center, .header-right { width: 100%; text-align: center; align-items: center; }
-        .header-right { justify-content: center; margin-top: 10px; }
-        .btn-logbook { width: 80%; margin-top: 15px; font-size: 14px; }
-        .header-title h1 { font-size: 20px; }
-        .center-main-text { font-size: 18px; line-height: 1.2; }
-        .center-sub-text { font-size: 14px; }
-        .clock-time { font-size: 32px; }
-        .controls-container { flex-direction: column; align-items: stretch; gap: 20px; }
-        .control-group { flex-direction: column; align-items: flex-start; width: 100%; }
-        .control-label { margin-bottom: 5px; }
-        .sb-input { width: 100%; }
-        .button-wrapper { display: flex; width: 100%; gap: 10px; flex-wrap: wrap;}
-        .btn-filter, .btn-draw, .btn-search, .btn-reset { flex: 1 1 auto; padding: 12px; }
-        .sb-live-header { flex-direction: column; align-items: flex-start; }
-        .card-metar, .card-to-data { grid-column: span 1; }
-        .modal-content { width: 95%; padding: 20px; }
-        .detail-row { flex-direction: column; }
-        .detail-label { width: 100%; margin-bottom: 2px; }
+        .header-container { flex-direction: column; gap: 15px; text-align: center; }
+        .header-right { align-items: center; }
+        .controls-grid { grid-template-columns: 1fr; }
+        .clock-time { font-size: 24px; }
+        .flight-table-container { overflow-x: auto; }
     }
-
 </style>
 </head>
 <body>
 
-<div class="header-container">
-    <div class="header-left header-title">
-        <h1>RPL DISPATCH 5.10</h1>
-        <div>PARA USO EM SIMULADOR DE VOO DOMÉSTICO</div>
-    </div>
-    
-    <div class="header-center">
-        <div class="center-main-text">PLANOS DE VOO REPETITIVOS BRASIL</div>
-        <div class="center-sub-text" id="validity-box">VALIDADE: 05 FEV 2026 A 11 FEV 2026</div>
-    </div>
+<div class="dashboard-wrapper">
 
-    <div class="header-right clock-box">
-        <div class="clock-time" id="brt-clock">00:00:00</div>
-        <div class="clock-date" id="brt-date">---</div>
-        <button class="btn-logbook" onclick="toggleLogbook()">📖 MEU LOGBOOK</button>
-    </div>
-</div>
+    <div class="header-container">
+        <div class="header-title">
+            <h1>RPL Dispatch 6.2</h1>
+            <div>Simulador de Voo Doméstico</div>
+        </div>
+        
+        <div class="center-info">
+            <div class="center-main-text">MALHA AÉREA REAL BRASIL</div>
+            <div class="center-sub-text" id="validity-box">VALIDADE: ---</div>
+        </div>
 
-<div class="controls-container">
-    <div class="control-group">
-        <span class="control-label">1. SimBrief ID:</span>
-        <input type="text" id="sb-id" class="sb-input" placeholder="User ID" oninput="saveSBID()">
-    </div>
-
-    <div class="control-group">
-        <span class="control-label">2. Filtro CIA:</span>
-        <div class="button-wrapper" style="display:flex; width:100%; gap:8px;">
-            <button class="btn-filter active" onclick="setFilter('todas', this)">Todas</button>
-            <button class="btn-filter" data-cia="LATAM" onclick="setFilter('LATAM', this)">Latam</button>
-            <button class="btn-filter" data-cia="GOL" onclick="setFilter('GOL', this)">Gol</button>
-            <button class="btn-filter" data-cia="AZUL" onclick="setFilter('AZUL', this)">Azul</button>
+        <div class="clock-box">
+            <div class="clock-time" id="brt-clock">00:00:00</div>
+            <div class="clock-date" id="brt-date">---</div>
+            <button class="btn-logbook" onclick="toggleLogbook()">📖 ABRIR LOGBOOK</button>
         </div>
     </div>
 
-    <div class="control-group">
-        <span class="control-label">3. Rota (DEP / ARR):</span>
-        <div style="display:flex; align-items:center; gap:5px;">
-            <input type="text" id="airport-search" class="sb-input" style="width:110px;" placeholder="Origem" onkeydown="if(event.key==='Enter') searchByAirport()">
-            <span style="font-weight:bold; color:#95a5a6;">➜</span>
-            <input type="text" id="destination-search" class="sb-input" style="width:110px;" placeholder="Destino (Opc)" onkeydown="if(event.key==='Enter') searchByAirport()">
-        </div>
-        <button class="btn-search" onclick="searchByAirport()">FILTRAR</button>
-    </div>
+    <div class="card-panel">
+        <div class="controls-grid">
+            
+            <div class="control-group">
+                <label class="control-label">SimBrief ID</label>
+                <input type="text" id="sb-id" class="sb-input" placeholder="Ex: 123456" oninput="saveSBID()">
+            </div>
 
-    <div class="control-group">
-        <span class="control-label">4. Gerar Escala (Pernas):</span>
-        <div class="button-wrapper" style="display:flex; width:100%; gap:8px;">
-            <button class="btn-draw" onclick="generateRealTimeChain(1)">1</button>
-            <button class="btn-draw" onclick="generateRealTimeChain(2)">2</button>
-            <button class="btn-draw" onclick="generateRealTimeChain(3)">3</button>
-            <button class="btn-draw" onclick="generateRealTimeChain(4)">4</button>
-        </div>
-    </div>
+            <div class="control-group">
+                <label class="control-label">Companhia Aérea</label>
+                <div class="filter-wrapper">
+                    <button class="btn-filter active" onclick="setFilter('todas', this)">Todas</button>
+                    <button class="btn-filter" data-cia="LATAM" onclick="setFilter('LATAM', this)">Latam</button>
+                    <button class="btn-filter" data-cia="GOL" onclick="setFilter('GOL', this)">Gol</button>
+                    <button class="btn-filter" data-cia="AZUL" onclick="setFilter('AZUL', this)">Azul</button>
+                </div>
+            </div>
 
-    <div class="control-group">
-        <span class="control-label">5. Buscar Voo:</span>
-        <input type="text" id="search-input" class="sb-input" placeholder="Ex: 1229" onkeydown="if(event.key==='Enter') manualSearch()">
-        <button class="btn-search" onclick="manualSearch()">BUSCAR</button>
-    </div>
-    
-    <div class="control-group">
-        <button class="btn-reset" onclick="resetPanel()">Limpar</button>
-    </div>
-</div>
+            <div class="control-group">
+                <label class="control-label">Gerar Escala</label>
+                <div class="legs-wrapper">
+                    <button class="btn-draw" onclick="generateRealTimeChain(1)">1</button>
+                    <button class="btn-draw" onclick="generateRealTimeChain(2)">2</button>
+                    <button class="btn-draw" onclick="generateRealTimeChain(3)">3</button>
+                    <button class="btn-draw" onclick="generateRealTimeChain(4)">4</button>
+                </div>
+            </div>
 
-<div class="flight-table-container">
-    <table class="flight-table">
-        <thead>
-            <tr>
-                <th style="text-align: center;">Dispatch / Agendar</th> <th>Voo</th>
-                <th>Cia</th>
-                <th>Origem</th>
-                <th title="Horário ZULO / BRASÍLIA">Partida (Z / BRT)</th>
-                <th>Destino</th>
-                <th title="Calculado ZULO / BRASÍLIA">Chegada (Z / BRT)</th>
-                <th style="text-align: center;">FL</th>
-                <th>Rota</th>
-                <th>Observações</th>
-            </tr>
-        </thead>
-        <tbody id="board-content"></tbody>
-    </table>
-    <div id="empty-msg" class="msg-box">Carregando dados do servidor...</div>
-</div>
+            <div class="control-group">
+                <label class="control-label">Buscar Voo</label>
+                <div style="display:flex; gap:8px;">
+                    <input type="text" id="search-input" class="sb-input" placeholder="Nº Voo" onkeydown="if(event.key==='Enter') manualSearch()">
+                    <button class="btn-search" onclick="manualSearch()">BUSCAR</button>
+                </div>
+            </div>
 
-<div id="roster-section" class="roster-section-container">
-    <div class="roster-header">
-        <div class="roster-title">📅 Minha Escala (Roster)</div>
-        <div style="font-size: 13px; color:#777;">Planeje seus próximos voos aqui</div>
-    </div>
-    
-    <div class="flight-table-container" style="box-shadow:none; border:none; margin:0;">
-        <table class="flight-table">
-            <thead>
-                <tr>
-                    <th style="text-align: center;">Ações</th> <th>Voo</th>
-                    <th>Cia</th>
-                    <th>Origem</th>
-                    <th title="Horário ZULO / BRASÍLIA">Partida (Z / BRT)</th>
-                    <th>Destino</th>
-                    <th title="Calculado ZULO / BRASÍLIA">Chegada (Z / BRT)</th>
-                    <th style="text-align: center;">FL</th>
-                    <th>Rota</th>
-                    <th>Observações</th>
-                </tr>
-            </thead>
-            <tbody id="roster-body">
-            </tbody>
-        </table>
-        <div id="roster-empty" style="padding:20px; text-align:center; color:#999; display:block;">
-            Nenhum voo agendado. Clique no ícone 📅 na tabela de busca para adicionar.
+            <div class="control-group">
+                <label class="control-label">Rota</label>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <input type="text" id="airport-search" class="sb-input" placeholder="Origem" onkeydown="if(event.key==='Enter') searchByAirport()">
+                    <span style="color:#cbd5e0;">&rarr;</span>
+                    <input type="text" id="destination-search" class="sb-input" placeholder="Destino" onkeydown="if(event.key==='Enter') searchByAirport()">
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">&nbsp;</label>
+                <button class="btn-reset" onclick="resetPanel()">Limpar Filtros</button>
+            </div>
+
         </div>
     </div>
-</div>
 
-<div id="logbook-section" class="logbook-container">
-    <div class="logbook-header">
-        <div class="logbook-title">📖 Logbook do Piloto</div>
-        <div style="display: flex; gap: 10px; align-items: center;">
-            <input type="file" id="backup-file-input" style="display: none;" onchange="restoreLogbook(event)">
-            <button class="btn-backup" onclick="backupLogbook()">⬇️ Backup</button>
-            <button class="btn-restore" onclick="document.getElementById('backup-file-input').click()">⬆️ Restaurar</button>
-            <button class="btn-reset" onclick="clearLogbook()">Limpar Tudo</button>
+    <div class="card-panel" style="padding:0; overflow:hidden;">
+        <div style="padding: 20px 25px; border-bottom:1px solid #f1f3f9;">
+            <div style="font-weight:700; color:var(--text-main); font-size:16px;">Quadro de Voos Disponíveis</div>
+        </div>
+        <div style="overflow-x:auto;">
+            <table class="flight-table">
+                <thead>
+                    <tr>
+                        <th style="text-align: center;">Ações</th> 
+                        <th>Voo</th>
+                        <th>Cia</th>
+                        <th>Aeronave</th> <th>Origem</th>
+                        <th>Horários (Z / BRT)</th>
+                        <th>Destino</th>
+                        <th>Chegada (Z / BRT)</th>
+                        <th style="text-align: center;">FL</th>
+                        <th>Rota</th>
+                        <th>Obs</th>
+                    </tr>
+                </thead>
+                <tbody id="board-content"></tbody>
+            </table>
+            <div id="empty-msg" style="padding:50px; text-align:center; color:var(--text-muted); font-style:italic;">
+                Carregando dados da malha...
+            </div>
         </div>
     </div>
-    
-    <div class="logbook-stats">
-        <span>✈️ Total Voos: <span id="stats-count">0</span></span>
-        <span style="border-left: 2px solid rgba(255,255,255,0.3); padding-left: 20px;">⏱️ Total Horas: <span id="stats-hours">00h 00m</span></span>
-    </div>
 
-    <div style="overflow-x:auto;">
-        <table class="logbook-table">
-            <thead>
-                <tr>
-                    <th>Data Registro</th>
-                    <th>Voo</th>
-                    <th>Origem</th>
-                    <th>Destino</th>
-                    <th>Tempo Est.</th>
-                    <th>Aeronave</th>
-                    <th style="text-align:center;">Ações</th>
-                </tr>
-            </thead>
-            <tbody id="logbook-body">
+    <div id="roster-section" class="card-panel" style="padding:0; overflow:hidden;">
+        <div class="roster-header" style="margin:0; padding: 20px 25px; border-bottom:1px solid #f1f3f9;">
+            <div class="section-title">📅 Minha Escala (Roster) <span class="section-badge" id="roster-badge">0</span></div>
+            <div style="font-size: 12px; color:var(--text-muted);">Seus voos agendados</div>
+        </div>
+        
+        <div style="overflow-x:auto;">
+            <table class="flight-table">
+                <thead>
+                    <tr>
+                        <th style="text-align: center;">Gerenciar</th> <th>Voo</th>
+                        <th>Cia</th>
+                        <th>Aeronave</th> <th>Origem</th>
+                        <th>Partida (Z / BRT)</th>
+                        <th>Destino</th>
+                        <th>Chegada (Z / BRT)</th>
+                        <th style="text-align: center;">FL</th>
+                        <th>Rota</th>
+                        <th>Obs</th>
+                    </tr>
+                </thead>
+                <tbody id="roster-body">
                 </tbody>
-        </table>
-        <div id="logbook-empty" style="padding:20px; text-align:center; color:#999; display:none;">
-            Nenhum voo registrado ainda. Gere um despacho no SimBrief!
+            </table>
+            <div id="roster-empty" style="padding:40px; text-align:center; color:var(--text-muted); display:block;">
+                Nenhum voo na escala. Clique no ícone <span style="background:var(--accent-cyan); color:white; padding:2px 6px; border-radius:4px;">📅</span> para adicionar.
+            </div>
         </div>
     </div>
-</div>
 
-<div class="tutorial-container">
-    <div class="tutorial-title">
-        <span style="font-size:20px;">💡</span> MINI TUTORIAL DE USO
+    <div id="logbook-section" class="card-panel" style="display: none;">
+        <div class="roster-header">
+            <div class="section-title">📖 Logbook do Piloto</div>
+            <div style="display: flex; gap: 8px;">
+                <input type="file" id="backup-file-input" style="display: none;" onchange="restoreLogbook(event)">
+                <button class="btn-reset" onclick="backupLogbook()">⬇️ Backup</button>
+                <button class="btn-reset" onclick="document.getElementById('backup-file-input').click()">⬆️ Restaurar</button>
+                <button class="btn-remove" onclick="clearLogbook()">Limpar Tudo</button>
+            </div>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon icon-blue">✈️</div>
+                <div class="stat-info">
+                    <h4>Total de Voos</h4>
+                    <p id="stats-count">0</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon icon-green">⏱️</div>
+                <div class="stat-info">
+                    <h4>Horas Voadas</h4>
+                    <p id="stats-hours">00h 00m</p>
+                </div>
+            </div>
+        </div>
+
+        <div style="overflow-x:auto; border-radius:8px; border:1px solid #f1f3f9;">
+            <table class="flight-table">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Voo</th>
+                        <th>Origem</th>
+                        <th>Destino</th>
+                        <th>Tempo</th>
+                        <th>Aeronave</th>
+                        <th style="text-align:center;">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="logbook-body"></tbody>
+            </table>
+            <div id="logbook-empty" style="padding:30px; text-align:center; color:var(--text-muted); display:none;">
+                Nenhum registro ainda.
+            </div>
+        </div>
     </div>
+
     <div class="tutorial-grid">
-        <div class="tut-card tut-escala">
-            <h4><span class="tut-icon">📅</span> Agendar Voos (Novo)</h4>
-            <p>Encontre um voo na tabela e clique no ícone 📅. Ele será salvo na sua <strong>Escala (Roster)</strong> com o horário do plano.</p>
+        <div class="tut-card">
+            <h4>📅 Agendamento Inteligente</h4>
+            <p>Clique no botão verde na tabela para agendar. O sistema calcula automaticamente o tempo de solo entre voos.</p>
         </div>
-        
-        <div class="tut-card tut-filtro">
-            <h4><span class="tut-icon">🎯</span> Filtro de Rota</h4>
-            <p><strong>Origem:</strong> Obrigatório (ex: SBSP).<br>
-            <strong>Destino:</strong> Opcional. Se deixar vazio, mostra todos os destinos a partir da origem.</p>
+        <div class="tut-card">
+            <h4>🎯 Filtro de Rota</h4>
+            <p>Use "Origem -> Destino" para achar rotas específicas. Se deixar o destino vazio, mostra todas as saídas.</p>
         </div>
-
-        <div class="tut-card tut-busca">
-            <h4><span class="tut-icon">🔍</span> Detalhes do Voo</h4>
-            <p>Clique no <strong>número do voo</strong> (ex: <span style="color:#2980b9; text-decoration:underline;">GLO1234</span>) na tabela para ver a ficha completa com dias de operação e rota detalhada.</p>
-        </div>
-
-        <div class="tut-card tut-sb">
-            <h4><span class="tut-icon">📄</span> SimBrief & Logbook</h4>
-            <p>1. Coloque seu ID no campo <strong>1</strong>.<br>2. Clique em <strong>SIMBRIEF ↗</strong>. O voo será aberto no SimBrief e <strong>SALVO AUTOMATICAMENTE</strong> no seu Logbook.</p>
-        </div>
-    </div>
-</div>
-
-<div class="sb-live-container">
-    <div class="sb-live-header">
-        <div class="sb-live-title">
-            <span>✈️ LIVE DISPATCH (OFP)</span>
-        </div>
-        <div style="text-align: right;">
-            <span id="ofp-status" class="sb-status">Aguardando solicitação...</span>
-            <button class="btn-action" onclick="fetchLatestSimBrief()">CARREGAR ÚLTIMO OFP</button>
+        <div class="tut-card">
+            <h4>📄 SimBrief Direto</h4>
+            <p>O botão vermelho já envia a aeronave, rota, matrícula e <strong>horário ZULU correto</strong> para o SimBrief.</p>
         </div>
     </div>
 
-    <div id="sb-live-content" style="display: none;">
-        
-        <div id="sb-raw-header" class="sb-raw-header"></div>
-
-        <div class="sb-grid">
-            <div class="sb-card">
-                <h3>Dados do Voo</h3>
-                <div class="sb-data-row"><span>Cia/Voo:</span> <span class="sb-value" id="sb-callsign">---</span></div>
-                <div class="sb-data-row"><span>Aeronave:</span> <span class="sb-value" id="sb-acft">---</span></div>
-                <div class="sb-data-row"><span>Matrícula:</span> <span class="sb-value" id="sb-reg">---</span></div>
-                <div class="sb-data-row"><span>Origem:</span> <span class="sb-value" id="sb-orig">---</span></div>
-                <div class="sb-data-row"><span>Destino:</span> <span class="sb-value" id="sb-dest">---</span></div>
-                <div class="sb-data-row"><span>Alternativo:</span> <span class="sb-value" id="sb-altn">---</span></div>
-                <div class="sb-data-row"><span>Flight Level:</span> <span class="sb-value" id="sb-fl">---</span></div>
-            </div>
-
-            <div class="sb-card card-perf">
-                <h3>Payload & Performance</h3>
-                <div class="sb-data-row"><span>PAX:</span> <span class="sb-value" id="sb-pax">---</span></div>
-                <div class="sb-data-row"><span>Cargo:</span> <span class="sb-value" id="sb-cargo">---</span></div>
-                <div class="sb-data-row"><span>Payload:</span> <span class="sb-value" id="sb-payload">---</span></div>
-                <div class="sb-data-row"><span>ZFW:</span> <span class="sb-value" id="sb-zfw">---</span></div>
-                <div class="sb-data-row"><span>Block Fuel:</span> <span class="sb-value" id="sb-fuel">---</span></div>
-
-                <div class="perf-header">/// TAKEOFF DATA ///</div>
-                <div class="sb-data-row"><span>RWY:</span> <span class="sb-value" id="sb-to-rwy">---</span></div>
-                <div class="sb-data-row"><span>Est TOW:</span> <span class="sb-value" id="sb-tow">---</span></div>
-                
-                <div class="perf-header">/// LANDING DATA ///</div>
-                <div class="sb-data-row"><span>RWY:</span> <span class="sb-value" id="sb-ld-rwy">---</span></div>
-                <div class="sb-data-row"><span>Est LAW:</span> <span class="sb-value" id="sb-law">---</span></div>
-            </div>
-
-            <div class="sb-card card-to-data" id="card-detailed-to" style="display:none;">
-                <h3>/// TAKEOFF DATA (DETAILED) ///</h3>
-                <div style="overflow-x: auto;">
-                    <table class="to-table">
-                        <thead>
-                            <tr>
-                                <th>APT</th> <th>RWY</th> <th>WIND</th> <th>QNH</th> 
-                                <th>FLAP</th> <th>TEMP</th> 
-                                <th style="background:#e67e22; color:white;">V1</th> 
-                                <th style="background:#e67e22; color:white;">VR</th> 
-                                <th style="background:#e67e22; color:white;">V2</th>
-                                <th>LIMIT</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td id="to-apt">-</td> <td id="to-rwy">-</td> <td id="to-wind">-</td> <td id="to-qnh">-</td>
-                                <td id="to-flp">-</td> <td id="to-temp">-</td>
-                                <td id="to-v1" style="color:#d35400;">-</td> 
-                                <td id="to-vr" style="color:#d35400;">-</td> 
-                                <td id="to-v2" style="color:#d35400;">-</td>
-                                <td id="to-lim">-</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="to-rmks" id="to-rmks">---</div>
-            </div>
-
-            <div class="sb-card" style="grid-column: span 2;">
-                <h3>Rota Aprovada</h3>
-                <div class="route-text" id="sb-route">---</div>
-                
-                <div style="margin-top: 15px;">
-                    <h3>Meteorologia (METAR Público Ao Vivo)</h3>
-                    <div style="display: grid; grid-template-columns: 1fr; gap: 10px;">
-                        <div><strong style="font-size:14px;">ORIGEM (<span id="icao-orig-lbl"></span>):</strong> <div class="metar-box" id="metar-orig">...</div></div>
-                        <div><strong style="font-size:14px;">DESTINO (<span id="icao-dest-lbl"></span>):</strong> <div class="metar-box" id="metar-dest">...</div></div>
-                        <div><strong style="font-size:14px;">ALTERNATE (<span id="icao-altn-lbl"></span>):</strong> <div class="metar-box" id="metar-altn">...</div></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="flight-modal" class="modal-overlay">
+</div> <div id="flight-modal" class="modal-overlay">
     <div class="modal-content">
         <div class="modal-header">
             <div class="modal-title">
-                <span id="modal-cia-badge" class="badge-modal">CIA</span>
-                <span id="modal-flight-num">VOO 1234</span>
+                <span id="modal-cia-badge" class="cia-badge" style="font-size:14px;">CIA</span>
+                <span id="modal-flight-num" style="margin-left:10px;">VOO 1234</span>
             </div>
             <button class="close-modal" onclick="closeModal()">×</button>
         </div>
         
         <div id="modal-body">
-            <div class="detail-row"><span class="detail-label">Aeronave:</span> <span class="detail-val" id="md-acft"></span></div>
-             <div class="detail-row"><span class="detail-label">Rota:</span> <span class="detail-val" id="md-route"></span></div>
-             <div class="detail-row"><span class="detail-label">Dep/Arr:</span> <span class="detail-val" id="md-deparr"></span></div>
-             <div class="detail-row"><span class="detail-label">EET (Duração):</span> <span class="detail-val" id="md-eet"></span></div>
-             <div class="detail-row"><span class="detail-label">Nível (FL):</span> <span class="detail-val" id="md-fl"></span></div>
-             <div class="detail-row"><span class="detail-label">Dias Op:</span> <span class="detail-val" id="md-days"></span></div>
-             <div class="detail-row"><span class="detail-label">Observações:</span> <span class="detail-val" id="md-obs"></span></div>
+            <div class="detail-row"><span class="detail-label">Aeronave</span> <span class="detail-val" id="md-acft"></span></div>
+             <div class="detail-row"><span class="detail-label">Rota Completa</span> <span class="detail-val" id="md-route" style="font-size:11px;"></span></div>
+             <div class="detail-row"><span class="detail-label">Trecho</span> <span class="detail-val" id="md-deparr"></span></div>
+             <div class="detail-row"><span class="detail-label">Tempo Estimado</span> <span class="detail-val" id="md-eet"></span></div>
+             <div class="detail-row"><span class="detail-label">Nível (FL)</span> <span class="detail-val" id="md-fl"></span></div>
+             <div class="detail-row"><span class="detail-label">Dias de Operação</span> <span class="detail-val" id="md-days"></span></div>
+             <div class="detail-row"><span class="detail-label">Observações</span> <span class="detail-val" id="md-obs"></span></div>
         </div>
     </div>
 </div>
 
-<div id="file-debug"></div>
+<div id="file-debug" style="display:none;"></div>
 
 <script>
-    // --- 1. CONFIGURAÇÕES GERAIS ---
     const USE_REAL_TIME_DATE = true; 
     const SIMULATE_DATE_FIXED = "2026-02-07"; 
     const TURNAROUND_MINUTES = 45; 
 
-    // IMPORTANTE: Certifique-se que estes arquivos existem na pasta!
     const airlineConfig = [
         { id: 'LATAM', name: 'LATAM', file: 'Cia_TAM_CS.txt', color: '#1B0088' },
         { id: 'GOL', name: 'GOL', file: 'Cia_GLO_CS.txt', color: '#FF5E00' },
@@ -721,291 +579,45 @@
     let displayedFlights = [];
     let validityUpdated = false;
 
-    // --- FUNÇÕES AUXILIARES SEGURAS ---
-    // Tenta ler o localStorage sem quebrar a aplicação se o JSON estiver inválido
     function getSafeStorage(key) {
         try {
             const data = localStorage.getItem(key);
             return data ? JSON.parse(data) : [];
         } catch (e) {
-            console.error(`Erro ao ler storage para ${key}:`, e);
             return [];
         }
     }
 
-    // --- 2. GERENCIAMENTO DO SIMBRIEF (OFP LIVE) ---
     document.addEventListener("DOMContentLoaded", () => {
         const savedID = localStorage.getItem("simbrief_id");
         if (savedID) document.getElementById("sb-id").value = savedID;
-        renderLogbook(); // Carrega o logbook ao iniciar
-        renderRoster(); // Carrega a escala
+        renderLogbook();
+        renderRoster();
     });
 
     function saveSBID() {
         localStorage.setItem("simbrief_id", document.getElementById("sb-id").value);
     }
 
-    async function fetchLatestSimBrief() {
-        const sbInput = document.getElementById("sb-id");
-        const sbID = sbInput.value ? sbInput.value.trim() : "";
-        const statusSpan = document.getElementById("ofp-status");
-        const contentDiv = document.getElementById("sb-live-content");
-
-        if (!sbID) {
-            alert("Por favor, preencha o ID do SimBrief.");
-            sbInput.focus();
-            return;
-        }
-
-        statusSpan.innerText = "Conectando ao SimBrief...";
-        statusSpan.style.color = "#2980b9";
-        contentDiv.style.display = "none";
-
-        const isNumeric = /^\d+$/.test(sbID);
-        const paramName = isNumeric ? "userid" : "username";
-        
-        const directUrl = `https://www.simbrief.com/api/xml.fetcher.php?${paramName}=${sbID}&json=1`;
-        // Usando allorigins como proxy principal
-        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(directUrl)}`;
-
-        let data = null;
-
-        try {
-            let response;
-            try {
-                // Tenta direto primeiro (caso CORS mude no futuro ou esteja local)
-                response = await fetch(directUrl, { cache: 'no-store' });
-                if(!response.ok) throw new Error("Erro Direto");
-            } catch(e) {
-                console.log("Tentativa direta falhou, usando proxy...");
-                response = await fetch(proxyUrl, { cache: 'no-store' });
-            }
-            
-            if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
-
-            const text = await response.text();
-            
-            if (text.includes("Error:") || !text.trim().startsWith("{")) {
-                throw new Error("ID não encontrado ou sem OFP recente.");
-            }
-
-            try {
-                data = JSON.parse(text);
-            } catch (e) {
-                throw new Error("JSON inválido recebido.");
-            }
-
-            if (!data.general) throw new Error("Dados incompletos.");
-
-            renderSimBriefData(data);
-            await renderPublicWeather(data);
-
-            statusSpan.innerText = `OFP Atualizado: ${new Date().toLocaleTimeString()}`;
-            statusSpan.style.color = "#27ae60";
-            contentDiv.style.display = "block";
-
-        } catch (error) {
-            console.error("SimBrief Error:", error);
-            statusSpan.innerText = `Falha: ${error.message}`;
-            statusSpan.style.color = "#c0392b";
-            alert("Erro ao carregar SimBrief. Verifique seu ID e se gerou um voo recentemente.");
-        }
-    }
-
-    function renderSimBriefData(data) {
-        const safe = (val) => val || "---";
-
-        const callsign = `${data.general.icao_airline}${data.general.flight_number}`;
-        const orig = data.origin.icao_code;
-        const dest = data.destination.icao_code;
-        const reg = data.aircraft.reg;
-        const acft = data.aircraft.icao_code;
-        
-        const dateObj = new Date(parseInt(data.params.time_generated) * 1000);
-        const dateStr = dateObj.toLocaleDateString('en-GB', {day: '2-digit', month: 'short', year: 'numeric'}).toUpperCase().replace(/ /g, '');
-        const shortDate = dateStr.substring(0, 7); 
-        
-        const rawHeader = 
-`${callsign} ${dateStr} ${orig}-${dest} ${acft} ${reg} RELEASE ${dateObj.toISOString().substring(11,16).replace(':','')} ${shortDate}
-OFP 1 ${data.origin.name.toUpperCase().substring(0,15)}-DEP ${data.destination.name.toUpperCase().substring(0,15)}
-ATC C/S ${callsign} ${orig}/${data.origin.plan_rwy} ${dest}/${data.destination.plan_rwy} CI ${data.general.costindex}
-GND DIST ${data.general.route_distance} AIR DIST ${data.general.air_distance}
-ESTIMATED TOW ${safe(data.weights.est_tow)} LAW ${safe(data.weights.est_ldw)} ZFW ${safe(data.weights.est_zfw)}
-ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
-
-        document.getElementById("sb-raw-header").textContent = rawHeader;
-
-        document.getElementById("sb-callsign").innerText = callsign;
-        document.getElementById("sb-acft").innerText = data.aircraft.name;
-        document.getElementById("sb-reg").innerText = reg;
-        document.getElementById("sb-orig").innerText = orig;
-        document.getElementById("sb-dest").innerText = dest;
-        document.getElementById("sb-altn").innerText = data.alternate ? data.alternate.icao_code : "N/A";
-        document.getElementById("sb-fl").innerText = safe(data.general.initial_altitude);
-
-        document.getElementById("sb-pax").innerText = safe(data.weights.pax_count);
-        document.getElementById("sb-cargo").innerText = safe(data.weights.cargo);
-        document.getElementById("sb-payload").innerText = safe(data.weights.payload);
-        document.getElementById("sb-zfw").innerText = safe(data.weights.est_zfw);
-        document.getElementById("sb-fuel").innerText = safe(data.fuel.plan_ramp);
-
-        document.getElementById("sb-to-rwy").innerText = safe(data.origin.plan_rwy);
-        document.getElementById("sb-tow").innerText = safe(data.weights.est_tow);
-        
-        document.getElementById("sb-ld-rwy").innerText = safe(data.destination.plan_rwy);
-        document.getElementById("sb-law").innerText = safe(data.weights.est_ldw);
-
-        if (data.text && data.text.plan_text) {
-            const detailedTO = extractDetailedTakeoff(data.text.plan_text);
-            const cardDetailed = document.getElementById("card-detailed-to");
-
-            if (detailedTO) {
-                cardDetailed.style.display = "block";
-                document.getElementById("to-apt").innerText = detailedTO.apt;
-                document.getElementById("to-rwy").innerText = detailedTO.rwy;
-                document.getElementById("to-wind").innerText = detailedTO.wind;
-                document.getElementById("to-qnh").innerText = detailedTO.qnh;
-                document.getElementById("to-flp").innerText = detailedTO.flp;
-                document.getElementById("to-temp").innerText = detailedTO.temp;
-                document.getElementById("to-v1").innerText = detailedTO.v1;
-                document.getElementById("to-vr").innerText = detailedTO.vr;
-                document.getElementById("to-v2").innerText = detailedTO.v2;
-                document.getElementById("to-lim").innerText = detailedTO.limit;
-                document.getElementById("to-rmks").textContent = detailedTO.rmks; 
-            } else {
-                cardDetailed.style.display = "none";
-            }
-        }
-
-        document.getElementById("sb-route").textContent = safe(data.general.route);
-        
-        document.getElementById("icao-orig-lbl").innerText = orig;
-        document.getElementById("icao-dest-lbl").innerText = dest;
-        document.getElementById("icao-altn-lbl").innerText = data.alternate ? data.alternate.icao_code : "-";
-    }
-
-    function extractDetailedTakeoff(fullText) {
-        if (!fullText) return null;
-        const headerRegex = /APT.*PRWY.*WIND.*QNH/i;
-        const headerMatch = fullText.match(headerRegex);
-
-        if (!headerMatch) return null;
-
-        const textFromHeader = fullText.substring(headerMatch.index + headerMatch[0].length);
-        const lines = textFromHeader.split('\n');
-
-        let dataLine = "";
-        let lineIndex = 0;
-        
-        for(let i=0; i < lines.length; i++) {
-            const l = lines[i].trim();
-            if(l.length > 10 && !l.startsWith("---") && !l.startsWith("___")) {
-                dataLine = l;
-                lineIndex = i;
-                break;
-            }
-        }
-
-        if (!dataLine) return null;
-        const cols = dataLine.split(/\s+/);
-        
-        let remarks = [];
-        for(let i = lineIndex + 1; i < lineIndex + 5; i++) { 
-            if (lines[i]) {
-                const l = lines[i].trim();
-                if (l.includes("---") || l.includes("___") || l.length < 3) break; 
-                remarks.push(l);
-            }
-        }
-
-        const getCol = (idx) => cols[idx] || "-";
-
-        return {
-            apt: getCol(0),
-            rwy: getCol(1),
-            wind: getCol(3),
-            qnh: getCol(4),
-            flp: getCol(6),
-            temp: getCol(7), 
-            v1: getCol(8),
-            vr: getCol(9),
-            v2: getCol(10),
-            limit: cols[cols.length-1], 
-            rmks: remarks.join("\n")
-        };
-    }
-
-    async function renderPublicWeather(data) {
-        const orig = data.origin.icao_code;
-        const dest = data.destination.icao_code;
-        const altn = data.alternate ? data.alternate.icao_code : null;
-
-        fetchMetarWithFallback(orig, "metar-orig");
-        fetchMetarWithFallback(dest, "metar-dest");
-        if (altn) {
-            fetchMetarWithFallback(altn, "metar-altn");
-        } else {
-            document.getElementById("metar-altn").innerText = "N/A";
-        }
-    }
-
-    async function fetchMetarWithFallback(icao, elementId) {
-        const el = document.getElementById(elementId);
-        el.innerText = "Buscando...";
-
-        try {
-            const res = await fetch(`https://metar.vatsim.net/metar.php?id=${icao}`);
-            if (res.ok) {
-                const text = await res.text();
-                if (text.trim().length > 10) { 
-                    el.innerText = text.trim();
-                    return;
-                }
-            }
-        } catch(e) {}
-
-        try {
-            const proxy = "https://api.allorigins.win/raw?url=";
-            const noaa = `https://tgftp.nws.noaa.gov/data/observations/metar/stations/${icao}.TXT`;
-            const res2 = await fetch(proxy + encodeURIComponent(noaa));
-            
-            if(res2.ok) {
-                const text = await res2.text();
-                const lines = text.split('\n');
-                if(lines.length >= 2) {
-                    el.innerText = lines[1].trim(); 
-                    return;
-                }
-            }
-        } catch(e) {
-            el.innerText = "METAR Indisponível.";
-        }
-    }
-
-    // --- ABRIR SIMBRIEF COM HORÁRIO ZULU ---
     function openSimBriefWithData(flight) {
         const sbID = document.getElementById("sb-id").value;
         if (!sbID) {
-            alert("Por favor, digite seu ID do SimBrief para gerar o plano.");
+            alert("Preencha o ID do SimBrief no painel de controles.");
             document.getElementById("sb-id").focus();
             return;
         }
 
-        // SALVAR NO LOGBOOK AUTOMATICAMENTE
         saveToLogbook(flight);
 
-        // 1. DADOS BÁSICOS
         const airlineCode = flight.ident.match(/^[A-Z]+/)[0];
         const fltNumber = flight.ident.match(/\d+/)[0];
         let cleanType = flight.type.split('/')[0]; 
         const routeEncoded = encodeURIComponent(flight.rota);
 
-        // 2. CÁLCULO DO HORÁRIO (ZULU)
         let hours = Math.floor(flight.depMinUTC / 60);
         let minutes = flight.depMinUTC % 60;
         if (hours >= 24) hours = hours % 24;
 
-        // 3. CÁLCULO DA DATA (DDMMMYY)
         const dateObj = new Date(); 
         const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
         const day = String(dateObj.getUTCDate()).padStart(2, '0');
@@ -1013,7 +625,6 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         const year = String(dateObj.getUTCFullYear()).slice(-2); 
         const sbDate = `${day}${month}${year}`;
 
-        // 4. MONTAGEM DA URL FINAL
         const url = `https://www.simbrief.com/system/dispatch.php?userid=${sbID}&airline=${airlineCode}&fltnum=${fltNumber}&orig=${flight.origin}&dest=${flight.dest}&route=${routeEncoded}&type=${cleanType}&date=${sbDate}&deph=${hours}&depm=${minutes}`;
         
         window.open(url, '_blank');
@@ -1028,124 +639,68 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
     function resetPanel() {
         document.getElementById('board-content').innerHTML = '';
         document.getElementById('empty-msg').style.display = 'block';
-        document.getElementById('empty-msg').innerText = "Painel limpo. Selecione 'Gerar Escala'.";
-        document.getElementById('sb-live-content').style.display = 'none';
-        document.getElementById('ofp-status').innerText = "Aguardando solicitação...";
-        document.getElementById('ofp-status').style.color = "#95a5a6";
+        document.getElementById('empty-msg').innerText = "Painel limpo. Selecione os filtros acima.";
         document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
         displayedFlights = [];
     }
 
-    // --- FUNÇÃO DE BUSCA MANUAL (NUMERO DE VOO) ---
     function manualSearch() {
         const rawInput = document.getElementById('search-input').value;
         const input = rawInput ? rawInput.toUpperCase().replace(/\s+/g, '') : "";
 
-        if (input.length < 3) {
-            alert("Por favor, digite pelo menos 3 caracteres do voo (ex: GLO1229).");
-            return;
-        }
-
-        if(allFlightsDB.length === 0) {
-            alert("Aguarde o carregamento do banco de dados ou verifique os arquivos.");
-            return;
-        }
-
-        document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
+        if (input.length < 3) { alert("Digite pelo menos 3 caracteres."); return; }
+        if(allFlightsDB.length === 0) { alert("Aguarde o carregamento."); return; }
 
         const matches = allFlightsDB.filter(f => f.ident.includes(input));
-
-        if (matches.length === 0) {
-            alert("Voo não encontrado no banco de dados.");
-            return;
-        }
+        if (matches.length === 0) { alert("Voo não encontrado."); return; }
 
         matches.sort((a,b) => a.depMinUTC - b.depMinUTC);
-
-        const enrichedResults = matches.map(f => enrichFlightData(f));
-
-        displayedFlights = enrichedResults;
-        renderRows(enrichedResults);
+        const enriched = matches.map(f => enrichFlightData(f));
+        displayedFlights = enriched;
+        renderRows(enriched);
         document.getElementById('empty-msg').style.display = 'none';
     }
 
-    // --- BUSCA POR ROTA (ORIGEM E/OU DESTINO) ---
     function searchByAirport() {
         const rawOrig = document.getElementById('airport-search').value;
         const orig = rawOrig ? rawOrig.toUpperCase().trim() : "";
-        
         const rawDest = document.getElementById('destination-search').value;
         const dest = rawDest ? rawDest.toUpperCase().trim() : "";
         
-        // Validação: Pelo menos a origem é obrigatória para começar
-        if (orig.length < 3) {
-            alert("Por favor, digite pelo menos o código da Origem (Ex: SBSP).");
-            return;
-        }
-
-        if(allFlightsDB.length === 0) {
-            alert("Aguarde o carregamento do banco de dados.");
-            return;
-        }
+        if (orig.length < 3) { alert("Digite o código de origem (Ex: SBSP)."); return; }
+        if(allFlightsDB.length === 0) { alert("Aguarde o carregamento."); return; }
 
         const now = getSimulationDate();
         const currentUTCMinutes = ((now.getUTCHours()) * 60) + now.getUTCMinutes(); 
 
         const matches = allFlightsDB.filter(f => {
             const airlineMatch = (currentFilter === 'todas') || (f.airline.name === currentFilter);
-            
-            // Lógica de Filtro:
             const routeMatch = (f.origin === orig) && (dest ? f.dest === dest : true);
-
-            return routeMatch && 
-                   isFlightValidToday(f, now) && 
-                   f.depMinUTC >= currentUTCMinutes &&
-                   airlineMatch; 
+            return routeMatch && isFlightValidToday(f, now) && f.depMinUTC >= currentUTCMinutes && airlineMatch; 
         });
 
         if (matches.length === 0) {
-            let ciaMsg = currentFilter === 'todas' ? '' : ` da ${currentFilter}`;
-            let routeMsg = dest ? `de ${orig} para ${dest}` : `saindo de ${orig}`;
-            
-            alert(`Nenhum voo${ciaMsg} encontrado ${routeMsg} para o restante do dia de hoje.`);
-            
-            document.getElementById('board-content').innerHTML = '';
-            document.getElementById('empty-msg').innerText = `Sem voos encontrados na rota solicitada após ${now.getUTCHours().toString().padStart(2,'0')}:${now.getUTCMinutes().toString().padStart(2,'0')}Z`;
-            document.getElementById('empty-msg').style.display = 'block';
+            alert("Nenhum voo encontrado para hoje com estes parâmetros.");
             return;
         }
 
         matches.sort((a,b) => a.depMinUTC - b.depMinUTC);
-
-        const enrichedResults = matches.map(f => enrichFlightData(f));
-
-        displayedFlights = enrichedResults;
-        renderRows(enrichedResults);
+        const enriched = matches.map(f => enrichFlightData(f));
+        displayedFlights = enriched;
+        renderRows(enriched);
         document.getElementById('empty-msg').style.display = 'none';
     }
 
-    // --- ROSTER / AGENDAMENTO FUNCTIONS (NOVO) ---
     function scheduleFlight(index) {
         const flight = displayedFlights[index];
         if (!flight) return;
 
-        // Sem prompt. Pega direto o voo enriquecido (com horários já calculados)
         let roster = getSafeStorage('myPilotRoster');
-        
-        const entry = {
-            id: Date.now(),
-            flightData: flight
-        };
-
-        roster.push(entry);
-        
-        // Ordena por horário de saída
+        roster.push({ id: Date.now(), flightData: flight });
         roster.sort((a, b) => a.flightData.depMinUTC - b.flightData.depMinUTC);
         
         localStorage.setItem('myPilotRoster', JSON.stringify(roster));
         renderRoster();
-        // Feedback visual sutil opcional, ou alerta
-        // alert(`Voo ${flight.ident} adicionado à escala!`);
         document.getElementById('roster-section').scrollIntoView({behavior: 'smooth'});
     }
 
@@ -1153,50 +708,33 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         const roster = getSafeStorage('myPilotRoster');
         const tbody = document.getElementById('roster-body');
         const emptyMsg = document.getElementById('roster-empty');
+        
+        document.getElementById('roster-badge').innerText = roster.length;
 
         tbody.innerHTML = '';
-        
-        if (roster.length === 0) {
-            emptyMsg.style.display = 'block';
-            return;
-        } else {
-            emptyMsg.style.display = 'none';
-        }
+        if (roster.length === 0) { emptyMsg.style.display = 'block'; return; }
+        else { emptyMsg.style.display = 'none'; }
 
         roster.forEach(entry => {
             const f = entry.flightData;
             const tr = document.createElement('tr');
             
-            // Botões da Roster: Remove em vez de Agendar
-            const sbButton = `<button class="btn-sb" onclick="dispatchRosterFlight(${entry.id})">DESPACHAR ↗</button>`;
-            const removeButton = `<button class="btn-remove-roster" title="Remover da escala" onclick="deleteRosterEntry(${entry.id})">❌</button>`;
+            const sbButton = `<button class="btn-sb" onclick="dispatchRosterFlight(${entry.id})">SIMBRIEF ↗</button>`;
+            const removeButton = `<button class="btn-remove" title="Remover" onclick="deleteRosterEntry(${entry.id})">✕</button>`;
 
-            const arrHtml = f.isNextDay 
-                ? `<span class="time-brt">${f.arrDisplay}</span> <span class="next-day-badge">(+1)</span>` 
-                : `<span class="time-brt">${f.arrDisplay}</span>`;
+            const depCell = `<div class="time-pill"><div class="tp-utc">${f.depDisplayUTC}z</div><div class="tp-local">${f.depDisplay}</div></div>`;
+            const arrCell = `<div class="time-pill arr"><div class="tp-utc">${f.arrDisplayUTC}z</div><div class="tp-local">${f.arrDisplay}</div></div>`;
+            const acftType = f.type.split('/')[0];
 
-            const depCell = `
-                <div class="time-utc">${f.depDisplayUTC}Z</div>
-                <div class="time-brt">${f.depDisplay}</div>
-            `;
-            
-            const arrCell = `
-                <div class="time-utc">${f.arrDisplayUTC}Z</div>
-                <div>${arrHtml}</div>
-            `;
-
-            // Mesma estrutura da tabela principal
             tr.innerHTML = `
-                <td style="text-align:center; white-space:nowrap;">
-                    ${sbButton}
-                    ${removeButton}
-                </td>
+                <td style="text-align:center; white-space:nowrap; display:flex; gap:5px; justify-content:center;">${sbButton}${removeButton}</td>
                 <td class="col-flight">${f.ident}</td>
                 <td><span class="cia-badge" style="background-color: ${f.airline.color}">${f.airline.name}</span></td>
+                <td style="font-weight:700;">${acftType}</td>
                 <td class="col-airport">${f.origin}</td>
-                <td class="col-time">${depCell}</td>
+                <td style="text-align:center;">${depCell}</td>
                 <td class="col-airport">${f.dest}</td>
-                <td class="col-time time-arr">${arrCell}</td>
+                <td style="text-align:center;">${arrCell}</td>
                 <td class="col-fl">${f.fl}</td>
                 <td class="col-rota">${f.rota}</td>
                 <td class="col-obs">${f.obs}</td>
@@ -1208,44 +746,35 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
     function dispatchRosterFlight(id) {
         const roster = getSafeStorage('myPilotRoster');
         const entry = roster.find(e => e.id === id);
-        if (entry) {
-            openSimBriefWithData(entry.flightData);
-        }
+        if (entry) openSimBriefWithData(entry.flightData);
     }
 
     function deleteRosterEntry(id) {
-        if(!confirm("Remover este voo da sua escala?")) return;
-        
+        if(!confirm("Remover da escala?")) return;
         let roster = getSafeStorage('myPilotRoster');
         roster = roster.filter(e => e.id !== id);
         localStorage.setItem('myPilotRoster', JSON.stringify(roster));
         renderRoster();
     }
 
-    // --- LOGBOOK FUNCTIONS ---
     function saveToLogbook(flight) {
         let logbook = getSafeStorage('myPilotLogbook');
-        
         const now = new Date();
         const dateStr = now.toLocaleDateString('pt-BR');
         
-        const acftSimple = flight.type.split('/')[0];
-
         const durHours = Math.floor(flight.durMin / 60);
         const durMins = flight.durMin % 60;
         const durStr = String(durHours).padStart(2,'0') + ":" + String(durMins).padStart(2,'0');
 
-        const entry = {
-            id: Date.now(), // ID único
+        logbook.unshift({
+            id: Date.now(),
             date: dateStr,
             callsign: flight.ident,
             dep: flight.origin,
             arr: flight.dest,
             time: durStr,
-            acft: acftSimple
-        };
-
-        logbook.unshift(entry);
+            acft: flight.type.split('/')[0]
+        });
         localStorage.setItem('myPilotLogbook', JSON.stringify(logbook));
         renderLogbook();
     }
@@ -1255,7 +784,6 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         const tbody = document.getElementById('logbook-body');
         const emptyMsg = document.getElementById('logbook-empty');
         
-        // CALCULO ESTATISTICAS
         let totalMinutes = 0;
         logbook.forEach(e => {
             const parts = e.time.split(':');
@@ -1268,25 +796,20 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         document.getElementById('stats-hours').innerText = `${String(totalH).padStart(2,'0')}h ${String(totalM).padStart(2,'0')}m`;
 
         tbody.innerHTML = '';
-        
-        if (logbook.length === 0) {
-            emptyMsg.style.display = 'block';
-            return;
-        } else {
-            emptyMsg.style.display = 'none';
-        }
+        if (logbook.length === 0) { emptyMsg.style.display = 'block'; return; }
+        else { emptyMsg.style.display = 'none'; }
 
         logbook.forEach(entry => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td>${entry.date}</td>
-                <td style="font-weight:bold; color:#2980b9;">${entry.callsign}</td>
+                <td style="font-weight:700; color:var(--primary);">${entry.callsign}</td>
                 <td>${entry.dep}</td>
                 <td>${entry.arr}</td>
                 <td>${entry.time}</td>
                 <td>${entry.acft}</td>
                 <td style="text-align:center;">
-                    <button class="btn-delete-entry" onclick="deleteLogbookEntry(${entry.id})">🗑️</button>
+                    <button class="btn-remove" onclick="deleteLogbookEntry(${entry.id})">🗑️</button>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -1294,18 +817,16 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
     }
 
     function deleteLogbookEntry(id) {
-        if(!confirm("Deseja excluir este registro do histórico?")) return;
-        
+        if(!confirm("Excluir registro?")) return;
         let logbook = getSafeStorage('myPilotLogbook');
         logbook = logbook.filter(entry => entry.id !== id);
-        
         localStorage.setItem('myPilotLogbook', JSON.stringify(logbook));
         renderLogbook();
     }
 
     function toggleLogbook() {
         const div = document.getElementById('logbook-section');
-        if (div.style.display === 'none' || div.style.display === '') {
+        if (div.style.display === 'none') {
             div.style.display = 'block';
             renderLogbook();
             div.scrollIntoView({ behavior: 'smooth' });
@@ -1315,106 +836,76 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
     }
 
     function clearLogbook() {
-        if(confirm("ATENÇÃO: Isso apagará TODOS os voos do seu histórico. Confirma?")) {
+        if(confirm("Apagar todo o histórico?")) {
             localStorage.removeItem('myPilotLogbook');
             renderLogbook();
         }
     }
 
-    // --- BACKUP E RESTORE ---
     function backupLogbook() {
-        const logbookData = getSafeStorage('myPilotLogbook');
-        const rosterData = getSafeStorage('myPilotRoster');
-        const sbID = localStorage.getItem('simbrief_id') || "";
-
-        const backupData = {
-            version: "5.10",
+        const dataStr = JSON.stringify({
+            version: "6.2",
             date: new Date().toISOString(),
-            simbrief_id: sbID,
-            logbook: logbookData,
-            roster: rosterData
-        };
-
-        const dataStr = JSON.stringify(backupData, null, 2);
+            simbrief_id: localStorage.getItem('simbrief_id') || "",
+            logbook: getSafeStorage('myPilotLogbook'),
+            roster: getSafeStorage('myPilotRoster')
+        }, null, 2);
+        
         const blob = new Blob([dataStr], { type: "application/json" });
         const url = URL.createObjectURL(blob);
-        
         const a = document.createElement('a');
         a.href = url;
-        a.download = `backup_rpl_data_${new Date().toISOString().split('T')[0]}.json`;
+        a.download = `backup_rpl_${new Date().toISOString().split('T')[0]}.json`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        URL.revokeObjectURL(url);
     }
 
     function restoreLogbook(event) {
         const file = event.target.files[0];
         if (!file) return;
-
         const reader = new FileReader();
         reader.onload = function(e) {
             try {
                 const data = JSON.parse(e.target.result);
-                
-                if (data.logbook && Array.isArray(data.logbook)) {
-                    if(confirm(`Backup encontrado. Restaurar dados?`)) {
+                if (data.logbook) {
+                    if(confirm("Restaurar backup?")) {
                         localStorage.setItem('myPilotLogbook', JSON.stringify(data.logbook));
-                        
-                        if (data.roster) {
-                            localStorage.setItem('myPilotRoster', JSON.stringify(data.roster));
-                        }
-                        
+                        if (data.roster) localStorage.setItem('myPilotRoster', JSON.stringify(data.roster));
                         if (data.simbrief_id) {
                             localStorage.setItem('simbrief_id', data.simbrief_id);
                             document.getElementById('sb-id').value = data.simbrief_id;
                         }
-                        
                         renderLogbook();
                         renderRoster();
-                        alert("Backup restaurado com sucesso!");
+                        alert("Restaurado!");
                     }
-                } else {
-                    alert("Arquivo inválido.");
                 }
-            } catch (err) {
-                console.error(err);
-                alert("Erro ao ler o arquivo.");
-            }
+            } catch (err) { alert("Erro no arquivo."); }
             event.target.value = '';
         };
         reader.readAsText(file);
     }
 
-    // --- MODAL DETALHES ---
     function showFlightDetails(index) {
         const f = displayedFlights[index];
         if (!f) return;
-
         document.getElementById('modal-cia-badge').innerText = f.airline.name;
         document.getElementById('modal-cia-badge').style.backgroundColor = f.airline.color;
         document.getElementById('modal-flight-num').innerText = f.ident;
-        
         document.getElementById('md-acft').innerText = f.type;
         document.getElementById('md-route').textContent = f.rota; 
-        document.getElementById('md-deparr').innerText = `${f.origin} (${f.depDisplayUTC}z) -> ${f.dest} (${f.arrDisplayUTC}z)`;
+        document.getElementById('md-deparr').innerText = `${f.origin} -> ${f.dest}`;
         document.getElementById('md-eet').innerText = minutesToTimeStr(f.durMin).replace(':', 'h ') + 'm';
         document.getElementById('md-fl').innerText = f.fl;
         document.getElementById('md-days').innerText = formatDaysOp(f.daysOp);
         document.getElementById('md-obs').textContent = f.obs;
-
         document.getElementById('flight-modal').style.display = 'flex';
     }
 
-    function closeModal() {
-        document.getElementById('flight-modal').style.display = 'none';
-    }
-    
+    function closeModal() { document.getElementById('flight-modal').style.display = 'none'; }
     window.onclick = function(event) {
-        const modal = document.getElementById('flight-modal');
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
+        if (event.target == document.getElementById('flight-modal')) closeModal();
     }
 
     function formatDaysOp(daysStr) {
@@ -1422,14 +913,11 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         const labels = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
         let active = [];
         for (let i = 0; i < daysStr.length; i++) {
-            if (daysStr[i] !== ' ' && daysStr[i] !== '0') {
-                active.push(labels[i]);
-            }
+            if (daysStr[i] !== ' ' && daysStr[i] !== '0') active.push(labels[i]);
         }
         return active.length > 0 ? active.join(', ') : "Não especificado";
     }
 
-    // --- 3. RELÓGIO E DATA ---
     function getSimulationDate() {
         if (USE_REAL_TIME_DATE) return new Date();
         const realNow = new Date();
@@ -1441,18 +929,14 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
         const now = getSimulationDate(); 
         const timeOptions = { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
         const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-
         document.getElementById('brt-clock').innerText = now.toLocaleTimeString('pt-BR', timeOptions);
         document.getElementById('brt-date').innerText = now.toLocaleDateString('pt-BR', dateOptions).toUpperCase();
     }
     setInterval(updateClock, 1000);
     updateClock();
 
-    // --- 4. CARREGAMENTO (FETCH) ---
     async function loadAllFiles() {
         allFlightsDB = [];
-        const debugDiv = document.getElementById('file-debug');
-        
         const allButtons = document.querySelectorAll('button');
         allButtons.forEach(btn => btn.disabled = true);
         document.getElementById('empty-msg').innerText = "Carregando malha aérea... Por favor aguarde.";
@@ -1463,353 +947,196 @@ ALTN ${data.alternate ? data.alternate.icao_code : '---'}`;
                     const response = await fetch(airline.file);
                     if (!response.ok) throw new Error("404");
                     const text = await response.text();
-                    
                     checkValidityDate(text);
-
                     const flights = parseRPLData(text, airline);
-                    return { status: "OK", flights: flights, name: airline.name };
-                } catch (error) {
-                    return { status: "Erro/Ausente", flights: [], name: airline.name };
-                }
+                    return { status: "OK", flights: flights };
+                } catch (error) { return { status: "Erro", flights: [] }; }
             });
-
             const results = await Promise.all(promises);
-            
-            const debugTexts = [];
-            results.forEach(res => {
-                if(res.flights.length > 0) {
-                    allFlightsDB = allFlightsDB.concat(res.flights);
-                }
-                debugTexts.push(`${res.name}: ${res.status}`);
-            });
-
-            debugDiv.innerText = debugTexts.join(" | ");
-            
-            if (allFlightsDB.length > 0) {
-                document.getElementById('empty-msg').innerText = "Sistema pronto. Selecione a quantidade de voos.";
-            } else {
-                document.getElementById('empty-msg').innerHTML = "ERRO: Arquivos de malha (.txt) não encontrados.<br>Certifique-se que Cia_TAM_CS.txt, etc, estão na pasta.";
-                document.getElementById('empty-msg').style.color = "#c0392b";
-            }
-        } finally {
-            allButtons.forEach(btn => btn.disabled = false);
-        }
+            results.forEach(res => { if(res.flights.length > 0) allFlightsDB = allFlightsDB.concat(res.flights); });
+            if (allFlightsDB.length > 0) document.getElementById('empty-msg').innerText = "Sistema pronto. Utilize os filtros acima.";
+            else document.getElementById('empty-msg').innerText = "Erro: Arquivos .txt não encontrados.";
+        } finally { allButtons.forEach(btn => btn.disabled = false); }
     }
 
     function checkValidityDate(text) {
         if (validityUpdated) return; 
-        
         const regex = /IN[IÍ]CIO DE VALIDADE:\s*(\d{2})([a-z]{3})\.(\d{4})/i;
         const match = text.match(regex);
-        
         if (match) {
             const day = parseInt(match[1]);
             const monthStr = match[2].toLowerCase();
             const year = parseInt(match[3]);
-
             const months = { 'jan':0, 'fev':1, 'mar':2, 'abr':3, 'mai':4, 'jun':5, 'jul':6, 'ago':7, 'set':8, 'out':9, 'nov':10, 'dez':11 };
             
             if (months[monthStr] !== undefined) {
                 const startDate = new Date(year, months[monthStr], day);
                 const endDate = new Date(startDate);
                 endDate.setDate(startDate.getDate() + 6); 
-
                 const opts = { day: '2-digit', month: 'short', year: 'numeric' };
                 const startFmt = startDate.toLocaleDateString('pt-BR', opts).toUpperCase().replace('.', '');
                 const endFmt = endDate.toLocaleDateString('pt-BR', opts).toUpperCase().replace('.', '');
-                
                 const cleanStart = startFmt.replace(' DE ', ' ');
                 const cleanEnd = endFmt.replace(' DE ', ' ');
-
+                // Formato Longo Solicitado
                 document.getElementById("validity-box").innerText = `VALIDADE: ${cleanStart} A ${cleanEnd}`;
                 validityUpdated = true;
             }
         }
     }
 
-    // --- 5. PARSER ---
     function parseRPLData(textData, airlineInfo) {
         const lines = textData.split('\n');
         const flights = [];
-
         for (let line of lines) {
             line = line.trim();
-            if (line.length < 50) continue;
-
-            if (/^\d{6}\s+\d{6}/.test(line)) {
-                const parts = line.split(/\s+/);
-                const speedIndex = parts.findIndex(p => /^[NM]\d{3,4}$/.test(p));
-
-                if (speedIndex !== -1 && parts.length > speedIndex + 3) {
-                    try {
-                        const daysOp = parts[2];
-                        const ident = parts[3];
-                        const type = parts[4];
-                        
-                        const adepEobt = parts[speedIndex - 1]; 
-                        const origin = adepEobt.substring(0, 4);
-                        const depTimeUTC = adepEobt.substring(4, 8); 
-                        const fl = parts[speedIndex + 1];
-
-                        let destIndex = -1;
-                        for(let k = speedIndex + 2; k < parts.length; k++) {
-                            if (/^[A-Z]{4}\d{4}$/.test(parts[k])) {
-                                destIndex = k;
-                                break;
-                            }
-                        }
-
-                        if (destIndex !== -1) {
-                            const destEet = parts[destIndex];
-                            const dest = destEet.substring(0, 4);
-                            const eetStr = destEet.substring(4, 8); 
-
-                            const rota = parts.slice(speedIndex + 2, destIndex).join(' ');
-                            const obs = parts.slice(destIndex + 1).join(' ');
-
-                            const depMinUTC = timeStrToMinutes(depTimeUTC);
-                            const durMin = timeStrToMinutes(eetStr);
-                            let arrMinUTC = depMinUTC + durMin;
-
-                            flights.push({
-                                airline: airlineInfo,
-                                ident: ident,
-                                type: type,
-                                origin: origin,
-                                dest: dest,
-                                depMinUTC: depMinUTC,
-                                arrMinUTC: arrMinUTC,
-                                durMin: durMin,
-                                fl: fl,
-                                rota: rota,
-                                obs: obs,
-                                daysOp: daysOp
-                            });
-                        }
-                    } catch(e) {}
-                }
+            if (line.length < 50 || !/^\d{6}\s+\d{6}/.test(line)) continue;
+            const parts = line.split(/\s+/);
+            const speedIndex = parts.findIndex(p => /^[NM]\d{3,4}$/.test(p));
+            if (speedIndex !== -1 && parts.length > speedIndex + 3) {
+                try {
+                    const daysOp = parts[2]; const ident = parts[3]; const type = parts[4];
+                    const adepEobt = parts[speedIndex - 1]; 
+                    const origin = adepEobt.substring(0, 4); const depTimeUTC = adepEobt.substring(4, 8); 
+                    const fl = parts[speedIndex + 1];
+                    let destIndex = parts.findIndex((p, idx) => idx > speedIndex && /^[A-Z]{4}\d{4}$/.test(p));
+                    if (destIndex !== -1) {
+                        const destEet = parts[destIndex];
+                        const dest = destEet.substring(0, 4); const eetStr = destEet.substring(4, 8); 
+                        const rota = parts.slice(speedIndex + 2, destIndex).join(' ');
+                        const obs = parts.slice(destIndex + 1).join(' ');
+                        const depMinUTC = timeStrToMinutes(depTimeUTC); const durMin = timeStrToMinutes(eetStr);
+                        flights.push({
+                            airline: airlineInfo, ident, type, origin, dest, depMinUTC,
+                            arrMinUTC: depMinUTC + durMin, durMin, fl, rota, obs, daysOp
+                        });
+                    }
+                } catch(e) {}
             }
         }
         return flights;
     }
 
-    // --- 6. LÓGICA DE ESCALA ---
     function generateRealTimeChain(chainLength) {
-        const tableBody = document.getElementById('board-content');
-        const msgDiv = document.getElementById('empty-msg');
-        tableBody.innerHTML = '';
-        msgDiv.style.display = 'none';
-
-        if(allFlightsDB.length === 0) {
-            alert("Os arquivos de malha não foram carregados corretamente.");
-            msgDiv.style.display = 'block';
-            msgDiv.innerText = "Erro: Sem banco de dados.";
-            return;
-        }
-
         const now = getSimulationDate();
         const currentUTCMinutes = ((now.getUTCHours()) * 60) + now.getUTCMinutes(); 
         
         let validFlightsToday = allFlightsDB.filter(f => isFlightValidToday(f, now));
-
-        if (currentFilter !== 'todas') {
-            validFlightsToday = validFlightsToday.filter(f => f.airline.name === currentFilter);
-        }
-
-        const rawForcedOrigin = document.getElementById('airport-search').value;
-        const forcedOrigin = rawForcedOrigin ? rawForcedOrigin.toUpperCase().trim() : "";
-
+        if (currentFilter !== 'todas') validFlightsToday = validFlightsToday.filter(f => f.airline.name === currentFilter);
+        
+        const orig = document.getElementById('airport-search').value.toUpperCase().trim();
         let candidates = [];
 
-        if (forcedOrigin.length >= 3) {
-            candidates = validFlightsToday.filter(f => f.origin === forcedOrigin);
-            let futureCandidates = candidates.filter(f => f.depMinUTC >= currentUTCMinutes + 30);
-            
-            if (futureCandidates.length > 0) {
-                candidates = futureCandidates;
-            } else {
-                candidates = []; 
-            }
-
+        if (orig.length >= 3) {
+            candidates = validFlightsToday.filter(f => f.origin === orig);
+            let future = candidates.filter(f => f.depMinUTC >= currentUTCMinutes + 30);
+            if (future.length > 0) candidates = future;
+            else candidates = [];
         } else {
             candidates = validFlightsToday.filter(f => f.depMinUTC >= currentUTCMinutes + 30);
-            if (candidates.length === 0) {
-                candidates = validFlightsToday.filter(f => f.depMinUTC >= currentUTCMinutes);
-            }
+            if (candidates.length === 0) candidates = validFlightsToday.filter(f => f.depMinUTC >= currentUTCMinutes);
         }
 
-        if (candidates.length === 0) {
-            msgDiv.style.display = 'block';
-            let msg = "Nenhum voo encontrado para os filtros atuais";
-            if(forcedOrigin) msg += ` saindo de ${forcedOrigin}`;
-            msg += " no horário futuro.";
-            msgDiv.innerText = msg;
-            return;
-        }
-
+        if (candidates.length === 0) { alert("Sem voos disponíveis agora."); return; }
+        
         candidates.sort((a,b) => a.depMinUTC - b.depMinUTC);
-        
-        const poolSize = Math.min(15, candidates.length);
-        const seedIndex = Math.floor(Math.random() * poolSize);
-        let currentFlight = candidates[seedIndex];
-        
-        let chain = [enrichFlightData(currentFlight)];
+        const seed = candidates[Math.floor(Math.random() * Math.min(15, candidates.length))];
+        let chain = [enrichFlightData(seed)];
 
         for (let i = 1; i < chainLength; i++) {
             const prev = chain[i-1];
-            const prevArrNormalized = prev.arrMinUTC >= 1440 ? prev.arrMinUTC - 1440 : prev.arrMinUTC;
-            const minNextDep = prevArrNormalized + TURNAROUND_MINUTES;
-
-            let nextLegCandidates = validFlightsToday.filter(f => {
-                return (
-                    f.airline.name === prev.airline.name && 
-                    f.origin === prev.dest && 
-                    f.depMinUTC >= minNextDep 
-                );
-            });
-
-            if (nextLegCandidates.length === 0) {
-                 nextLegCandidates = validFlightsToday.filter(f => {
-                    return (
-                        f.airline.name === prev.airline.name && 
-                        f.origin === prev.dest
-                    );
+            const prevArr = prev.arrMinUTC >= 1440 ? prev.arrMinUTC - 1440 : prev.arrMinUTC;
+            const minNext = prevArr + TURNAROUND_MINUTES;
+            let nextLegs = validFlightsToday.filter(f => f.airline.name === prev.airline.name && f.origin === prev.dest && f.depMinUTC >= minNext);
+            
+            if (nextLegs.length === 0) nextLegs = validFlightsToday.filter(f => f.airline.name === prev.airline.name && f.origin === prev.dest);
+            if (nextLegs.length > 0) {
+                nextLegs.sort((a,b) => {
+                    let dA = a.depMinUTC - minNext; if(dA<0) dA+=1440;
+                    let dB = b.depMinUTC - minNext; if(dB<0) dB+=1440;
+                    return dA - dB;
                 });
-            }
-
-            if (nextLegCandidates.length > 0) {
-                nextLegCandidates.sort((a,b) => {
-                    let diffA = a.depMinUTC - minNextDep;
-                    if(diffA < 0) diffA += 1440; 
-                    let diffB = b.depMinUTC - minNextDep;
-                    if(diffB < 0) diffB += 1440;
-                    return diffA - diffB;
-                });
-                chain.push(enrichFlightData(nextLegCandidates[0]));
-            } else {
-                break; 
-            }
+                chain.push(enrichFlightData(nextLegs[0]));
+            } else break;
         }
-
+        
         displayedFlights = chain;
         renderRows(chain);
+        document.getElementById('empty-msg').style.display = 'none';
     }
 
     function enrichFlightData(flight) {
-        const toBRT = (utcMinutes) => {
-            let brt = utcMinutes - 180;
-            if (brt < 0) brt += 1440;
-            if (brt >= 1440) brt -= 1440;
-            return brt;
-        };
-
+        const toBRT = (utc) => { let b = utc - 180; if(b<0) b+=1440; if(b>=1440) b-=1440; return b; };
         const depMinBRT = toBRT(flight.depMinUTC);
         const arrMinBRT = toBRT(flight.arrMinUTC);
-        
-        let depUtcDisp = flight.depMinUTC;
-        if(depUtcDisp >= 1440) depUtcDisp -= 1440;
-        
-        let arrUtcDisp = flight.arrMinUTC;
-        if(arrUtcDisp >= 1440) arrUtcDisp -= 1440;
-
-        let nextDay = false;
-        
-        if (arrMinBRT < depMinBRT) {
-            nextDay = true;
-        }
+        let arrUtc = flight.arrMinUTC >= 1440 ? flight.arrMinUTC - 1440 : flight.arrMinUTC;
+        let nextDay = arrMinBRT < depMinBRT;
         
         return {
             ...flight,
             depDisplay: minutesToTimeStr(depMinBRT),
             arrDisplay: minutesToTimeStr(arrMinBRT),
-            depDisplayUTC: minutesToTimeStr(depUtcDisp),
-            arrDisplayUTC: minutesToTimeStr(arrUtcDisp),
+            depDisplayUTC: minutesToTimeStr(flight.depMinUTC),
+            arrDisplayUTC: minutesToTimeStr(arrUtc),
             isNextDay: nextDay
         };
     }
 
     function isFlightValidToday(flight, dateObj) {
-        const jsDay = dateObj.getDay(); 
-        const rplIndex = (jsDay === 0) ? 6 : jsDay - 1; 
-        
-        if (rplIndex >= flight.daysOp.length) return false;
-        const char = flight.daysOp.charAt(rplIndex);
-        return (char !== '0' && char !== ' ');
+        const d = dateObj.getDay(); 
+        const idx = d === 0 ? 6 : d - 1; 
+        const char = flight.daysOp.charAt(idx);
+        return char !== '0' && char !== ' ';
     }
 
     function timeStrToMinutes(str) {
-        if(!str) return 0;
-        const h = parseInt(str.substring(0,2), 10);
-        const m = parseInt(str.substring(2,4), 10);
-        return (h * 60) + m;
+        return (parseInt(str.substring(0,2))*60) + parseInt(str.substring(2,4));
     }
 
-    function minutesToTimeStr(totalMin) {
-        let h = Math.floor(totalMin / 60);
-        let m = Math.floor(totalMin % 60);
-        if (h >= 24) h = h % 24;
+    function minutesToTimeStr(min) {
+        let h = Math.floor(min/60)%24; let m = Math.floor(min%60);
         return String(h).padStart(2,'0') + ":" + String(m).padStart(2,'0');
     }
 
     function renderRows(flights) {
         const tbody = document.getElementById('board-content');
         tbody.innerHTML = '';
-        const fragment = document.createDocumentFragment();
-
         flights.forEach((f, index) => {
             const tr = document.createElement('tr');
             
-            // Botões de Ação
-            const sbButton = `<button class="btn-sb" onclick="openSimBriefFromIndex(${index})">SIMBRIEF ↗</button>`;
-            const scheduleButton = `<button class="btn-schedule" title="Agendar este voo" onclick="scheduleFlight(${index})">📅</button>`;
-            
-            const arrHtml = f.isNextDay 
-                ? `<span class="time-brt">${f.arrDisplay}</span> <span class="next-day-badge">(+1)</span>` 
-                : `<span class="time-brt">${f.arrDisplay}</span>`;
-
-            const depCell = `
-                <div class="time-utc">${f.depDisplayUTC}Z</div>
-                <div class="time-brt">${f.depDisplay}</div>
-            `;
-            
-            const arrCell = `
-                <div class="time-utc">${f.arrDisplayUTC}Z</div>
-                <div>${arrHtml}</div>
-            `;
+            const sbButton = `<button class="btn-sb" onclick="openSimBriefFromIndex(${index})">SIMBRIEF</button>`;
+            const scheduleButton = `<button class="btn-schedule" title="Agendar" onclick="scheduleFlight(${index})">📅</button>`;
+            const arrHtml = f.isNextDay ? `<span style="color:var(--accent-orange)">(+1)</span>` : ``;
+            const depCell = `<div class="time-pill"><div class="tp-utc">${f.depDisplayUTC}z</div><div class="tp-local">${f.depDisplay}</div></div>`;
+            const arrCell = `<div class="time-pill arr"><div class="tp-utc">${f.arrDisplayUTC}z</div><div class="tp-local">${f.arrDisplay} ${arrHtml}</div></div>`;
+            const acftType = f.type.split('/')[0];
 
             tr.innerHTML = `
-                <td style="text-align:center; white-space:nowrap;">
-                    ${sbButton}
-                    ${scheduleButton}
-                </td>
-                <td class="col-flight"><span class="flight-link" onclick="showFlightDetails(${index})">${f.ident}</span></td>
+                <td style="text-align:center; display:flex; gap:5px; justify-content:center;">${sbButton}${scheduleButton}</td>
+                <td class="col-flight" onclick="showFlightDetails(${index})">${f.ident}</td>
                 <td><span class="cia-badge" style="background-color: ${f.airline.color}">${f.airline.name}</span></td>
+                <td style="font-weight:bold;">${acftType}</td>
                 <td class="col-airport">${f.origin}</td>
-                <td class="col-time">${depCell}</td>
+                <td style="text-align:center;">${depCell}</td>
                 <td class="col-airport">${f.dest}</td>
-                <td class="col-time time-arr">${arrCell}</td>
+                <td style="text-align:center;">${arrCell}</td>
                 <td class="col-fl">${f.fl}</td>
                 <td class="col-rota">${f.rota}</td>
                 <td class="col-obs">${f.obs}</td>
             `;
-            fragment.appendChild(tr);
+            tbody.appendChild(tr);
         });
-
-        tbody.appendChild(fragment);
     }
 
     function setFilter(cia, btn) {
         currentFilter = cia;
         document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        const msg = document.getElementById('empty-msg');
-        msg.style.display = 'block';
-        msg.innerText = `Filtro ${cia} ativado. Clique em 'Gerar Escala'.`;
         document.getElementById('board-content').innerHTML = '';
+        document.getElementById('empty-msg').style.display = 'block';
     }
 
     loadAllFiles();
-
 </script>
 </body>
 </html>
