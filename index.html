@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RPL Dispatch 6.2 - Dashboard</title>
+<title>RPL Dispatch 6.5 - Escala & Fixes</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 
@@ -14,7 +14,7 @@
         --bg-card: #ffffff;
         --text-main: #2d3748;
         --text-muted: #718096;
-        --primary: #4e73df; /* Azul Dashboard */
+        --primary: #4e73df;
         --accent-purple: #6f42c1;
         --accent-cyan: #36b9cc;
         --accent-green: #1cc88a;
@@ -116,7 +116,8 @@
     /* --- CONTROLES --- */
     .controls-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        /* Aumentado minmax para 200px para dar mais espaço */
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         gap: 20px;
         align-items: end;
     }
@@ -125,6 +126,7 @@
         display: flex;
         flex-direction: column;
         gap: 8px;
+        width: 100%; /* Garante que o grupo ocupe a célula do grid */
     }
 
     .control-label {
@@ -309,7 +311,7 @@
     .tut-card h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 14px; font-weight: 700; }
     .tut-card p { margin: 0; font-size: 12px; color: var(--text-muted); line-height: 1.5; }
 
-    /* --- MODAL --- */
+    /* --- MODAL GERAL --- */
     .modal-overlay {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
         background: rgba(0,0,0,0.6); z-index: 2000;
@@ -348,7 +350,7 @@
 
     <div class="header-container">
         <div class="header-title">
-            <h1>RPL Dispatch 6.2</h1>
+            <h1>RPL Dispatch 6.5</h1>
             <div>Simulador de Voo Doméstico</div>
         </div>
         
@@ -410,6 +412,14 @@
             </div>
 
             <div class="control-group">
+                <label class="control-label">Agende sua escala de voo</label>
+                <div style="display:flex; gap:5px;">
+                    <input type="date" id="filter-date" class="sb-input" style="flex: 1; min-width: 0;" title="Deixe vazio para HOJE">
+                    <input type="time" id="filter-time" class="sb-input" style="flex: 1; min-width: 0;" title="Deixe vazio para AGORA">
+                </div>
+            </div>
+
+            <div class="control-group">
                 <label class="control-label">&nbsp;</label>
                 <button class="btn-reset" onclick="resetPanel()">Limpar Filtros</button>
             </div>
@@ -428,7 +438,8 @@
                         <th style="text-align: center;">Ações</th> 
                         <th>Voo</th>
                         <th>Cia</th>
-                        <th>Aeronave</th> <th>Origem</th>
+                        <th>Aeronave</th>
+                        <th>Origem</th>
                         <th>Horários (Z / BRT)</th>
                         <th>Destino</th>
                         <th>Chegada (Z / BRT)</th>
@@ -455,15 +466,15 @@
             <table class="flight-table">
                 <thead>
                     <tr>
-                        <th style="text-align: center;">Gerenciar</th> <th>Voo</th>
+                        <th style="text-align: center;">Gerenciar</th> 
+                        <th>Data/Hora (Z)</th>
+                        <th>Voo</th>
                         <th>Cia</th>
-                        <th>Aeronave</th> <th>Origem</th>
-                        <th>Partida (Z / BRT)</th>
+                        <th>Aeronave</th>
+                        <th>Origem</th>
                         <th>Destino</th>
-                        <th>Chegada (Z / BRT)</th>
-                        <th style="text-align: center;">FL</th>
+                        <th>FL</th>
                         <th>Rota</th>
-                        <th>Obs</th>
                     </tr>
                 </thead>
                 <tbody id="roster-body">
@@ -527,11 +538,11 @@
     <div class="tutorial-grid">
         <div class="tut-card">
             <h4>📅 Agendamento Inteligente</h4>
-            <p>Clique no botão verde na tabela para agendar. O sistema calcula automaticamente o tempo de solo entre voos.</p>
+            <p>Clique no ícone 📅 para escolher a <strong>Data e Hora exata</strong> do seu voo. O SimBrief respeitará esse agendamento.</p>
         </div>
         <div class="tut-card">
-            <h4>🎯 Filtro de Rota</h4>
-            <p>Use "Origem -> Destino" para achar rotas específicas. Se deixar o destino vazio, mostra todas as saídas.</p>
+            <h4>🎯 Filtros de Tempo (Novo)</h4>
+            <p>Use os campos "Quando?" para buscar voos em datas e horários específicos. Se deixar vazio, o sistema usa o relógio atual.</p>
         </div>
         <div class="tut-card">
             <h4>📄 SimBrief Direto</h4>
@@ -546,9 +557,8 @@
                 <span id="modal-cia-badge" class="cia-badge" style="font-size:14px;">CIA</span>
                 <span id="modal-flight-num" style="margin-left:10px;">VOO 1234</span>
             </div>
-            <button class="close-modal" onclick="closeModal()">×</button>
+            <button class="close-modal" onclick="closeModal('flight-modal')">×</button>
         </div>
-        
         <div id="modal-body">
             <div class="detail-row"><span class="detail-label">Aeronave</span> <span class="detail-val" id="md-acft"></span></div>
              <div class="detail-row"><span class="detail-label">Rota Completa</span> <span class="detail-val" id="md-route" style="font-size:11px;"></span></div>
@@ -557,6 +567,33 @@
              <div class="detail-row"><span class="detail-label">Nível (FL)</span> <span class="detail-val" id="md-fl"></span></div>
              <div class="detail-row"><span class="detail-label">Dias de Operação</span> <span class="detail-val" id="md-days"></span></div>
              <div class="detail-row"><span class="detail-label">Observações</span> <span class="detail-val" id="md-obs"></span></div>
+        </div>
+    </div>
+</div>
+
+<div id="schedule-modal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 400px;">
+        <div class="modal-header">
+            <div class="modal-title">Agendar Voo</div>
+            <button class="close-modal" onclick="closeModal('schedule-modal')">×</button>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:20px;">
+            <div style="background:#f8f9fc; padding:15px; border-radius:8px; text-align:center;">
+                <div id="sch-flight-num" style="font-weight:800; font-size:18px; color:var(--primary);">VOO</div>
+                <div id="sch-route" style="font-size:12px; color:var(--text-muted); margin-top:5px;">DEP - ARR</div>
+            </div>
+            
+            <div class="control-group">
+                <label class="control-label">Data do Voo</label>
+                <input type="date" id="sch-date" class="sb-input">
+            </div>
+            
+            <div class="control-group">
+                <label class="control-label">Horário de Saída (ZULU)</label>
+                <input type="time" id="sch-time" class="sb-input">
+            </div>
+
+            <button class="btn-action" style="width:100%; height:45px; margin-top:10px;" onclick="confirmSchedule()">CONFIRMAR AGENDAMENTO</button>
         </div>
     </div>
 </div>
@@ -578,14 +615,13 @@
     let currentFilter = 'todas';
     let displayedFlights = [];
     let validityUpdated = false;
+    let selectedFlightForSchedule = null;
 
     function getSafeStorage(key) {
         try {
             const data = localStorage.getItem(key);
             return data ? JSON.parse(data) : [];
-        } catch (e) {
-            return [];
-        }
+        } catch (e) { return []; }
     }
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -599,7 +635,38 @@
         localStorage.setItem("simbrief_id", document.getElementById("sb-id").value);
     }
 
-    function openSimBriefWithData(flight) {
+    // --- HELPER DE TEMPO DE REFERÊNCIA ---
+    function getReferenceTime() {
+        const dateInput = document.getElementById('filter-date').value;
+        const timeInput = document.getElementById('filter-time').value;
+        
+        let now;
+        
+        if (dateInput) {
+            // Se usuário definiu data
+            if (timeInput) {
+                // Se definiu data e hora, usa a combinação
+                now = new Date(`${dateInput}T${timeInput}`);
+            } else {
+                // Se só definiu data, assume meia-noite (00:00) ou hora atual desse dia
+                // Vamos usar a hora atual do dia selecionado para manter consistência
+                const tempNow = new Date();
+                const h = String(tempNow.getHours()).padStart(2, '0');
+                const m = String(tempNow.getMinutes()).padStart(2, '0');
+                now = new Date(`${dateInput}T${h}:${m}`);
+            }
+        } else {
+            // Se não definiu data, usa lógica padrão (Hoje Real)
+            now = getSimulationDate();
+        }
+        
+        // Calcula minutos UTC
+        const utcMinutes = (now.getUTCHours() * 60) + now.getUTCMinutes();
+        
+        return { dateObj: now, utcMinutes: utcMinutes };
+    }
+
+    function openSimBriefWithData(flight, customDateObj = null, customHours = null, customMinutes = null) {
         const sbID = document.getElementById("sb-id").value;
         if (!sbID) {
             alert("Preencha o ID do SimBrief no painel de controles.");
@@ -614,11 +681,17 @@
         let cleanType = flight.type.split('/')[0]; 
         const routeEncoded = encodeURIComponent(flight.rota);
 
-        let hours = Math.floor(flight.depMinUTC / 60);
-        let minutes = flight.depMinUTC % 60;
-        if (hours >= 24) hours = hours % 24;
+        let hours, minutes;
+        if (customHours !== null && customMinutes !== null) {
+            hours = parseInt(customHours);
+            minutes = parseInt(customMinutes);
+        } else {
+            hours = Math.floor(flight.depMinUTC / 60);
+            minutes = flight.depMinUTC % 60;
+            if (hours >= 24) hours = hours % 24;
+        }
 
-        const dateObj = new Date(); 
+        const dateObj = customDateObj || new Date();
         const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
         const day = String(dateObj.getUTCDate()).padStart(2, '0');
         const month = monthNames[dateObj.getUTCMonth()];
@@ -633,74 +706,78 @@
     function openSimBriefFromIndex(index) {
         const flight = displayedFlights[index];
         if (!flight) return;
-        openSimBriefWithData(flight);
-    }
-
-    function resetPanel() {
-        document.getElementById('board-content').innerHTML = '';
-        document.getElementById('empty-msg').style.display = 'block';
-        document.getElementById('empty-msg').innerText = "Painel limpo. Selecione os filtros acima.";
-        document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
-        displayedFlights = [];
-    }
-
-    function manualSearch() {
-        const rawInput = document.getElementById('search-input').value;
-        const input = rawInput ? rawInput.toUpperCase().replace(/\s+/g, '') : "";
-
-        if (input.length < 3) { alert("Digite pelo menos 3 caracteres."); return; }
-        if(allFlightsDB.length === 0) { alert("Aguarde o carregamento."); return; }
-
-        const matches = allFlightsDB.filter(f => f.ident.includes(input));
-        if (matches.length === 0) { alert("Voo não encontrado."); return; }
-
-        matches.sort((a,b) => a.depMinUTC - b.depMinUTC);
-        const enriched = matches.map(f => enrichFlightData(f));
-        displayedFlights = enriched;
-        renderRows(enriched);
-        document.getElementById('empty-msg').style.display = 'none';
-    }
-
-    function searchByAirport() {
-        const rawOrig = document.getElementById('airport-search').value;
-        const orig = rawOrig ? rawOrig.toUpperCase().trim() : "";
-        const rawDest = document.getElementById('destination-search').value;
-        const dest = rawDest ? rawDest.toUpperCase().trim() : "";
-        
-        if (orig.length < 3) { alert("Digite o código de origem (Ex: SBSP)."); return; }
-        if(allFlightsDB.length === 0) { alert("Aguarde o carregamento."); return; }
-
-        const now = getSimulationDate();
-        const currentUTCMinutes = ((now.getUTCHours()) * 60) + now.getUTCMinutes(); 
-
-        const matches = allFlightsDB.filter(f => {
-            const airlineMatch = (currentFilter === 'todas') || (f.airline.name === currentFilter);
-            const routeMatch = (f.origin === orig) && (dest ? f.dest === dest : true);
-            return routeMatch && isFlightValidToday(f, now) && f.depMinUTC >= currentUTCMinutes && airlineMatch; 
-        });
-
-        if (matches.length === 0) {
-            alert("Nenhum voo encontrado para hoje com estes parâmetros.");
-            return;
+        // Se houver data de filtro selecionada, usa ela para o SimBrief
+        const ref = getReferenceTime();
+        // Se o usuário filtrou por data, assume que quer voar nessa data
+        if(document.getElementById('filter-date').value) {
+             // Hora ZULU do voo
+             let h = Math.floor(flight.depMinUTC / 60);
+             let m = flight.depMinUTC % 60;
+             openSimBriefWithData(flight, ref.dateObj, h, m);
+        } else {
+             openSimBriefWithData(flight);
         }
-
-        matches.sort((a,b) => a.depMinUTC - b.depMinUTC);
-        const enriched = matches.map(f => enrichFlightData(f));
-        displayedFlights = enriched;
-        renderRows(enriched);
-        document.getElementById('empty-msg').style.display = 'none';
     }
 
     function scheduleFlight(index) {
-        const flight = displayedFlights[index];
-        if (!flight) return;
+        selectedFlightForSchedule = displayedFlights[index];
+        if (!selectedFlightForSchedule) return;
+
+        document.getElementById('sch-flight-num').innerText = selectedFlightForSchedule.ident;
+        document.getElementById('sch-route').innerText = `${selectedFlightForSchedule.origin} -> ${selectedFlightForSchedule.dest}`;
+
+        // Se houver filtro de data, usa ele como padrão no modal
+        const filterDate = document.getElementById('filter-date').value;
+        if(filterDate) {
+            document.getElementById('sch-date').value = filterDate;
+        } else {
+            const now = new Date();
+            const yyyy = now.getFullYear();
+            const mm = String(now.getMonth() + 1).padStart(2, '0');
+            const dd = String(now.getDate()).padStart(2, '0');
+            document.getElementById('sch-date').value = `${yyyy}-${mm}-${dd}`;
+        }
+
+        let h = Math.floor(selectedFlightForSchedule.depMinUTC / 60);
+        let m = selectedFlightForSchedule.depMinUTC % 60;
+        if(h >= 24) h = h % 24;
+        const timeStr = String(h).padStart(2,'0') + ":" + String(m).padStart(2,'0');
+        document.getElementById('sch-time').value = timeStr;
+
+        document.getElementById('schedule-modal').style.display = 'flex';
+    }
+
+    function confirmSchedule() {
+        if (!selectedFlightForSchedule) return;
+
+        const dateVal = document.getElementById('sch-date').value;
+        const timeVal = document.getElementById('sch-time').value;
+
+        if (!dateVal || !timeVal) {
+            alert("Por favor, selecione data e hora.");
+            return;
+        }
 
         let roster = getSafeStorage('myPilotRoster');
-        roster.push({ id: Date.now(), flightData: flight });
-        roster.sort((a, b) => a.flightData.depMinUTC - b.flightData.depMinUTC);
+        
+        const entry = {
+            id: Date.now(),
+            flightData: selectedFlightForSchedule,
+            scheduledDate: dateVal, 
+            scheduledTime: timeVal  
+        };
+
+        roster.push(entry);
+        
+        roster.sort((a, b) => {
+            const dtA = new Date(a.scheduledDate + 'T' + a.scheduledTime);
+            const dtB = new Date(b.scheduledDate + 'T' + b.scheduledTime);
+            return dtA - dtB;
+        });
         
         localStorage.setItem('myPilotRoster', JSON.stringify(roster));
         renderRoster();
+        closeModal('schedule-modal');
         document.getElementById('roster-section').scrollIntoView({behavior: 'smooth'});
     }
 
@@ -722,22 +799,22 @@
             const sbButton = `<button class="btn-sb" onclick="dispatchRosterFlight(${entry.id})">SIMBRIEF ↗</button>`;
             const removeButton = `<button class="btn-remove" title="Remover" onclick="deleteRosterEntry(${entry.id})">✕</button>`;
 
-            const depCell = `<div class="time-pill"><div class="tp-utc">${f.depDisplayUTC}z</div><div class="tp-local">${f.depDisplay}</div></div>`;
-            const arrCell = `<div class="time-pill arr"><div class="tp-utc">${f.arrDisplayUTC}z</div><div class="tp-local">${f.arrDisplay}</div></div>`;
+            const dateParts = entry.scheduledDate.split('-'); 
+            const dateDisplay = `${dateParts[2]}/${dateParts[1]}`; 
+            const timeDisplay = entry.scheduledTime + 'z';
+
             const acftType = f.type.split('/')[0];
 
             tr.innerHTML = `
                 <td style="text-align:center; white-space:nowrap; display:flex; gap:5px; justify-content:center;">${sbButton}${removeButton}</td>
+                <td style="font-weight:700; color:var(--text-main); font-family:'JetBrains Mono';">${dateDisplay} ${timeDisplay}</td>
                 <td class="col-flight">${f.ident}</td>
                 <td><span class="cia-badge" style="background-color: ${f.airline.color}">${f.airline.name}</span></td>
                 <td style="font-weight:700;">${acftType}</td>
                 <td class="col-airport">${f.origin}</td>
-                <td style="text-align:center;">${depCell}</td>
                 <td class="col-airport">${f.dest}</td>
-                <td style="text-align:center;">${arrCell}</td>
                 <td class="col-fl">${f.fl}</td>
                 <td class="col-rota">${f.rota}</td>
-                <td class="col-obs">${f.obs}</td>
             `;
             tbody.appendChild(tr);
         });
@@ -746,7 +823,77 @@
     function dispatchRosterFlight(id) {
         const roster = getSafeStorage('myPilotRoster');
         const entry = roster.find(e => e.id === id);
-        if (entry) openSimBriefWithData(entry.flightData);
+        if (entry) {
+            const dateParts = entry.scheduledDate.split('-'); 
+            const scheduledDateObj = new Date(Date.UTC(dateParts[0], dateParts[1]-1, dateParts[2]));
+            const timeParts = entry.scheduledTime.split(':');
+            openSimBriefWithData(entry.flightData, scheduledDateObj, timeParts[0], timeParts[1]);
+        }
+    }
+
+    function resetPanel() {
+        document.getElementById('board-content').innerHTML = '';
+        document.getElementById('empty-msg').style.display = 'block';
+        document.getElementById('empty-msg').innerText = "Painel limpo. Selecione os filtros acima.";
+        document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
+        document.getElementById('filter-date').value = '';
+        document.getElementById('filter-time').value = '';
+        displayedFlights = [];
+    }
+
+    function manualSearch() {
+        const rawInput = document.getElementById('search-input').value;
+        const input = rawInput ? rawInput.toUpperCase().replace(/\s+/g, '') : "";
+        if (input.length < 3) { alert("Digite pelo menos 3 caracteres."); return; }
+        if(allFlightsDB.length === 0) { alert("Aguarde o carregamento."); return; }
+        const matches = allFlightsDB.filter(f => f.ident.includes(input));
+        if (matches.length === 0) { alert("Voo não encontrado."); return; }
+        matches.sort((a,b) => a.depMinUTC - b.depMinUTC);
+        const enriched = matches.map(f => enrichFlightData(f));
+        displayedFlights = enriched;
+        renderRows(enriched);
+        document.getElementById('empty-msg').style.display = 'none';
+    }
+
+    function searchByAirport() {
+        const rawOrig = document.getElementById('airport-search').value;
+        const orig = rawOrig ? rawOrig.toUpperCase().trim() : "";
+        const rawDest = document.getElementById('destination-search').value;
+        const dest = rawDest ? rawDest.toUpperCase().trim() : "";
+        
+        if (orig.length < 3) { alert("Digite o código de origem (Ex: SBSP)."); return; }
+        if(allFlightsDB.length === 0) { alert("Aguarde o carregamento."); return; }
+
+        // USA A REFERÊNCIA DE TEMPO (Pode ser Agora ou Futuro)
+        const ref = getReferenceTime();
+        
+        // Se o usuário preencheu o campo de HORA, ele quer ver voos a partir daquele horário.
+        // Se não preencheu hora (só data), mostramos voos do dia inteiro (>= 0 minutes).
+        const filterMinutes = document.getElementById('filter-time').value ? ref.utcMinutes : 0;
+
+        const matches = allFlightsDB.filter(f => {
+            const airlineMatch = (currentFilter === 'todas') || (f.airline.name === currentFilter);
+            const routeMatch = (f.origin === orig) && (dest ? f.dest === dest : true);
+            
+            // Valida o dia da semana baseado na DATA escolhida (ref.dateObj)
+            const validDay = isFlightValidToday(f, ref.dateObj);
+            
+            // Valida o horário (Maior que o horário escolhido)
+            const validTime = f.depMinUTC >= filterMinutes;
+
+            return routeMatch && validDay && validTime && airlineMatch; 
+        });
+
+        if (matches.length === 0) {
+            alert("Nenhum voo encontrado para esta data/rota.");
+            return;
+        }
+
+        matches.sort((a,b) => a.depMinUTC - b.depMinUTC);
+        const enriched = matches.map(f => enrichFlightData(f));
+        displayedFlights = enriched;
+        renderRows(enriched);
+        document.getElementById('empty-msg').style.display = 'none';
     }
 
     function deleteRosterEntry(id) {
@@ -757,100 +904,14 @@
         renderRoster();
     }
 
-    function saveToLogbook(flight) {
-        let logbook = getSafeStorage('myPilotLogbook');
-        const now = new Date();
-        const dateStr = now.toLocaleDateString('pt-BR');
-        
-        const durHours = Math.floor(flight.durMin / 60);
-        const durMins = flight.durMin % 60;
-        const durStr = String(durHours).padStart(2,'0') + ":" + String(durMins).padStart(2,'0');
-
-        logbook.unshift({
-            id: Date.now(),
-            date: dateStr,
-            callsign: flight.ident,
-            dep: flight.origin,
-            arr: flight.dest,
-            time: durStr,
-            acft: flight.type.split('/')[0]
-        });
-        localStorage.setItem('myPilotLogbook', JSON.stringify(logbook));
-        renderLogbook();
-    }
-
-    function renderLogbook() {
-        const logbook = getSafeStorage('myPilotLogbook');
-        const tbody = document.getElementById('logbook-body');
-        const emptyMsg = document.getElementById('logbook-empty');
-        
-        let totalMinutes = 0;
-        logbook.forEach(e => {
-            const parts = e.time.split(':');
-            totalMinutes += (parseInt(parts[0]) * 60) + parseInt(parts[1]);
-        });
-        const totalH = Math.floor(totalMinutes / 60);
-        const totalM = totalMinutes % 60;
-        
-        document.getElementById('stats-count').innerText = logbook.length;
-        document.getElementById('stats-hours').innerText = `${String(totalH).padStart(2,'0')}h ${String(totalM).padStart(2,'0')}m`;
-
-        tbody.innerHTML = '';
-        if (logbook.length === 0) { emptyMsg.style.display = 'block'; return; }
-        else { emptyMsg.style.display = 'none'; }
-
-        logbook.forEach(entry => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${entry.date}</td>
-                <td style="font-weight:700; color:var(--primary);">${entry.callsign}</td>
-                <td>${entry.dep}</td>
-                <td>${entry.arr}</td>
-                <td>${entry.time}</td>
-                <td>${entry.acft}</td>
-                <td style="text-align:center;">
-                    <button class="btn-remove" onclick="deleteLogbookEntry(${entry.id})">🗑️</button>
-                </td>
-            `;
-            tbody.appendChild(tr);
-        });
-    }
-
-    function deleteLogbookEntry(id) {
-        if(!confirm("Excluir registro?")) return;
-        let logbook = getSafeStorage('myPilotLogbook');
-        logbook = logbook.filter(entry => entry.id !== id);
-        localStorage.setItem('myPilotLogbook', JSON.stringify(logbook));
-        renderLogbook();
-    }
-
-    function toggleLogbook() {
-        const div = document.getElementById('logbook-section');
-        if (div.style.display === 'none') {
-            div.style.display = 'block';
-            renderLogbook();
-            div.scrollIntoView({ behavior: 'smooth' });
-        } else {
-            div.style.display = 'none';
-        }
-    }
-
-    function clearLogbook() {
-        if(confirm("Apagar todo o histórico?")) {
-            localStorage.removeItem('myPilotLogbook');
-            renderLogbook();
-        }
-    }
-
     function backupLogbook() {
         const dataStr = JSON.stringify({
-            version: "6.2",
+            version: "6.5",
             date: new Date().toISOString(),
             simbrief_id: localStorage.getItem('simbrief_id') || "",
             logbook: getSafeStorage('myPilotLogbook'),
             roster: getSafeStorage('myPilotRoster')
         }, null, 2);
-        
         const blob = new Blob([dataStr], { type: "application/json" });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -903,9 +964,11 @@
         document.getElementById('flight-modal').style.display = 'flex';
     }
 
-    function closeModal() { document.getElementById('flight-modal').style.display = 'none'; }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
     window.onclick = function(event) {
-        if (event.target == document.getElementById('flight-modal')) closeModal();
+        if (event.target.classList.contains('modal-overlay')) {
+            event.target.style.display = 'none';
+        }
     }
 
     function formatDaysOp(daysStr) {
@@ -968,7 +1031,6 @@
             const monthStr = match[2].toLowerCase();
             const year = parseInt(match[3]);
             const months = { 'jan':0, 'fev':1, 'mar':2, 'abr':3, 'mai':4, 'jun':5, 'jul':6, 'ago':7, 'set':8, 'out':9, 'nov':10, 'dez':11 };
-            
             if (months[monthStr] !== undefined) {
                 const startDate = new Date(year, months[monthStr], day);
                 const endDate = new Date(startDate);
@@ -978,7 +1040,6 @@
                 const endFmt = endDate.toLocaleDateString('pt-BR', opts).toUpperCase().replace('.', '');
                 const cleanStart = startFmt.replace(' DE ', ' ');
                 const cleanEnd = endFmt.replace(' DE ', ' ');
-                // Formato Longo Solicitado
                 document.getElementById("validity-box").innerText = `VALIDADE: ${cleanStart} A ${cleanEnd}`;
                 validityUpdated = true;
             }
@@ -1018,10 +1079,10 @@
     }
 
     function generateRealTimeChain(chainLength) {
-        const now = getSimulationDate();
-        const currentUTCMinutes = ((now.getUTCHours()) * 60) + now.getUTCMinutes(); 
+        const ref = getReferenceTime(); 
+        const currentUTCMinutes = ref.utcMinutes;
         
-        let validFlightsToday = allFlightsDB.filter(f => isFlightValidToday(f, now));
+        let validFlightsToday = allFlightsDB.filter(f => isFlightValidToday(f, ref.dateObj));
         if (currentFilter !== 'todas') validFlightsToday = validFlightsToday.filter(f => f.airline.name === currentFilter);
         
         const orig = document.getElementById('airport-search').value.toUpperCase().trim();
@@ -1037,7 +1098,7 @@
             if (candidates.length === 0) candidates = validFlightsToday.filter(f => f.depMinUTC >= currentUTCMinutes);
         }
 
-        if (candidates.length === 0) { alert("Sem voos disponíveis agora."); return; }
+        if (candidates.length === 0) { alert("Sem voos disponíveis para este horário/data."); return; }
         
         candidates.sort((a,b) => a.depMinUTC - b.depMinUTC);
         const seed = candidates[Math.floor(Math.random() * Math.min(15, candidates.length))];
