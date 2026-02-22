@@ -259,6 +259,9 @@
     }
 
     .col-airport { font-weight: 700; font-size: 14px; color: var(--text-main); }
+    
+    /* Nova Coluna de Dias */
+    .col-days { font-size: 11px; color: var(--text-muted); font-weight: 600; max-width: 120px; line-height: 1.4; }
 
     /* Time Pills */
     .time-pill {
@@ -458,7 +461,8 @@
                         <th style="text-align: center;">Ações</th> 
                         <th>Voo</th>
                         <th>Cia</th>
-                        <th>Aeronave</th> <th>Origem</th>
+                        <th>Aeronave</th>
+                        <th>Dias</th> <th>Origem</th>
                         <th>Horários (Z / BRT)</th>
                         <th>Destino</th>
                         <th>Chegada (Z / BRT)</th>
@@ -485,9 +489,11 @@
             <table class="flight-table">
                 <thead>
                     <tr>
-                        <th style="text-align: center;">Gerenciar</th> <th>Voo</th>
+                        <th style="text-align: center;">Gerenciar</th> 
+                        <th>Voo</th>
                         <th>Cia</th>
-                        <th>Aeronave</th> <th>Origem</th>
+                        <th>Aeronave</th>
+                        <th>Dias</th> <th>Origem</th>
                         <th>Partida (Z / BRT)</th>
                         <th>Destino</th>
                         <th>Chegada (Z / BRT)</th>
@@ -802,11 +808,10 @@
 
             tr.innerHTML = `
                 <td style="text-align:center; white-space:nowrap; display:flex; gap:5px; justify-content:center;">${sbButton}${removeButton}</td>
-                
                 <td class="col-flight" onclick="showRosterFlightDetails(${entry.id})">${f.ident}</td>
-                
                 <td><span class="cia-badge" style="background-color: ${f.airline.color}">${f.airline.name}</span></td>
                 <td style="font-weight:700;">${acftType}</td>
+                <td class="col-days">${formatDaysOp(f.daysOp)}</td>
                 <td class="col-airport">${f.origin}</td>
                 <td style="text-align:center;">${depCell}</td>
                 <td class="col-airport">${f.dest}</td>
@@ -1203,6 +1208,7 @@
                 <td class="col-flight" onclick="showFlightDetails(${index})">${f.ident}</td>
                 <td><span class="cia-badge" style="background-color: ${f.airline.color}">${f.airline.name}</span></td>
                 <td style="font-weight:bold;">${acftType}</td>
+                <td class="col-days">${formatDaysOp(f.daysOp)}</td>
                 <td class="col-airport">${f.origin}</td>
                 <td style="text-align:center;">${depCell}</td>
                 <td class="col-airport">${f.dest}</td>
