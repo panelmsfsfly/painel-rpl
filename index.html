@@ -174,7 +174,7 @@
     .btn-action:hover { background: #3b5cb8; box-shadow: 0 4px 12px rgba(78, 115, 223, 0.3); }
 
     .btn-search { background: var(--accent-purple); color: white; height: 38px; }
-    .btn-search:hover { background: #5a32a3; box-shadow: 0 4px 12px rgba(111, 66, 193, 0.3); }
+    .btn-search:hover { filter: brightness(1.1); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
 
     .btn-reset { background: #e2e6ea; color: var(--text-muted); }
     .btn-reset:hover { background: #dbe0e5; color: var(--text-main); }
@@ -326,7 +326,7 @@
     
     .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #f1f3f9; }
     .modal-title { font-size: 20px; font-weight: 800; color: var(--text-main); }
-    .close-modal { font-size: 24px; color: var(--text-muted); background: none; padding: 0; }
+    .close-modal { font-size: 24px; color: var(--text-muted); background: none; padding: 0; border: none; cursor: pointer; }
     
     .detail-row { display: flex; padding: 12px 0; border-bottom: 1px dashed #e3e6f0; }
     .detail-label { width: 140px; font-weight: 600; color: var(--text-muted); font-size: 12px; text-transform: uppercase; }
@@ -365,6 +365,9 @@
     </div>
 
     <div class="card-panel">
+        <div style="font-weight:700; margin-bottom: 15px; color:var(--text-main); font-size:14px; display: flex; align-items: center; gap: 8px;">
+            ⚙️ Setup e Gerador de Escalas
+        </div>
         <div class="controls-grid">
             
             <div class="control-group">
@@ -383,7 +386,7 @@
             </div>
 
             <div class="control-group">
-                <label class="control-label">Gerar Escala</label>
+                <label class="control-label">Gerar Escala (Horário Real)</label>
                 <div class="legs-wrapper">
                     <button class="btn-draw" onclick="generateRealTimeChain(1)">1</button>
                     <button class="btn-draw" onclick="generateRealTimeChain(2)">2</button>
@@ -393,25 +396,40 @@
             </div>
 
             <div class="control-group">
-                <label class="control-label">Buscar Voo</label>
+                <label class="control-label">Buscar Nº Voo</label>
                 <div style="display:flex; gap:8px;">
                     <input type="text" id="search-input" class="sb-input" placeholder="Nº Voo" onkeydown="if(event.key==='Enter') manualSearch()">
-                    <button class="btn-search" onclick="manualSearch()">BUSCAR</button>
-                </div>
-            </div>
-
-            <div class="control-group">
-                <label class="control-label">Rota</label>
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <input type="text" id="airport-search" class="sb-input" placeholder="Origem" onkeydown="if(event.key==='Enter') searchByAirport()">
-                    <span style="color:#cbd5e0;">&rarr;</span>
-                    <input type="text" id="destination-search" class="sb-input" placeholder="Destino" onkeydown="if(event.key==='Enter') searchByAirport()">
+                    <button class="btn-search" style="background: var(--accent-purple);" onclick="manualSearch()">BUSCAR VOO</button>
                 </div>
             </div>
 
             <div class="control-group">
                 <label class="control-label">&nbsp;</label>
                 <button class="btn-reset" onclick="resetPanel()">Limpar Filtros</button>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="card-panel">
+        <div style="font-weight:700; color:var(--text-main); font-size:14px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+            📍 Pesquisa Livre de Aeroportos e Rotas
+        </div>
+        <div style="display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-end;">
+            
+            <div class="control-group" style="flex: 1; min-width: 200px;">
+                <label class="control-label">Aeroporto de Origem</label>
+                <input type="text" id="airport-search" class="sb-input" placeholder="Ex: SBGR (Também baseia a escala acima)" onkeydown="if(event.key==='Enter') searchDepartures()">
+            </div>
+
+            <div class="control-group" style="flex: 1; min-width: 200px;">
+                <label class="control-label">Aeroporto de Destino</label>
+                <input type="text" id="destination-search" class="sb-input" placeholder="Ex: SBSP" onkeydown="if(event.key==='Enter') searchRoute()">
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-search" style="background:var(--accent-cyan);" onclick="searchDepartures()">BUSCAR PARTIDAS</button>
+                <button class="btn-search" style="background:var(--accent-purple);" onclick="searchRoute()">BUSCAR ROTA</button>
             </div>
 
         </div>
@@ -530,8 +548,8 @@
             <p>Clique no botão verde na tabela para agendar. O sistema calcula automaticamente o tempo de solo entre voos.</p>
         </div>
         <div class="tut-card">
-            <h4>🎯 Filtro de Rota</h4>
-            <p>Use "Origem -> Destino" para achar rotas específicas. Se deixar o destino vazio, mostra todas as saídas.</p>
+            <h4>🎯 Pesquisa Separada</h4>
+            <p>Use o novo painel de Busca Livre. Você pode ver todas as partidas de um aeroporto a partir de agora ou buscar uma rota específica.</p>
         </div>
         <div class="tut-card">
             <h4>📄 SimBrief Direto</h4>
@@ -539,14 +557,16 @@
         </div>
     </div>
 
-</div> <div id="flight-modal" class="modal-overlay">
+</div> 
+
+<div id="flight-modal" class="modal-overlay">
     <div class="modal-content">
         <div class="modal-header">
             <div class="modal-title">
                 <span id="modal-cia-badge" class="cia-badge" style="font-size:14px;">CIA</span>
                 <span id="modal-flight-num" style="margin-left:10px;">VOO 1234</span>
             </div>
-            <button class="close-modal" onclick="closeModal()">×</button>
+            <button class="close-modal" aria-label="Fechar" onclick="closeModal()">×</button>
         </div>
         
         <div id="modal-body">
@@ -593,6 +613,7 @@
         if (savedID) document.getElementById("sb-id").value = savedID;
         renderLogbook();
         renderRoster();
+        loadAllFiles(); 
     });
 
     function saveSBID() {
@@ -641,7 +662,18 @@
         document.getElementById('empty-msg').style.display = 'block';
         document.getElementById('empty-msg').innerText = "Painel limpo. Selecione os filtros acima.";
         document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
+        
+        document.getElementById('search-input').value = '';
+        document.getElementById('airport-search').value = '';
+        document.getElementById('destination-search').value = '';
+        
         displayedFlights = [];
+    }
+
+    function setFilter(filterName, btnElement) {
+        document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
+        btnElement.classList.add('active');
+        currentFilter = filterName;
     }
 
     function manualSearch() {
@@ -661,26 +693,52 @@
         document.getElementById('empty-msg').style.display = 'none';
     }
 
-    function searchByAirport() {
+    function searchDepartures() {
         const rawOrig = document.getElementById('airport-search').value;
         const orig = rawOrig ? rawOrig.toUpperCase().trim() : "";
-        const rawDest = document.getElementById('destination-search').value;
-        const dest = rawDest ? rawDest.toUpperCase().trim() : "";
         
-        if (orig.length < 3) { alert("Digite o código de origem (Ex: SBSP)."); return; }
-        if(allFlightsDB.length === 0) { alert("Aguarde o carregamento."); return; }
+        if (orig.length < 3) { alert("Digite pelo menos 3 caracteres na Origem (Ex: SBGR)."); return; }
+        if(allFlightsDB.length === 0) { alert("Aguarde o carregamento da malha."); return; }
 
         const now = getSimulationDate();
         const currentUTCMinutes = ((now.getUTCHours()) * 60) + now.getUTCMinutes(); 
 
         const matches = allFlightsDB.filter(f => {
             const airlineMatch = (currentFilter === 'todas') || (f.airline.name === currentFilter);
-            const routeMatch = (f.origin === orig) && (dest ? f.dest === dest : true);
-            return routeMatch && isFlightValidToday(f, now) && f.depMinUTC >= currentUTCMinutes && airlineMatch; 
+            return (f.origin === orig) && isFlightValidToday(f, now) && (f.depMinUTC >= currentUTCMinutes) && airlineMatch; 
         });
 
         if (matches.length === 0) {
-            alert("Nenhum voo encontrado para hoje com estes parâmetros.");
+            alert(`Nenhuma partida encontrada saindo de ${orig} a partir de agora.`);
+            return;
+        }
+
+        matches.sort((a,b) => a.depMinUTC - b.depMinUTC);
+        const enriched = matches.map(f => enrichFlightData(f));
+        displayedFlights = enriched;
+        renderRows(enriched);
+        document.getElementById('empty-msg').style.display = 'none';
+    }
+
+    function searchRoute() {
+        const rawOrig = document.getElementById('airport-search').value;
+        const orig = rawOrig ? rawOrig.toUpperCase().trim() : "";
+        const rawDest = document.getElementById('destination-search').value;
+        const dest = rawDest ? rawDest.toUpperCase().trim() : "";
+        
+        if (orig.length < 3 || dest.length < 3) { alert("Para buscar rota, preencha a Origem e o Destino (Ex: SBGR e SBSP)."); return; }
+        if(allFlightsDB.length === 0) { alert("Aguarde o carregamento da malha."); return; }
+
+        const now = getSimulationDate();
+        const currentUTCMinutes = ((now.getUTCHours()) * 60) + now.getUTCMinutes(); 
+
+        const matches = allFlightsDB.filter(f => {
+            const airlineMatch = (currentFilter === 'todas') || (f.airline.name === currentFilter);
+            return (f.origin === orig) && (f.dest === dest) && isFlightValidToday(f, now) && (f.depMinUTC >= currentUTCMinutes) && airlineMatch; 
+        });
+
+        if (matches.length === 0) {
+            alert(`Nenhum voo direto encontrado de ${orig} para ${dest} a partir de agora.`);
             return;
         }
 
@@ -719,8 +777,8 @@
             const f = entry.flightData;
             const tr = document.createElement('tr');
             
-            const sbButton = `<button class="btn-sb" onclick="dispatchRosterFlight(${entry.id})">SIMBRIEF ↗</button>`;
-            const removeButton = `<button class="btn-remove" title="Remover" onclick="deleteRosterEntry(${entry.id})">✕</button>`;
+            const sbButton = `<button class="btn-sb" title="Abrir no SimBrief" aria-label="Abrir voo no SimBrief" onclick="dispatchRosterFlight(${entry.id})">SIMBRIEF ↗</button>`;
+            const removeButton = `<button class="btn-remove" title="Remover da Escala" aria-label="Remover voo da escala" onclick="deleteRosterEntry(${entry.id})">✕</button>`;
 
             const depCell = `<div class="time-pill"><div class="tp-utc">${f.depDisplayUTC}z</div><div class="tp-local">${f.depDisplay}</div></div>`;
             const arrCell = `<div class="time-pill arr"><div class="tp-utc">${f.arrDisplayUTC}z</div><div class="tp-local">${f.arrDisplay}</div></div>`;
@@ -728,7 +786,9 @@
 
             tr.innerHTML = `
                 <td style="text-align:center; white-space:nowrap; display:flex; gap:5px; justify-content:center;">${sbButton}${removeButton}</td>
-                <td class="col-flight">${f.ident}</td>
+                
+                <td class="col-flight" onclick="showRosterFlightDetails(${entry.id})">${f.ident}</td>
+                
                 <td><span class="cia-badge" style="background-color: ${f.airline.color}">${f.airline.name}</span></td>
                 <td style="font-weight:700;">${acftType}</td>
                 <td class="col-airport">${f.origin}</td>
@@ -809,7 +869,7 @@
                 <td>${entry.time}</td>
                 <td>${entry.acft}</td>
                 <td style="text-align:center;">
-                    <button class="btn-remove" onclick="deleteLogbookEntry(${entry.id})">🗑️</button>
+                    <button class="btn-remove" title="Apagar Registro" aria-label="Apagar registro do logbook" onclick="deleteLogbookEntry(${entry.id})">🗑️</button>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -887,9 +947,8 @@
         reader.readAsText(file);
     }
 
-    function showFlightDetails(index) {
-        const f = displayedFlights[index];
-        if (!f) return;
+    /* --- FUNÇÃO AUXILIAR NOVA: PREENCHE O MODAL --- */
+    function openModalWithFlight(f) {
         document.getElementById('modal-cia-badge').innerText = f.airline.name;
         document.getElementById('modal-cia-badge').style.backgroundColor = f.airline.color;
         document.getElementById('modal-flight-num').innerText = f.ident;
@@ -901,6 +960,18 @@
         document.getElementById('md-days').innerText = formatDaysOp(f.daysOp);
         document.getElementById('md-obs').textContent = f.obs;
         document.getElementById('flight-modal').style.display = 'flex';
+    }
+
+    function showFlightDetails(index) {
+        const f = displayedFlights[index];
+        if (f) openModalWithFlight(f);
+    }
+
+    /* --- FUNÇÃO NOVA PARA ABRIR O MODAL PELA ESCALA (ROSTER) --- */
+    function showRosterFlightDetails(id) {
+        const roster = getSafeStorage('myPilotRoster');
+        const entry = roster.find(e => e.id === id);
+        if (entry) openModalWithFlight(entry.flightData);
     }
 
     function closeModal() { document.getElementById('flight-modal').style.display = 'none'; }
@@ -978,7 +1049,6 @@
                 const endFmt = endDate.toLocaleDateString('pt-BR', opts).toUpperCase().replace('.', '');
                 const cleanStart = startFmt.replace(' DE ', ' ');
                 const cleanEnd = endFmt.replace(' DE ', ' ');
-                // Formato Longo Solicitado
                 document.getElementById("validity-box").innerText = `VALIDADE: ${cleanStart} A ${cleanEnd}`;
                 validityUpdated = true;
             }
@@ -1104,8 +1174,9 @@
         flights.forEach((f, index) => {
             const tr = document.createElement('tr');
             
-            const sbButton = `<button class="btn-sb" onclick="openSimBriefFromIndex(${index})">SIMBRIEF</button>`;
-            const scheduleButton = `<button class="btn-schedule" title="Agendar" onclick="scheduleFlight(${index})">📅</button>`;
+            const sbButton = `<button class="btn-sb" title="Abrir no SimBrief" aria-label="Abrir voo no SimBrief" onclick="openSimBriefFromIndex(${index})">SIMBRIEF</button>`;
+            const scheduleButton = `<button class="btn-schedule" title="Agendar voo na escala" aria-label="Agendar voo" onclick="scheduleFlight(${index})">📅</button>`;
+            
             const arrHtml = f.isNextDay ? `<span style="color:var(--accent-orange)">(+1)</span>` : ``;
             const depCell = `<div class="time-pill"><div class="tp-utc">${f.depDisplayUTC}z</div><div class="tp-local">${f.depDisplay}</div></div>`;
             const arrCell = `<div class="time-pill arr"><div class="tp-utc">${f.arrDisplayUTC}z</div><div class="tp-local">${f.arrDisplay} ${arrHtml}</div></div>`;
@@ -1128,15 +1199,6 @@
         });
     }
 
-    function setFilter(cia, btn) {
-        currentFilter = cia;
-        document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById('board-content').innerHTML = '';
-        document.getElementById('empty-msg').style.display = 'block';
-    }
-
-    loadAllFiles();
 </script>
 </body>
 </html>
