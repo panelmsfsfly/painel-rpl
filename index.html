@@ -580,11 +580,15 @@
         let minutes = flight.depMinUTC % 60;
         if (hours >= 24) hours = hours % 24;
 
+        // Ajusta a data para o SimBrief usando a conversão de fuso horário BRT correto
         const dateObj = getSimulationDate(); 
-        // Lógica NOVA: Ajusta a data do SimBrief se o voo for para amanhã ou depois
         if (flight.offsetDay) {
             dateObj.setDate(dateObj.getDate() + flight.offsetDay);
         }
+        
+        let depMinBRT = flight.depMinUTC - 180;
+        if (depMinBRT < 0) depMinBRT += 1440;
+        dateObj.setHours(Math.floor(depMinBRT / 60), depMinBRT % 60, 0, 0);
 
         const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
         const day = String(dateObj.getUTCDate()).padStart(2, '0');
@@ -622,48 +626,12 @@
         currentFilter = filterName;
     }
 
-    function manualSearch() {
-        const rawInput = document.getElementById('search-input').value;
-        const input = rawInput ? rawInput.toUpperCase().replace(/\s+/g, '') : "";
-
-        if (input.length < 3) { alert("Digite pelo menos 3 caracteres."); return; }
-        if(allFlightsDB.length === 0) { alert("Aguarde o carregamento."); return; }
-
-        const now = getSimulationDate();
-        const currentUTCMinutes = (now.getUTCHours() * 60) + now.getUTCMinutes();
-        const currentDay = now.getDay();
-        const rplCurrentDayIdx = currentDay === 0 ? 6 : currentDay - 1;
-
-        let matches = [];
-        allFlightsDB.forEach(f => {
-            if (f.ident.includes(input)) {
-                // Busca o voo especifico hoje e amanhã (48h)
-                for (let offset = 0; offset <= 1; offset++) {
-                    const checkIdx = (rplCurrentDayIdx + offset) % 7;
-                    if (f.daysOp.charAt(checkIdx) !== '0' && f.daysOp.charAt(checkIdx) !== ' ') {
-                        let minsFromNow = (offset * 1440) + f.depMinUTC - currentUTCMinutes;
-                        if(minsFromNow > -1440) { // Permite ver voos que passaram um pouco se for hoje
-                            matches.push({ ...f, offsetDay: offset, sortMins: minsFromNow });
-                        }
-                    }
-                }
-            }
-        });
-
-        if (matches.length === 0) { alert("Voo não encontrado operando hoje ou amanhã."); return; }
-
-        matches.sort((a,b) => a.sortMins - b.sortMins);
-        displayedFlights = matches.map(f => enrichFlightData(f));
-        renderRows(displayedFlights);
-        document.getElementById('empty-msg').style.display = 'none';
-    }
-
-    // --- NOVA LÓGICA DE 48 HORAS --- //
+    // --- NOVA LOGICA DE BUSCA: HORÁRIO LOCAL (BRT) ---
     function getUpcomingFlights(orig, dest = null, ciaFilter = 'todas', maxHours = 48) {
         const now = getSimulationDate();
-        const currentUTCMinutes = (now.getUTCHours() * 60) + now.getUTCMinutes();
-        const currentDay = now.getDay();
-        const rplCurrentDayIdx = currentDay === 0 ? 6 : currentDay - 1; 
+        const currentBRTMinutes = (now.getHours() * 60) + now.getMinutes();
+        const currentLocalDay = now.getDay();
+        const rplCurrentLocalDayIdx = currentLocalDay === 0 ? 6 : currentLocalDay - 1; 
         
         let results = [];
 
@@ -672,18 +640,24 @@
             if (dest && f.dest !== dest) return;
             if (ciaFilter !== 'todas' && f.airline.name !== ciaFilter) return;
 
-            // Varre Hoje, Amanhã e Depois de Amanhã (para cobrir 48h completas)
+            let depMinBRT = f.depMinUTC - 180;
+            if (depMinBRT < 0) depMinBRT += 1440;
+
+            // Checa Hoje, Amanhã e Depois
             for (let offset = 0; offset <= 2; offset++) {
-                const checkIdx = (rplCurrentDayIdx + offset) % 7;
-                const operates = f.daysOp.charAt(checkIdx) !== '0' && f.daysOp.charAt(checkIdx) !== ' ';
+                const checkLocalDayIdx = (rplCurrentLocalDayIdx + offset) % 7;
                 
-                if (operates) {
-                    let minsFromNow = (offset * 1440) + f.depMinUTC - currentUTCMinutes;
+                // Converte o Dia Local de volta para o Dia UTC que está no arquivo
+                let utcDayIdx = checkLocalDayIdx;
+                if (f.depMinUTC < 180) { 
+                    utcDayIdx = (checkLocalDayIdx + 1) % 7;
+                }
+
+                if (f.daysOp.charAt(utcDayIdx) !== '0' && f.daysOp.charAt(utcDayIdx) !== ' ') {
+                    let minsFromNow = (offset * 1440) + depMinBRT - currentBRTMinutes;
                     
-                    // Só adiciona se o voo for no futuro, até o limite de horas
                     if (minsFromNow >= 0 && minsFromNow <= (maxHours * 60)) { 
-                        let cloned = { ...f, offsetDay: offset, sortMins: minsFromNow };
-                        results.push(cloned);
+                        results.push({ ...f, offsetDay: offset, sortMins: minsFromNow });
                     }
                 }
             }
@@ -691,6 +665,48 @@
 
         results.sort((a, b) => a.sortMins - b.sortMins);
         return results;
+    }
+
+    function manualSearch() {
+        const rawInput = document.getElementById('search-input').value;
+        const input = rawInput ? rawInput.toUpperCase().replace(/\s+/g, '') : "";
+
+        if (input.length < 3) { alert("Digite pelo menos 3 caracteres."); return; }
+        if(allFlightsDB.length === 0) { alert("Aguarde o carregamento."); return; }
+
+        const now = getSimulationDate();
+        const currentBRTMinutes = (now.getHours() * 60) + now.getMinutes();
+        const currentLocalDay = now.getDay();
+        const rplCurrentLocalDayIdx = currentLocalDay === 0 ? 6 : currentLocalDay - 1;
+
+        let matches = [];
+        allFlightsDB.forEach(f => {
+            if (f.ident.includes(input)) {
+                let depMinBRT = f.depMinUTC - 180;
+                if (depMinBRT < 0) depMinBRT += 1440;
+
+                for (let offset = 0; offset <= 2; offset++) {
+                    const checkLocalDayIdx = (rplCurrentLocalDayIdx + offset) % 7;
+                    let utcDayIdx = checkLocalDayIdx;
+                    if (f.depMinUTC < 180) utcDayIdx = (checkLocalDayIdx + 1) % 7;
+
+                    if (f.daysOp.charAt(utcDayIdx) !== '0' && f.daysOp.charAt(utcDayIdx) !== ' ') {
+                        let minsFromNow = (offset * 1440) + depMinBRT - currentBRTMinutes;
+                        
+                        if(minsFromNow > -1440 && minsFromNow <= 2880) { // Mostra voos que já passaram hoje também
+                            matches.push({ ...f, offsetDay: offset, sortMins: minsFromNow });
+                        }
+                    }
+                }
+            }
+        });
+
+        if (matches.length === 0) { alert("Voo não encontrado."); return; }
+
+        matches.sort((a,b) => a.sortMins - b.sortMins);
+        displayedFlights = matches.map(f => enrichFlightData(f));
+        renderRows(displayedFlights);
+        document.getElementById('empty-msg').style.display = 'none';
     }
 
     function searchDepartures() {
@@ -736,13 +752,11 @@
     function generateRealTimeChain(chainLength) {
         const orig = document.getElementById('airport-search').value.toUpperCase().trim();
         
-        // Busca candidatos nas próximas 24h para basear a escala
         let candidates = getUpcomingFlights(orig.length >= 3 ? orig : null, null, currentFilter, 24);
         if (candidates.length === 0) { alert("Sem voos disponíveis nas próximas horas."); return; }
         
-        // Dá preferência para voos saindo nas próximas 3 horas para começar logo
         let seedCandidates = candidates.filter(f => f.sortMins >= 30 && f.sortMins <= 180);
-        if (seedCandidates.length === 0) seedCandidates = candidates; // fallback
+        if (seedCandidates.length === 0) seedCandidates = candidates;
 
         const seed = seedCandidates[Math.floor(Math.random() * Math.min(15, seedCandidates.length))];
         let chain = [enrichFlightData(seed)];
@@ -750,20 +764,15 @@
         for (let i = 1; i < chainLength; i++) {
             const prev = chain[i-1];
             
-            // Calcula o tempo absoluto do pouso para saber a partir de quando buscar o próximo
             const prevArrMinsFromNow = prev.sortMins + prev.durMin;
             const minNextDepMinsFromNow = prevArrMinsFromNow + TURNAROUND_MINUTES;
             
             let nextLegs = getUpcomingFlights(prev.dest, null, prev.airline.name, 48);
-            
-            // Só aceita pernas que saiam DEPOIS do pouso + turnaround
             nextLegs = nextLegs.filter(f => f.sortMins >= minNextDepMinsFromNow);
             
             if (nextLegs.length > 0) {
                 chain.push(enrichFlightData(nextLegs[0]));
-            } else {
-                break;
-            }
+            } else break;
         }
         
         displayedFlights = chain;
@@ -776,11 +785,8 @@
         const depMinBRT = toBRT(flight.depMinUTC);
         const arrMinBRT = toBRT(flight.arrMinUTC);
         let arrUtc = flight.arrMinUTC >= 1440 ? flight.arrMinUTC - 1440 : flight.arrMinUTC;
-        
-        // Verifica se cruza meia noite no horário local
         let nextDay = arrMinBRT < depMinBRT;
         
-        // Cria a TAG de Amanhã se o offset do voo for maior que 0
         let depPrefix = "";
         if (flight.offsetDay === 1) {
             depPrefix = `<span style="color:var(--accent-orange); font-size:9px; display:block; margin-bottom:2px; font-weight:800; letter-spacing:1px;">AMANHÃ</span>`;
@@ -808,13 +814,34 @@
         return String(h).padStart(2,'0') + ":" + String(m).padStart(2,'0');
     }
 
+    // --- CORREÇÃO DE DIAS PARA HORÁRIO LOCAL ---
+    function formatDaysLocal(daysStr, depMinUTC) {
+        if (!daysStr) return "N/A";
+        const labels = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+        let localDaysActive = [false, false, false, false, false, false, false];
+        
+        let shift = depMinUTC < 180 ? -1 : 0;
+
+        for (let i = 0; i < daysStr.length; i++) {
+            if (daysStr[i] !== ' ' && daysStr[i] !== '0') {
+                let localDayIdx = (i + shift + 7) % 7;
+                localDaysActive[localDayIdx] = true;
+            }
+        }
+        
+        let active = [];
+        for (let i = 0; i < 7; i++) {
+            if (localDaysActive[i]) active.push(labels[i]);
+        }
+        return active.length > 0 ? active.join(', ') : "Não especificado";
+    }
+
     function scheduleFlight(index) {
         const flight = displayedFlights[index];
         if (!flight) return;
 
         let roster = getSafeStorage('myPilotRoster');
         roster.push({ id: Date.now(), flightData: flight });
-        // Ordena a escala com base no tempo real a partir de agora
         roster.sort((a, b) => (a.flightData.sortMins || 0) - (b.flightData.sortMins || 0));
         
         localStorage.setItem('myPilotRoster', JSON.stringify(roster));
@@ -832,8 +859,6 @@
             const scheduleButton = `<button class="btn-schedule" title="Agendar voo na escala" aria-label="Agendar voo" onclick="scheduleFlight(${index})">➕</button>`;
             
             const arrHtml = f.isNextDay ? `<span style="color:var(--accent-orange); font-size:9px; display:block; margin-top:2px;">(+1)</span>` : ``;
-            
-            // Inserida a TAG depPrefix gerada no enrichFlightData
             const depCell = `<div class="time-pill">${f.depPrefix || ''}<div class="tp-utc">${f.depDisplayUTC}z</div><div class="tp-local">${f.depDisplay}</div></div>`;
             const arrCell = `<div class="time-pill arr"><div class="tp-utc">${f.arrDisplayUTC}z</div><div class="tp-local">${f.arrDisplay}</div>${arrHtml}</div>`;
             const acftType = f.type.split('/')[0];
@@ -843,7 +868,7 @@
                 <td class="col-flight" onclick="showFlightDetails(${index})">${f.ident}</td>
                 <td><span class="cia-badge" style="background-color: ${f.airline.color}">${f.airline.name}</span></td>
                 <td style="font-weight:800; font-family:'JetBrains Mono';">${acftType}</td>
-                <td class="col-days">${formatDaysOp(f.daysOp)}</td>
+                <td class="col-days">${formatDaysLocal(f.daysOp, f.depMinUTC)}</td>
                 <td class="col-airport">${f.origin}</td>
                 <td style="text-align:center;">${depCell}</td>
                 <td class="col-airport">${f.dest}</td>
@@ -884,7 +909,7 @@
                 <td class="col-flight" onclick="showRosterFlightDetails(${entry.id})">${f.ident}</td>
                 <td><span class="cia-badge" style="background-color: ${f.airline.color}">${f.airline.name}</span></td>
                 <td style="font-weight:800; font-family:'JetBrains Mono';">${acftType}</td>
-                <td class="col-days">${formatDaysOp(f.daysOp)}</td>
+                <td class="col-days">${formatDaysLocal(f.daysOp, f.depMinUTC)}</td>
                 <td class="col-airport">${f.origin}</td>
                 <td style="text-align:center;">${depCell}</td>
                 <td class="col-airport">${f.dest}</td>
@@ -1156,7 +1181,7 @@
         document.getElementById('md-deparr').innerText = `${f.origin} -> ${f.dest}`;
         document.getElementById('md-eet').innerText = minutesToTimeStr(f.durMin).replace(':', 'h ') + 'm';
         document.getElementById('md-fl').innerText = f.fl;
-        document.getElementById('md-days').innerText = formatDaysOp(f.daysOp);
+        document.getElementById('md-days').innerText = formatDaysLocal(f.daysOp, f.depMinUTC);
         document.getElementById('md-obs').textContent = f.obs;
         document.getElementById('flight-modal').style.display = 'flex';
     }
@@ -1175,16 +1200,6 @@
     function closeModal() { document.getElementById('flight-modal').style.display = 'none'; }
     window.onclick = function(event) {
         if (event.target == document.getElementById('flight-modal')) closeModal();
-    }
-
-    function formatDaysOp(daysStr) {
-        if (!daysStr) return "N/A";
-        const labels = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
-        let active = [];
-        for (let i = 0; i < daysStr.length; i++) {
-            if (daysStr[i] !== ' ' && daysStr[i] !== '0') active.push(labels[i]);
-        }
-        return active.length > 0 ? active.join(', ') : "Não especificado";
     }
 
     function getSimulationDate() {
