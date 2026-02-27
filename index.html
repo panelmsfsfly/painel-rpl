@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RPL Dispatch 7.1 - Pro System</title>
+<title>RPL Dispatch 7.0 - Pro System</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
 
@@ -187,7 +187,6 @@
 
     .col-fl { font-family: 'JetBrains Mono'; font-weight: 700; color: var(--accent-purple); background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.2); padding: 4px 8px; border-radius: 4px; font-size: 12px; text-align: center; }
     .col-rota { font-family: 'JetBrains Mono'; font-size: 11px; color: #cbd5e1; max-width: 250px; line-height: 1.4; }
-    .col-obs { font-family: 'JetBrains Mono'; font-size: 10px; color: var(--text-muted); max-width: 150px; }
 
     .roster-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border-color); }
     .section-title { font-size: 16px; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -233,7 +232,7 @@
 
     <div class="header-container">
         <div class="header-title">
-            <h1>RPL Dispatch <span>7.1</span></h1>
+            <h1>RPL Dispatch <span>7.0</span></h1>
             <div>Simulador de Voo Doméstico</div>
         </div>
         
@@ -383,7 +382,6 @@
                         <th>Chegada (Z / BRT)</th>
                         <th style="text-align: center;">FL</th>
                         <th>Rota</th>
-                        <th>Obs</th>
                     </tr>
                 </thead>
                 <tbody id="board-content"></tbody>
@@ -414,7 +412,6 @@
                         <th>Chegada (Z / BRT)</th>
                         <th style="text-align: center;">FL</th>
                         <th>Rota</th>
-                        <th>Obs</th>
                     </tr>
                 </thead>
                 <tbody id="roster-body">
@@ -482,7 +479,7 @@
         </div>
         <div class="tut-card">
             <h4>📄 Despacho SimBrief</h4>
-            <p>Com um clique (<strong>SB ↗</strong>), envie aeronave, rota, indicativo e horários ZULU exatos para o SimBrief. O voo é registrado no Logbook automaticamente!</p>
+            <p>Com um clique (<strong>Simbrief ↗</strong>), envie aeronave, rota, indicativo e horários ZULU exatos para o SimBrief. O voo é registrado no Logbook automaticamente!</p>
         </div>
         <div class="tut-card">
             <h4>📖 Logbook Inteligente</h4>
@@ -842,7 +839,7 @@
         flights.forEach((f, index) => {
             const tr = document.createElement('tr');
             
-            const sbButton = `<button class="btn-sb" title="Abrir no SimBrief" aria-label="Abrir voo no SimBrief" onclick="openSimBriefFromIndex(${index})">SB ↗</button>`;
+            const sbButton = `<button class="btn-sb" title="Abrir no SimBrief" aria-label="Abrir voo no SimBrief" onclick="openSimBriefFromIndex(${index})">Simbrief ↗</button>`;
             const scheduleButton = `<button class="btn-schedule" title="Agendar voo na escala" aria-label="Agendar voo" onclick="scheduleFlight(${index})">➕</button>`;
             
             const arrHtml = f.isNextDay ? `<span style="color:var(--accent-orange); font-size:9px; display:block; margin-top:2px;">(+1)</span>` : ``;
@@ -851,7 +848,7 @@
             const acftType = f.type.split('/')[0];
 
             tr.innerHTML = `
-                <td style="text-align:center; display:flex; gap:5px; justify-content:center;">${sbButton}${scheduleButton}</td>
+                <td><div style="display:flex; gap:5px; justify-content:center;">${sbButton}${scheduleButton}</div></td>
                 <td class="col-flight" onclick="showFlightDetails(${index})">${f.ident}</td>
                 <td><span class="cia-badge" style="background-color: ${f.airline.color}">${f.airline.name}</span></td>
                 <td style="font-weight:800; font-family:'JetBrains Mono';">${acftType}</td>
@@ -862,7 +859,6 @@
                 <td style="text-align:center;">${arrCell}</td>
                 <td class="col-fl">${f.fl}</td>
                 <td class="col-rota">${f.rota}</td>
-                <td class="col-obs">${f.obs}</td>
             `;
             tbody.appendChild(tr);
         });
@@ -883,7 +879,7 @@
             const f = entry.flightData;
             const tr = document.createElement('tr');
             
-            const sbButton = `<button class="btn-sb" title="Abrir no SimBrief" aria-label="Abrir voo no SimBrief" onclick="dispatchRosterFlight(${entry.id})">SB ↗</button>`;
+            const sbButton = `<button class="btn-sb" title="Abrir no SimBrief" aria-label="Abrir voo no SimBrief" onclick="dispatchRosterFlight(${entry.id})">Simbrief ↗</button>`;
             const removeButton = `<button class="btn-remove" title="Remover da Escala" aria-label="Remover voo da escala" onclick="deleteRosterEntry(${entry.id})">✕</button>`;
 
             const arrHtml = f.isNextDay ? `<span style="color:var(--accent-orange); font-size:9px; display:block; margin-top:2px;">(+1)</span>` : ``;
@@ -892,7 +888,7 @@
             const acftType = f.type.split('/')[0];
 
             tr.innerHTML = `
-                <td style="text-align:center; white-space:nowrap; display:flex; gap:5px; justify-content:center;">${sbButton}${removeButton}</td>
+                <td><div style="display:flex; gap:5px; justify-content:center;">${sbButton}${removeButton}</div></td>
                 <td class="col-flight" onclick="showRosterFlightDetails(${entry.id})">${f.ident}</td>
                 <td><span class="cia-badge" style="background-color: ${f.airline.color}">${f.airline.name}</span></td>
                 <td style="font-weight:800; font-family:'JetBrains Mono';">${acftType}</td>
@@ -903,7 +899,6 @@
                 <td style="text-align:center;">${arrCell}</td>
                 <td class="col-fl">${f.fl}</td>
                 <td class="col-rota">${f.rota}</td>
-                <td class="col-obs">${f.obs}</td>
             `;
             tbody.appendChild(tr);
         });
@@ -953,9 +948,11 @@
                 <td><span class="cia-badge" style="background-color: ${badgeColor}; padding: 6px 12px; font-size: 11px;">${displayCia}</span></td>
                 <td style="font-weight:800; font-size: 15px; font-family: 'JetBrains Mono'; color:var(--text-main);">${acft.type}</td>
                 <td class="col-airport" style="color:var(--accent-cyan);">${acft.loc}</td>
-                <td style="text-align:center; display:flex; gap:5px; justify-content:center;">
-                    <button class="btn-schedule" title="Procurar voos saindo daqui" onclick="flyFromHangar('${acft.loc}', '${displayCia}')">🛫 VOAR DAQUI</button>
-                    <button class="btn-remove" title="Remover do Hangar" onclick="removeAircraftFromHangar(${acft.id})">🗑️</button>
+                <td>
+                    <div style="display:flex; gap:5px; justify-content:center;">
+                        <button class="btn-schedule" title="Procurar voos saindo daqui" onclick="flyFromHangar('${acft.loc}', '${displayCia}')">🛫 VOAR DAQUI</button>
+                        <button class="btn-remove" title="Remover do Hangar" onclick="removeAircraftFromHangar(${acft.id})">🗑️</button>
+                    </div>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -1075,9 +1072,11 @@
                 <td style="font-family:'JetBrains Mono'; font-weight:700;">${entry.arr}</td>
                 <td style="color:var(--accent-green); font-weight:700;">${entry.time}</td>
                 <td style="font-weight:700;">${entry.acft}</td>
-                <td style="text-align:center; display:flex; gap:5px; justify-content:center;">
-                    <button class="btn-logbook" style="background:rgba(245, 158, 11, 0.1); color:var(--accent-orange); border-color:var(--accent-orange);" title="Estacionar aeronave no Hangar" onclick="parkFromLogbook('${entry.callsign}', '${entry.acft}', '${entry.arr}')">🅿️ HANGAR</button>
-                    <button class="btn-remove" title="Apagar Registro" aria-label="Apagar registro do logbook" onclick="deleteLogbookEntry(${entry.id})">🗑️</button>
+                <td>
+                    <div style="display:flex; gap:5px; justify-content:center;">
+                        <button class="btn-logbook" style="background:rgba(245, 158, 11, 0.1); color:var(--accent-orange); border-color:var(--accent-orange);" title="Estacionar aeronave no Hangar" onclick="parkFromLogbook('${entry.callsign}', '${entry.acft}', '${entry.arr}')">🅿️ HANGAR</button>
+                        <button class="btn-remove" title="Apagar Registro" aria-label="Apagar registro do logbook" onclick="deleteLogbookEntry(${entry.id})">🗑️</button>
+                    </div>
                 </td>
             `;
             tbody.appendChild(tr);
