@@ -3,21 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RPL Dispatch 7.0 - Pro System</title>
+<title>RPL Dispatch 7.1 - Pro System</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
 
 <style>
     /* --- VARIÁVEIS TEMA DISPATCH PROFISSIONAL (DARK) --- */
     :root {
-        --bg-body: #0b111e;       
-        --bg-card: #151e2d;       
-        --bg-input: #0f1724;      
-        --text-main: #f1f5f9;     
-        --text-muted: #94a3b8;    
-        --border-color: #233147;  
+        --bg-body: #0b111e;        
+        --bg-card: #151e2d;        
+        --bg-input: #0f1724;       
+        --text-main: #f1f5f9;      
+        --text-muted: #94a3b8;     
+        --border-color: #233147;   
         
-        --primary: #3b82f6;       
+        --primary: #3b82f6;        
         --accent-purple: #8b5cf6;
         --accent-cyan: #06b6d4;
         --accent-green: #10b981;
@@ -26,7 +26,7 @@
         
         --shadow-sm: 0 2px 4px rgba(0,0,0,0.4);
         --shadow-md: 0 8px 16px rgba(0,0,0,0.4);
-        --radius: 6px;            
+        --radius: 6px;             
     }
 
     * { box-sizing: border-box; outline: none; }
@@ -233,7 +233,7 @@
 
     <div class="header-container">
         <div class="header-title">
-            <h1>RPL Dispatch <span>7.0</span></h1>
+            <h1>RPL Dispatch <span>7.1</span></h1>
             <div>Simulador de Voo Doméstico</div>
         </div>
         
@@ -349,17 +349,16 @@
             
             <div class="control-group" style="flex: 1; min-width: 200px;">
                 <label class="control-label">Aeroporto de Origem</label>
-                <input type="text" id="airport-search" class="sb-input" placeholder="Ex: SBGR (Baseia a escala acima)" onkeydown="if(event.key==='Enter') searchDepartures()">
+                <input type="text" id="airport-search" class="sb-input" placeholder="Ex: SBGR" onkeydown="if(event.key==='Enter') searchFlights()">
             </div>
 
             <div class="control-group" style="flex: 1; min-width: 200px;">
                 <label class="control-label">Aeroporto de Destino</label>
-                <input type="text" id="destination-search" class="sb-input" placeholder="Ex: SBSP" onkeydown="if(event.key==='Enter') searchRoute()">
+                <input type="text" id="destination-search" class="sb-input" placeholder="Opcional (Ex: SBSP)" onkeydown="if(event.key==='Enter') searchFlights()">
             </div>
 
             <div style="display: flex; gap: 10px;">
-                <button class="btn-action" style="background:var(--accent-cyan); height:38px; border-radius:4px; color:#0b111e;" onclick="searchDepartures()">BUSCAR PARTIDAS</button>
-                <button class="btn-action" style="background:var(--accent-purple); height:38px; border-radius:4px;" onclick="searchRoute()">BUSCAR ROTA</button>
+                <button class="btn-action" style="background:var(--accent-purple); height:38px; border-radius:4px; font-size: 12px; width: 100%;" onclick="searchFlights()">🔍 BUSCAR VOOS</button>
             </div>
 
         </div>
@@ -596,7 +595,7 @@
         const year = String(dateObj.getUTCFullYear()).slice(-2); 
         const sbDate = `${day}${month}${year}`;
 
-        const url = `https://www.simbrief.com/system/dispatch.php?userid=${sbID}&airline=${airlineCode}&fltnum=${fltNumber}&orig=${flight.origin}&dest=${flight.dest}&route=${routeEncoded}&type=${cleanType}&date=${sbDate}&deph=${hours}&depm=${minutes}`;
+        const url = `https://www.simbrief.com/system/dispatch.php?userid=${sbID}&airline=${airlineCode}&fltnum=${fltNumber}&orig=${flight.origin}&dest=${flight.dest}&route=${routeEncoded}&type=${cleanType}&date=${sbDate}&deph=${hours}&depm=${minutes}&fl=${flight.fl}`;
         
         window.open(url, '_blank');
     }
@@ -709,38 +708,26 @@
         document.getElementById('empty-msg').style.display = 'none';
     }
 
-    function searchDepartures() {
-        const rawOrig = document.getElementById('airport-search').value;
-        const orig = rawOrig ? rawOrig.toUpperCase().trim() : "";
-        
-        if (orig.length < 3) { alert("Digite pelo menos 3 caracteres na Origem (Ex: SBGR)."); return; }
-        if(allFlightsDB.length === 0) { alert("Aguarde o carregamento da malha."); return; }
-
-        const matches = getUpcomingFlights(orig, null, currentFilter, 48);
-
-        if (matches.length === 0) {
-            alert(`Nenhuma partida encontrada saindo de ${orig} nas próximas 48 horas.`);
-            return;
-        }
-
-        displayedFlights = matches.map(f => enrichFlightData(f));
-        renderRows(displayedFlights);
-        document.getElementById('empty-msg').style.display = 'none';
-    }
-
-    function searchRoute() {
+    function searchFlights() {
         const rawOrig = document.getElementById('airport-search').value;
         const orig = rawOrig ? rawOrig.toUpperCase().trim() : "";
         const rawDest = document.getElementById('destination-search').value;
         const dest = rawDest ? rawDest.toUpperCase().trim() : "";
         
-        if (orig.length < 3 || dest.length < 3) { alert("Para buscar rota, preencha a Origem e o Destino (Ex: SBGR e SBSP)."); return; }
+        if (orig.length < 3) { 
+            alert("Preencha pelo menos 3 caracteres na Origem (Ex: SBGR)."); 
+            return; 
+        }
         if(allFlightsDB.length === 0) { alert("Aguarde o carregamento da malha."); return; }
 
-        const matches = getUpcomingFlights(orig, dest, currentFilter, 48);
+        const matches = getUpcomingFlights(orig, dest.length >= 3 ? dest : null, currentFilter, 48);
 
         if (matches.length === 0) {
-            alert(`Nenhum voo direto encontrado de ${orig} para ${dest} nas próximas 48 horas.`);
+            if (dest.length >= 3) {
+                alert(`Nenhum voo direto encontrado de ${orig} para ${dest} nas próximas 48 horas.`);
+            } else {
+                alert(`Nenhuma partida encontrada saindo de ${orig} nas próximas 48 horas.`);
+            }
             return;
         }
 
@@ -1014,7 +1001,7 @@
             setFilter('todas', allBtn);
         }
 
-        searchDepartures();
+        searchFlights();
         document.getElementById('airport-search').scrollIntoView({behavior: 'smooth'});
     }
 
