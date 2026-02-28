@@ -18,7 +18,7 @@
     }
     *{box-sizing:border-box}
     body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui; }
-    .shell{max-width:1400px;margin:0 auto;padding:18px;display:flex;flex-direction:column;gap:14px}
+    .shell{max-width:1400px;margin:0 auto;padding:18px;display:flex;flex-direction:column;gap:14px;min-height:100vh;}
 
     /* Header */
     .topbar{
@@ -140,6 +140,18 @@
     .detail-label { width: 140px; font-weight: 700; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
     .detail-val { flex: 1; font-family: 'JetBrains Mono'; font-weight: 700; color: var(--cy); }
 
+    /* Footer */
+    .site-footer { text-align: center; padding: 20px 0; margin-top: auto; color: var(--muted); font-size: 11px; font-weight: 700; border-top: 1px dashed var(--border); letter-spacing: 1px; text-transform: uppercase; }
+
+    /* Tutorial Grid */
+    .tutorial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 12px;}
+    .tut-card { background: rgba(15,23,36,.4); border: 1px solid var(--border); padding: 16px; border-radius: var(--r); border-left: 3px solid var(--pri); }
+    .tut-card h4 { margin: 0 0 8px 0; color: var(--text); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;}
+    .tut-card p { margin: 0; font-size: 11px; color: var(--muted); line-height: 1.6; font-weight: 600; }
+    .tut-card:nth-child(2) { border-left-color: var(--pu); }
+    .tut-card:nth-child(3) { border-left-color: var(--cy); }
+    .tut-card:nth-child(4) { border-left-color: var(--gr); }
+
   </style>
 </head>
 
@@ -149,7 +161,7 @@
     <header class="topbar">
       <div class="brand">
         <h1>RPL Dispatch <span>7.1</span></h1>
-        <div class="sub">Commercial Ops Dashboard</div>
+        <div class="sub">Ops Dashboard Flight Simmer</div>
       </div>
 
       <div class="center">
@@ -182,7 +194,7 @@
             </div>
             
             <div class="card" style="flex:2.5; display:flex; flex-direction:column; justify-content:center;">
-              <div style="font-size:10px;color:var(--muted);font-weight:900;text-transform:uppercase;letter-spacing:.8px; margin-bottom: 8px;">VOO SUGERIDO (TEMPO DE PREPARO > 30 MIN)</div>
+              <div style="font-size:10px;color:var(--muted);font-weight:900;text-transform:uppercase;letter-spacing:.8px; margin-bottom: 8px;">VOO SUGERIDO</div>
               <div id="suggested-flight-container">
                  <div class="mono" style="font-size:13px; color:var(--cy);">Sincronizando...</div>
               </div>
@@ -201,6 +213,29 @@
           </div>
         </div>
       </div>
+
+      <div class="card" style="margin-top: 14px;">
+        <h3>Guia Rápido do Sistema</h3>
+        <div class="tutorial-grid">
+            <div class="tut-card">
+                <h4>🔎 Busca e Escalas</h4>
+                <p>Na aba <b>Voos</b>, busque rotas ou use o <strong>Gerador de Escala Auto</strong> para criar uma jornada (pernas) com 45m de turnaround realista no solo.</p>
+            </div>
+            <div class="tut-card">
+                <h4>📄 Despacho SimBrief</h4>
+                <p>Com um clique (<strong>Simbrief ↗</strong>), envie equipamento, rota, indicativo e FL real para o SimBrief. O voo é registrado no Logbook automaticamente!</p>
+            </div>
+            <div class="tut-card">
+                <h4>✈️ Meu Hangar</h4>
+                <p>Gerencie sua frota estacionada. Clique em <strong>🛫 Voar Daqui</strong> e o painel preenche a origem e a Cia Aérea para buscar seu próximo trecho.</p>
+            </div>
+            <div class="tut-card">
+                <h4>📖 Logbook Inteligente</h4>
+                <p>Acompanhe suas horas de voo totais. Você pode exportar (<strong>Backup ⬇️</strong>) toda a sua progressão, hangar e escalas para o seu computador.</p>
+            </div>
+        </div>
+      </div>
+
     </section>
 
     <section class="panel" id="tab-board" role="tabpanel">
@@ -403,6 +438,10 @@
       </div>
     </section>
 
+    <div class="site-footer">
+        DADOS TABULADOS: DECEA
+    </div>
+
   </div>
 
   <div id="flight-modal" class="modal-overlay">
@@ -496,7 +535,6 @@
         const container = document.getElementById('suggested-flight-container');
         if (allFlightsDB.length === 0) return;
 
-        // Pega voos das próximas 3 horas e que tenham pelo menos 30min de preparo
         let candidates = getUpcomingFlights(null, null, 'todas', 3);
         candidates = candidates.filter(f => f.sortMins >= 30);
 
