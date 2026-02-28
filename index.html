@@ -91,8 +91,8 @@
     .btn:active{transform:translateY(1px)}
 
     /* Filtros Cia / Gerador Escala */
-    .filter-wrapper { display: flex; gap: 5px; background: var(--input); padding: 4px; border-radius: 10px; border: 1px solid var(--border); height: 38px;} /* Altura corrigida para 38px */
-    .btn-filter { flex: 1; background: transparent; color: var(--muted); padding: 0 12px; font-size: 11px; border:0; border-radius:6px; cursor:pointer; font-weight:800; white-space: nowrap;} /* white-space: nowrap impede a quebra de linha */
+    .filter-wrapper { display: flex; gap: 5px; background: var(--input); padding: 4px; border-radius: 10px; border: 1px solid var(--border); height: 38px;}
+    .btn-filter { flex: 1; background: transparent; color: var(--muted); padding: 0 12px; font-size: 11px; border:0; border-radius:6px; cursor:pointer; font-weight:800; white-space: nowrap;}
     .btn-filter:hover { background: rgba(255,255,255,0.05); }
     .btn-filter.active { background: #334155; color: white; }
     .btn-filter[data-cia="LATAM"].active { background: #1B0088; color: white; border:none; }
@@ -174,16 +174,20 @@
     <section class="panel active" id="tab-dashboard" role="tabpanel">
       <div class="grid2">
         <div class="card">
-          <h3>Status</h3>
+          <h3>Status do Sistema</h3>
           <div class="row">
             <div class="card" style="flex:1">
               <div style="font-size:10px;color:var(--muted);font-weight:900;text-transform:uppercase;letter-spacing:.8px">BANCO RPL</div>
               <div class="mono" id="db-status" style="font-size:18px;margin-top:8px;color:var(--gr)">ONLINE</div>
             </div>
-            <div class="card" style="flex:1">
-              <div style="font-size:10px;color:var(--muted);font-weight:900;text-transform:uppercase;letter-spacing:.8px">TOTAL VOOS</div>
-              <div class="mono" id="db-count" style="font-size:18px;margin-top:8px">0</div>
+            
+            <div class="card" style="flex:2.5; display:flex; flex-direction:column; justify-content:center;">
+              <div style="font-size:10px;color:var(--muted);font-weight:900;text-transform:uppercase;letter-spacing:.8px; margin-bottom: 8px;">VOO SUGERIDO (TEMPO DE PREPARO > 30 MIN)</div>
+              <div id="suggested-flight-container">
+                 <div class="mono" style="font-size:13px; color:var(--cy);">Sincronizando...</div>
+              </div>
             </div>
+
           </div>
         </div>
 
@@ -226,7 +230,7 @@
         </div>
 
         <div class="card">
-            <h3>Busca de Rotas (Sempre pelo .txt)</h3>
+            <h3>Busca de Rotas</h3>
             <div class="row">
                 <div>
                     <label>Origem (ICAO)</label>
@@ -438,10 +442,7 @@
         const targetPanel = document.getElementById(`tab-${targetId}`);
         if(targetPanel) targetPanel.classList.add('active');
 
-        // Renderiza itens pesados caso precise de refresh ao abrir a aba
-        if(targetId === 'dashboard') {
-          updateDatabaseStatus(); 
-        }
+        if(targetId === 'dashboard') updateDatabaseStatus(); 
         if(targetId === 'hangar') renderHangar();
         if(targetId === 'logbook') renderLogbook();
         if(targetId === 'roster') renderRoster();
@@ -468,6 +469,7 @@
     let currentFilter = 'todas';
     let displayedFlights = [];
     let validityUpdated = false;
+    let currentSuggestedFlight = null;
 
     function getSafeStorage(key) {
         try {
@@ -487,6 +489,63 @@
 
     function saveSBID() {
         localStorage.setItem("simbrief_id", document.getElementById("sb-id").value);
+    }
+
+    // --- VOO SUGERIDO INTELIGENTE ---
+    function renderSuggestedFlight() {
+        const container = document.getElementById('suggested-flight-container');
+        if (allFlightsDB.length === 0) return;
+
+        // Pega voos das próximas 3 horas e que tenham pelo menos 30min de preparo
+        let candidates = getUpcomingFlights(null, null, 'todas', 3);
+        candidates = candidates.filter(f => f.sortMins >= 30);
+
+        if (candidates.length === 0) {
+            container.innerHTML = `<div class="mono" style="font-size:13px; color:var(--or);">Sem voos nas próximas horas.</div>`;
+            return;
+        }
+
+        const seed = candidates[Math.floor(Math.random() * candidates.length)];
+        currentSuggestedFlight = enrichFlightData(seed);
+
+        const f = currentSuggestedFlight;
+        const acftType = f.type.split('/')[0];
+        
+        container.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                <div style="display:flex; flex-direction:column; gap:4px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span class="cia-badge" style="background-color: ${f.airline.color}; margin:0;">${f.airline.name}</span>
+                        <span class="col-flight" style="font-size:16px; margin:0; cursor:default; text-decoration:none;">${f.ident}</span>
+                    </div>
+                    <div style="font-family:'JetBrains Mono'; font-size:13px; font-weight:700; color:var(--text);">
+                        ${f.origin} ➔ ${f.dest} | ${acftType}
+                    </div>
+                    <div style="font-size:10px; color:var(--gr); font-weight:800; text-transform:uppercase;">
+                        PARTIDA EM ${f.sortMins} MINUTOS
+                    </div>
+                </div>
+                <div style="display:flex; gap:6px;">
+                    <button class="btn ghost small" onclick="renderSuggestedFlight()" title="Sugerir outro voo">🔄 Outro</button>
+                    <button class="btn pri small" onclick="scheduleSuggestedFlight()" title="Adicionar à Escala">➕ Escala</button>
+                    <button class="btn pu small" onclick="dispatchSuggestedFlight()">Simbrief ↗</button>
+                </div>
+            </div>
+        `;
+    }
+
+    function dispatchSuggestedFlight() {
+        if(currentSuggestedFlight) openSimBriefWithData(currentSuggestedFlight);
+    }
+
+    function scheduleSuggestedFlight() {
+        if (!currentSuggestedFlight) return;
+        let roster = getSafeStorage('myPilotRoster');
+        roster.push({ id: Date.now(), flightData: currentSuggestedFlight });
+        roster.sort((a, b) => (a.flightData.sortMins || 0) - (b.flightData.sortMins || 0));
+        localStorage.setItem('myPilotRoster', JSON.stringify(roster));
+        renderRoster();
+        alert("Voo sugerido adicionado à sua Escala!");
     }
 
     // --- INTEGRAÇÃO SIMBRIEF ---
@@ -1086,12 +1145,11 @@
 
     function updateDatabaseStatus() {
         const dbCount = allFlightsDB.length;
-        document.getElementById('db-count').innerText = dbCount; // Mostra apenas o número real, sem fallback para 4
-
         const dbStatus = document.getElementById('db-status');
         if (dbCount > 0) {
             dbStatus.innerText = "ONLINE";
             dbStatus.style.color = "var(--gr)";
+            renderSuggestedFlight();
         } else {
             dbStatus.innerText = "Sincronizando..."; 
             dbStatus.style.color = "var(--cy)";
@@ -1118,7 +1176,7 @@
             const results = await Promise.all(promises);
             results.forEach(res => { if(res.flights.length > 0) allFlightsDB = allFlightsDB.concat(res.flights); });
             
-            updateDatabaseStatus(); // Atualiza contador e status após carregar
+            updateDatabaseStatus();
 
             if (allFlightsDB.length === 0) {
                 dbStatus.innerText = "ERRO DE LEITURA";
