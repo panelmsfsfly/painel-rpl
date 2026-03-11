@@ -79,13 +79,13 @@
     input::placeholder{color:#506079}
     
     .btn{
-      border:0;cursor:pointer;border-radius:10px;padding:10px 12px;font-weight:900;font-size:11px;
+      border:1px solid transparent;cursor:pointer;border-radius:10px;padding:10px 12px;font-weight:900;font-size:11px;
       text-transform:uppercase;letter-spacing:.7px;display:inline-flex;gap:8px;align-items:center;justify-content:center;
     }
     .btn.pri{background:var(--pri);color:#fff}
     .btn.pu{background:var(--pu);color:#fff}
-    .btn.ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
-    .btn.rd{background:rgba(239,68,68,.15);color:var(--rd);border:1px solid rgba(239,68,68,.35)}
+    .btn.ghost{background:transparent;color:var(--text);border-color:var(--border)}
+    .btn.rd{background:rgba(239,68,68,.15);color:var(--rd);border-color:rgba(239,68,68,.35)}
     .btn.small { padding: 6px 10px; font-size: 10px; border-radius: 6px; }
     .btn:hover { filter: brightness(1.2); }
     .btn:active{transform:translateY(1px)}
@@ -1294,30 +1294,62 @@
     function parseRPLData(textData, airlineInfo) {
         const lines = textData.split('\n');
         const flights = [];
-        for (let line of lines) {
-            line = line.trim();
-            if (line.length < 50 || !/^\d{6}\s+\d{6}/.test(line)) continue;
-            const parts = line.split(/\s+/);
-            const speedIndex = parts.findIndex(p => /^[NM]\d{3,4}$/.test(p));
-            if (speedIndex !== -1 && parts.length > speedIndex + 3) {
-                try {
-                    const daysOp = parts[2]; const ident = parts[3]; const type = parts[4];
-                    const adepEobt = parts[speedIndex - 1]; 
-                    const origin = adepEobt.substring(0, 4); const depTimeUTC = adepEobt.substring(4, 8); 
-                    const fl = parts[speedIndex + 1];
-                    let destIndex = parts.findIndex((p, idx) => idx > speedIndex && /^[A-Z]{4}\d{4}$/.test(p));
-                    if (destIndex !== -1) {
-                        const destEet = parts[destIndex];
-                        const dest = destEet.substring(0, 4); const eetStr = destEet.substring(4, 8); 
-                        const rota = parts.slice(speedIndex + 2, destIndex).join(' ');
-                        const obs = parts.slice(destIndex + 1).join(' ');
-                        const depMinUTC = timeStrToMinutes(depTimeUTC); const durMin = timeStrToMinutes(eetStr);
-                        flights.push({
-                            airline: airlineInfo, ident, type, origin, dest, depMinUTC,
-                            arrMinUTC: depMinUTC + durMin, durMin, fl, rota, obs, daysOp
-                        });
-                    }
-                } catch(e) {}
+        let currentFlight = null;
+
+        for (let rawLine of lines) {
+            if (rawLine.trim() === '' || 
+                rawLine.includes('Planos de Voo') || 
+                rawLine.includes('Classificação:') || 
+                rawLine.includes('CIA:') || 
+                rawLine.includes('---') || 
+                rawLine.includes('VALIDO') || 
+                rawLine.includes('DESDE')) {
+                continue;
+            }
+
+            if (/^\s*\d{6}\s+\d{6}/.test(rawLine)) {
+                let line = rawLine.trim();
+                const parts = line.split(/\s+/);
+                const speedIndex = parts.findIndex(p => /^[NM]\d{3,4}$/.test(p));
+                
+                if (speedIndex !== -1 && parts.length > speedIndex + 3) {
+                    try {
+                        const daysOp = parts[2]; 
+                        const ident = parts[3]; 
+                        const type = parts[4];
+                        const adepEobt = parts[speedIndex - 1]; 
+                        const origin = adepEobt.substring(0, 4); 
+                        const depTimeUTC = adepEobt.substring(4, 8); 
+                        const fl = parts[speedIndex + 1];
+                        let destIndex = parts.findIndex((p, idx) => idx > speedIndex && /^[A-Z]{4}\d{4}$/.test(p));
+                        
+                        if (destIndex !== -1) {
+                            const destEet = parts[destIndex];
+                            const dest = destEet.substring(0, 4); 
+                            const eetStr = destEet.substring(4, 8); 
+                            const rota = parts.slice(speedIndex + 2, destIndex).join(' ');
+                            const obs = parts.slice(destIndex + 1).join(' ');
+                            const depMinUTC = timeStrToMinutes(depTimeUTC); 
+                            const durMin = timeStrToMinutes(eetStr);
+                            
+                            currentFlight = {
+                                airline: airlineInfo, ident, type, origin, dest, depMinUTC,
+                                arrMinUTC: depMinUTC + durMin, durMin, fl, rota, obs, daysOp
+                            };
+                            flights.push(currentFlight);
+                        } else {
+                            currentFlight = null;
+                        }
+                    } catch(e) { currentFlight = null; }
+                } else {
+                    currentFlight = null;
+                }
+            } else if (currentFlight && rawLine.length > 50) {
+                let routeCont = rawLine.substring(58, 94).trim();
+                let obsCont = rawLine.substring(94).trim();
+
+                if (routeCont) currentFlight.rota += ' ' + routeCont;
+                if (obsCont) currentFlight.obs += ' ' + obsCont;
             }
         }
         return flights;
