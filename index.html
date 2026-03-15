@@ -228,7 +228,7 @@
             </div>
             <div class="tut-card">
                 <h4>✈️ Meu HUB</h4>
-                <p>Gerencie sua frota estacionada. Clique em <strong>🛫 Voar Daqui</strong> e o painel preenche a origem e a Cia Aérea para buscar seu próximo trecho.</p>
+                <p>Gerencie sua frota. Ao despachar qualquer voo pelo SimBrief, a aeronave será estacionada automaticamente no HUB de destino.</p>
             </div>
             <div class="tut-card">
                 <h4>📖 Logbook Inteligente</h4>
@@ -384,7 +384,7 @@
     <section class="panel" id="tab-hangar-roster" role="tabpanel">
       <div class="card">
         <h3>Gerador de Escala Baseado no HUB</h3>
-        <p style="font-size: 11px; color: var(--muted); margin-top: 0; margin-bottom: 12px; font-weight: 600;">Sorteia uma aeronave estacionada no seu HUB e cria uma jornada de voos aleatória respeitando a Companhia Aérea, a Localização atual e os tempos de solo (45 min).</p>
+        <p style="font-size: 11px; color: var(--muted); margin-top: 0; margin-bottom: 12px; font-weight: 600;">Sorteia uma aeronave estacionada no seu HUB e cria uma jornada de voos aleatória respeitando a Companhia Aérea, a Localização atual, o Equipamento e os tempos de solo (45 min).</p>
         <div class="row">
            <button class="btn pri" onclick="generateHangarSchedule(1)">🎲 Gerar 1 Perna</button>
            <button class="btn pri" onclick="generateHangarSchedule(2)">🎲 Gerar 2 Pernas</button>
@@ -546,7 +546,7 @@
     let allFlightsDB = [];
     let currentFilter = 'todas';
     let displayedFlights = [];
-    let displayedHangarChain = []; // Variável para armazenar a escala gerada do HUB
+    let displayedHangarChain = []; 
     let validityUpdated = false;
     let currentSuggestedFlight = null;
 
@@ -666,7 +666,7 @@
         alert(`Voo ${currentSuggestedFlight.ident} adicionado à sua Escala!`);
     }
 
-    // --- INTEGRAÇÃO SIMBRIEF (COM MOVIMENTO NO HUB) ---
+    // --- INTEGRAÇÃO SIMBRIEF (COM LÓGICA UNIVERSAL DE HUB CORRIGIDA) ---
     function openSimBriefWithData(flight, moveAcftId = null) {
         const sbID = document.getElementById("sb-id").value;
         if (!sbID) {
@@ -678,16 +678,24 @@
 
         saveToLogbook(flight);
 
-        // LÓGICA: MOVER AERONAVE NO HUB
+        // LÓGICA DE HUB UNIVERSAL
+        let hangar = getSafeStorage('myPilotHangar');
+        
         if (moveAcftId) {
-            let hangar = getSafeStorage('myPilotHangar');
-            let idx = hangar.findIndex(a => a.id === moveAcftId);
+            let idx = hangar.findIndex(a => String(a.id) === String(moveAcftId));
             if (idx !== -1) {
                 hangar[idx].loc = flight.dest;
                 localStorage.setItem('myPilotHangar', JSON.stringify(hangar));
-                renderHangar(); // Atualiza a tabela do HUB em background
+            } else {
+                console.warn("Aeronave não encontrada no HUB com o ID:", moveAcftId);
             }
+        } else {
+            let cia = flight.airline ? flight.airline.name : flight.ident.replace(/[0-9]/g, '');
+            let acftType = flight.type ? flight.type.split('/')[0] : "DESCONHECIDO";
+            hangar.push({ id: Date.now(), cia: cia, type: acftType, loc: flight.dest });
+            localStorage.setItem('myPilotHangar', JSON.stringify(hangar));
         }
+        renderHangar(); 
 
         const airlineCode = flight.ident.match(/^[A-Z]+/)[0];
         const fltNumber = flight.ident.match(/\d+/)[0];
@@ -743,7 +751,7 @@
         currentFilter = filterName;
     }
 
-    function getUpcomingFlights(orig, dest = null, ciaFilter = 'todas', maxHours = 48) {
+    function getUpcomingFlights(orig, dest = null, ciaFilter = 'todas', maxHours = 48, typeFilter = null) {
         const now = getSimulationDate();
         const currentBRTMinutes = (now.getHours() * 60) + now.getMinutes();
         const currentLocalDay = now.getDay();
@@ -754,6 +762,7 @@
             if (orig && f.origin !== orig) return;
             if (dest && f.dest !== dest) return;
             if (ciaFilter !== 'todas' && f.airline.name !== ciaFilter) return;
+            if (typeFilter && f.type.split('/')[0] !== typeFilter) return; // Nova trava do equipamento
 
             let depMinBRT = f.depMinUTC - 180;
             if (depMinBRT < 0) depMinBRT += 1440;
@@ -850,15 +859,24 @@
         const seed = seedCandidates[Math.floor(Math.random() * Math.min(15, seedCandidates.length))];
         let chain = [enrichFlightData(seed)];
 
+        const targetType = seed.type.split('/')[0];
+
         for (let i = 1; i < chainLength; i++) {
             const prev = chain[i-1];
             const prevArrMinsFromNow = prev.sortMins + prev.durMin;
             const minNextDepMinsFromNow = prevArrMinsFromNow + TURNAROUND_MINUTES;
             
-            let nextLegs = getUpcomingFlights(prev.dest, null, prev.airline.name, 48);
+            // Usando a trava nativa do novo getUpcomingFlights
+            let nextLegs = getUpcomingFlights(prev.dest, null, prev.airline.name, 48, targetType);
             nextLegs = nextLegs.filter(f => f.sortMins >= minNextDepMinsFromNow);
             
-            if (nextLegs.length > 0) chain.push(enrichFlightData(nextLegs[0]));
+            if (nextLegs.length > 0) {
+                let validNext = nextLegs.filter(f => f.sortMins <= minNextDepMinsFromNow + 180);
+                if(validNext.length === 0) validNext = nextLegs;
+
+                const nextLeg = validNext[Math.floor(Math.random() * Math.min(5, validNext.length))];
+                chain.push(enrichFlightData(nextLeg));
+            }
             else break;
         }
         
@@ -878,12 +896,10 @@
         const randomAcft = hangar[Math.floor(Math.random() * hangar.length)];
         const orig = randomAcft.loc;
         const cia = randomAcft.cia;
-        const targetType = randomAcft.type; // <-- PEGA O TIPO EXATO (ex: B738)
+        const targetType = randomAcft.type; 
 
-        let candidates = getUpcomingFlights(orig, null, cia, 24);
-        
-        // FILTRO DE TIPO DE AERONAVE NA 1ª PERNA
-        candidates = candidates.filter(f => f.type.split('/')[0] === targetType);
+        // Agora busca nativamente passando o targetType
+        let candidates = getUpcomingFlights(orig, null, cia, 24, targetType);
         
         if (candidates.length === 0) {
             alert(`Sorteio: ${cia} em ${orig} (${targetType}). Sem voos disponíveis para este equipamento nas próximas 24h. Tente rodar o sorteio novamente.`);
@@ -901,10 +917,8 @@
             const prevArrMinsFromNow = prev.sortMins + prev.durMin;
             const minNextDepMinsFromNow = prevArrMinsFromNow + TURNAROUND_MINUTES;
 
-            let nextLegs = getUpcomingFlights(prev.dest, null, prev.airline.name, 48);
-            
-            // FILTRO DE TEMPO DE SOLO E TIPO DE EQUIPAMENTO NAS PERNAS SEGUINTES
-            nextLegs = nextLegs.filter(f => f.sortMins >= minNextDepMinsFromNow && f.type.split('/')[0] === targetType);
+            let nextLegs = getUpcomingFlights(prev.dest, null, prev.airline.name, 48, targetType);
+            nextLegs = nextLegs.filter(f => f.sortMins >= minNextDepMinsFromNow);
 
             if (nextLegs.length > 0) {
                 let validNext = nextLegs.filter(f => f.sortMins <= minNextDepMinsFromNow + 180);
@@ -938,13 +952,13 @@
         emptyMsg.style.display = 'none';
         infoSpan.innerText = `[Aeronave Sorteada: ${acft.cia} | ${acft.type} | Sai de: ${acft.loc}]`;
         btnAddAll.style.display = 'inline-flex';
-        btnAddAll.onclick = () => scheduleEntireHangarChain(acft.id);
+        btnAddAll.onclick = () => scheduleEntireHangarChain(String(acft.id));
 
         chain.forEach((f, index) => {
             const tr = document.createElement('tr');
             
-            const sbButton = `<button class="btn pu small" title="Abrir no SimBrief e Mover Aeronave" onclick="dispatchHangarFlight(${index}, ${acft.id})">Simbrief ↗</button>`;
-            const scheduleButton = `<button class="btn pri small" title="Agendar na escala" onclick="scheduleHangarFlight(${index}, ${acft.id})">➕ Escala</button>`;
+            const sbButton = `<button class="btn pu small" title="Abrir no SimBrief e Mover Aeronave" onclick="dispatchHangarFlight(${index}, '${acft.id}')">Simbrief ↗</button>`;
+            const scheduleButton = `<button class="btn pri small" title="Agendar na escala" onclick="scheduleHangarFlight(${index}, '${acft.id}')">➕ Escala</button>`;
             
             const arrHtml = f.isNextDay ? `<span style="color:var(--or); font-size:9px; display:block; margin-top:2px;">(+1)</span>` : ``;
             const depCell = `<div class="time-pill">${f.depPrefix || ''}<div class="tp-utc">${f.depDisplayUTC}z</div><div class="tp-local">${f.depDisplay}</div></div>`;
@@ -981,7 +995,7 @@
         const flight = displayedHangarChain[index];
         if (!flight) return;
         let roster = getSafeStorage('myPilotRoster');
-        roster.push({ id: Date.now() + Math.random(), flightData: flight, hubAcftId: acftId });
+        roster.push({ id: Date.now() + Math.random(), flightData: flight, hubAcftId: String(acftId) });
         roster.sort((a, b) => (a.flightData.sortMins || 0) - (b.flightData.sortMins || 0));
         localStorage.setItem('myPilotRoster', JSON.stringify(roster));
         renderRoster();
@@ -992,7 +1006,7 @@
         if(displayedHangarChain.length === 0) return;
         let roster = getSafeStorage('myPilotRoster');
         displayedHangarChain.forEach(f => {
-            roster.push({ id: Date.now() + Math.random(), flightData: f, hubAcftId: acftId });
+            roster.push({ id: Date.now() + Math.random(), flightData: f, hubAcftId: String(acftId) });
         });
         roster.sort((a, b) => (a.flightData.sortMins || 0) - (b.flightData.sortMins || 0));
         localStorage.setItem('myPilotRoster', JSON.stringify(roster));
@@ -1168,7 +1182,7 @@
                 <td style="font-weight:800; font-size: 15px; font-family: 'JetBrains Mono'; color:var(--cy);">${acft.loc}</td>
                 <td>
                     <div style="display:flex; gap:5px; justify-content:center;">
-                        <button class="btn pri small" title="Procurar voos saindo daqui" onclick="flyFromHangar('${acft.loc}', '${displayCia}')">🛫 VOAR DAQUI</button>
+                        <button class="btn pri small" title="Procurar voos saindo daqui" onclick="flyFromHangar('${acft.loc}', '${displayCia}', '${acft.type}')">🛫 VOAR DAQUI</button>
                         <button class="btn rd small" title="Remover do HUB" onclick="removeAircraftFromHangar(${acft.id})">🗑️</button>
                     </div>
                 </td>
@@ -1204,7 +1218,8 @@
         renderHangar();
     }
 
-    function flyFromHangar(loc, cia) {
+    // MODIFICADO: Função VOAR DAQUI agora força a pesquisa customizada apenas do modelo exato do HUB
+    function flyFromHangar(loc, cia, type) {
         document.getElementById('airport-search').value = loc;
         document.getElementById('destination-search').value = '';
         
@@ -1215,8 +1230,22 @@
             setFilter('todas', allBtn);
         }
 
+        if(allFlightsDB.length === 0) { alert("Aguarde o carregamento da malha."); return; }
+
+        const matches = getUpcomingFlights(loc, null, cia, 48, type);
+
+        // Se não encontrar voos, avisa e interrompe a função (continuando na aba atual do HUB)
+        if (matches.length === 0) {
+            alert(`Nenhuma partida encontrada saindo de ${loc} com o equipamento ${type} nas próximas 48 horas.`);
+            return;
+        }
+
+        // Se chegou aqui, é porque encontrou voos. Então mudamos para a aba 'Voos' e mostramos os resultados.
         switchTab('board');
-        searchFlights();
+        
+        displayedFlights = matches.map(f => enrichFlightData(f));
+        renderRows(displayedFlights);
+        document.getElementById('empty-msg').style.display = 'none';
     }
 
     function parkFromLogbook(callsign, type, arrLoc) {
