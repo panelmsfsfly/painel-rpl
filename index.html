@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>RPL Dispatch 7.1</title>
+  <title>RPL Dispatch 7.3</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -17,48 +17,39 @@
       --r:10px; --shadow:0 8px 20px rgba(0,0,0,.35);
     }
     *{box-sizing:border-box}
-    body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui; }
-    .shell{max-width:1400px;margin:0 auto;padding:18px;display:flex;flex-direction:column;gap:14px;min-height:100vh;}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui;}
+    .shell{max-width:1400px;margin:0 auto;padding:18px;display:flex;flex-direction:column;gap:14px;min-height:100vh}
 
-    /* Header */
     .topbar{
       background:linear-gradient(180deg, rgba(21,30,45,.92), rgba(21,30,45,.78));
-      border:1px solid var(--border); border-radius:var(--r); box-shadow:var(--shadow);
-      padding:16px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px;
+      border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);
+      padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;
     }
     .brand h1{margin:0;font-size:20px;font-weight:900;letter-spacing:-.4px}
     .brand h1 span{color:var(--pri)}
     .brand .sub{margin-top:4px;font-size:11px;font-weight:800;color:var(--cy);letter-spacing:1px;text-transform:uppercase}
     .center{display:flex;flex-direction:column;align-items:center;gap:6px}
-    .cycle{font-family:"JetBrains Mono";font-weight:800;font-size:12px;color:var(--gr);background:rgba(16,185,129,.1);
-      border:1px solid rgba(16,185,129,.2);padding:4px 10px;border-radius:999px}
+    .cycle{
+      font-family:"JetBrains Mono";font-weight:800;font-size:12px;color:var(--gr);
+      background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);padding:4px 10px;border-radius:999px
+    }
     .clock{font-family:"JetBrains Mono";font-weight:800;font-size:26px;color:var(--or)}
     .clockSub{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:1px;text-align:right}
 
-    /* Tabs */
     .tabs{
-      display:flex;gap:8px;flex-wrap:wrap;
-      background:rgba(15,23,36,.65);
-      border:1px solid var(--border);
-      border-radius:999px;padding:8px;
+      display:flex;gap:8px;flex-wrap:wrap;background:rgba(15,23,36,.65);
+      border:1px solid var(--border);border-radius:999px;padding:8px;
     }
     .tab{
-      border:0;cursor:pointer;border-radius:999px;
-      padding:10px 14px;font-weight:900;font-size:11px;letter-spacing:.8px;text-transform:uppercase;
-      background:transparent;color:var(--muted);
-      display:flex;gap:8px;align-items:center;
+      border:0;cursor:pointer;border-radius:999px;padding:10px 14px;font-weight:900;font-size:11px;letter-spacing:.8px;text-transform:uppercase;
+      background:transparent;color:var(--muted);display:flex;gap:8px;align-items:center;
     }
     .tab[aria-selected="true"]{
-      background:rgba(59,130,246,.18);
-      border:1px solid rgba(59,130,246,.35);
-      color:var(--text);
+      background:rgba(59,130,246,.18);border:1px solid rgba(59,130,246,.35);color:var(--text);
     }
 
-    /* Panels */
     .panel{
-      display:none;
-      background:var(--card); border:1px solid var(--border); border-radius:var(--r); box-shadow:var(--shadow);
-      padding:16px;
+      display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);padding:16px;
     }
     .panel.active{display:block}
 
@@ -66,8 +57,7 @@
     @media(max-width:950px){.grid2{grid-template-columns:1fr}}
 
     .card{
-      background:rgba(15,23,36,.6);
-      border:1px solid var(--border);border-radius:var(--r);padding:14px;
+      background:rgba(15,23,36,.6);border:1px solid var(--border);border-radius:var(--r);padding:14px;
     }
     .card h3{margin:0 0 10px 0;font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.6px}
     .row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
@@ -77,7 +67,7 @@
       padding:10px 12px;color:var(--text);font-weight:800;min-width:180px
     }
     input::placeholder{color:#506079}
-    
+
     .btn{
       border:1px solid transparent;cursor:pointer;border-radius:10px;padding:10px 12px;font-weight:900;font-size:11px;
       text-transform:uppercase;letter-spacing:.7px;display:inline-flex;gap:8px;align-items:center;justify-content:center;
@@ -86,72 +76,97 @@
     .btn.pu{background:var(--pu);color:#fff}
     .btn.ghost{background:transparent;color:var(--text);border-color:var(--border)}
     .btn.rd{background:rgba(239,68,68,.15);color:var(--rd);border-color:rgba(239,68,68,.35)}
-    .btn.small { padding: 6px 10px; font-size: 10px; border-radius: 6px; }
-    .btn:hover { filter: brightness(1.2); }
+    .btn.gr{background:rgba(16,185,129,.15);color:var(--gr);border-color:rgba(16,185,129,.35)}
+    .btn.small{padding:6px 10px;font-size:10px;border-radius:6px}
+    .btn:hover{filter:brightness(1.15)}
     .btn:active{transform:translateY(1px)}
 
-    /* Filtros Cia / Gerador Escala */
-    .filter-wrapper { display: flex; gap: 5px; background: var(--input); padding: 4px; border-radius: 10px; border: 1px solid var(--border); height: 38px;}
-    .btn-filter { flex: 1; background: transparent; color: var(--muted); padding: 0 12px; font-size: 11px; border:0; border-radius:6px; cursor:pointer; font-weight:800; white-space: nowrap;}
-    .btn-filter:hover { background: rgba(255,255,255,0.05); }
-    .btn-filter.active { background: #334155; color: white; }
-    .btn-filter[data-cia="LATAM"].active { background: #1B0088; color: white; border:none; }
-    .btn-filter[data-cia="GOL"].active { background: #FF5E00; color: white; border:none; }
-    .btn-filter[data-cia="AZUL"].active { background: #0055A4; color: white; border:none; }
+    .filter-wrapper{
+      display:flex;gap:5px;background:var(--input);padding:4px;border-radius:10px;border:1px solid var(--border);height:38px;
+    }
+    .btn-filter{
+      flex:1;background:transparent;color:var(--muted);padding:0 12px;font-size:11px;border:0;border-radius:6px;
+      cursor:pointer;font-weight:800;white-space:nowrap;
+    }
+    .btn-filter:hover{background:rgba(255,255,255,0.05)}
+    .btn-filter.active{background:#334155;color:white}
+    .btn-filter[data-cia="LATAM"].active{background:#1B0088;color:white;border:none}
+    .btn-filter[data-cia="GOL"].active{background:#FF5E00;color:white;border:none}
+    .btn-filter[data-cia="AZUL"].active{background:#0055A4;color:white;border:none}
 
-    /* Table */
     .tableWrap{overflow:auto;border:1px solid var(--border);border-radius:var(--r)}
-    table{border-collapse:separate;border-spacing:0;min-width:1050px;width:100%}
+    table{border-collapse:separate;border-spacing:0;min-width:1150px;width:100%}
     th{
       background:#0f172a;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:1px;
       text-align:left;padding:12px 14px;border-bottom:2px solid var(--border)
     }
     td{
-      background:var(--card);padding:12px 14px;border-bottom:1px solid var(--border);font-size:13px; vertical-align: middle;
+      background:var(--card);padding:12px 14px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle;
     }
-    tr:last-child td { border-bottom: none; }
+    tr:last-child td{border-bottom:none}
     tr:hover td{background:#1e293b}
-    
+
     .mono{font-family:"JetBrains Mono";font-weight:900}
     .empty{padding:30px;text-align:center;color:var(--muted);font-style:italic}
 
-    /* Elementos das Tabelas da V7.0 */
-    .col-flight { font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--cy); font-size: 14px; cursor: pointer;}
-    .col-flight:hover { text-decoration: underline; color: #fff; }
-    .cia-badge { padding: 4px 8px; border-radius: 4px; color: white; font-weight: 800; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .time-pill {
-        display: inline-flex; flex-direction: column; align-items: center; justify-content: center;
-        background: var(--input); color: var(--pri); border: 1px solid var(--border);
-        padding: 6px 10px; border-radius: 6px; min-width: 75px; text-align:center;
+    .col-flight{font-family:'JetBrains Mono',monospace;font-weight:800;color:var(--cy);font-size:14px;cursor:pointer}
+    .col-flight:hover{text-decoration:underline;color:#fff}
+    .cia-badge{
+      padding:4px 8px;border-radius:4px;color:white;font-weight:800;font-size:9px;text-transform:uppercase;letter-spacing:.5px;display:inline-block;
     }
-    .time-pill.arr { color: var(--gr); border-color: rgba(16, 185, 129, 0.2); }
-    .tp-utc { font-size: 9px; opacity: 0.8; font-family: 'JetBrains Mono'; margin-bottom: 2px; color: var(--muted); }
-    .tp-local { font-size: 14px; font-weight: 800; font-family: 'JetBrains Mono'; line-height: 1; }
-    .col-fl { font-family: 'JetBrains Mono'; font-weight: 700; color: var(--pu); background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.2); padding: 4px 8px; border-radius: 4px; font-size: 11px; text-align: center; }
+    .time-pill{
+      display:inline-flex;flex-direction:column;align-items:center;justify-content:center;
+      background:var(--input);color:var(--pri);border:1px solid var(--border);
+      padding:6px 10px;border-radius:6px;min-width:75px;text-align:center;
+    }
+    .time-pill.arr{color:var(--gr);border-color:rgba(16,185,129,.2)}
+    .tp-utc{font-size:9px;opacity:.8;font-family:'JetBrains Mono';margin-bottom:2px;color:var(--muted)}
+    .tp-local{font-size:14px;font-weight:800;font-family:'JetBrains Mono';line-height:1}
+    .col-fl{
+      font-family:'JetBrains Mono';font-weight:700;color:var(--pu);
+      background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.2);padding:4px 8px;border-radius:4px;font-size:11px;text-align:center
+    }
 
-    /* Modal */
-    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
-    .modal-content { background: var(--card); padding: 30px; border-radius: var(--r); width: 90%; max-width: 600px; border: 1px solid var(--border); box-shadow: var(--shadow); }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
-    .modal-title { font-size: 20px; font-weight: 800; color: var(--text); font-family: 'JetBrains Mono';}
-    .close-modal { font-size: 24px; color: var(--muted); background: none; padding: 0; border: none; cursor: pointer; }
-    .close-modal:hover { color: var(--rd); }
-    .detail-row { display: flex; padding: 12px 0; border-bottom: 1px dashed var(--border); }
-    .detail-label { width: 140px; font-weight: 700; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .detail-val { flex: 1; font-family: 'JetBrains Mono'; font-weight: 700; color: var(--cy); }
+    .status-pill{
+      display:inline-flex;align-items:center;justify-content:center;padding:5px 9px;border-radius:999px;
+      font-size:10px;font-weight:900;letter-spacing:.7px;text-transform:uppercase;border:1px solid transparent;
+    }
+    .status-pill.programado{
+      background:rgba(16,185,129,.15);color:var(--gr);border-color:rgba(16,185,129,.35);
+    }
+    .status-pill.na-escala{
+      background:rgba(59,130,246,.15);color:var(--pri);border-color:rgba(59,130,246,.35);
+    }
 
-    /* Footer */
-    .site-footer { text-align: center; padding: 20px 0; margin-top: auto; color: var(--muted); font-size: 11px; font-weight: 700; border-top: 1px dashed var(--border); letter-spacing: 1px; text-transform: uppercase; }
+    .modal-overlay{
+      position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:2000;display:none;
+      justify-content:center;align-items:center;backdrop-filter:blur(5px);
+    }
+    .modal-content{
+      background:var(--card);padding:30px;border-radius:var(--r);width:90%;max-width:600px;border:1px solid var(--border);box-shadow:var(--shadow);
+    }
+    .modal-header{
+      display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:15px;border-bottom:1px solid var(--border);
+    }
+    .modal-title{font-size:20px;font-weight:800;color:var(--text);font-family:'JetBrains Mono'}
+    .close-modal{font-size:24px;color:var(--muted);background:none;padding:0;border:none;cursor:pointer}
+    .close-modal:hover{color:var(--rd)}
+    .detail-row{display:flex;padding:12px 0;border-bottom:1px dashed var(--border)}
+    .detail-label{width:140px;font-weight:700;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+    .detail-val{flex:1;font-family:'JetBrains Mono';font-weight:700;color:var(--cy)}
 
-    /* Tutorial Grid */
-    .tutorial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 12px;}
-    .tut-card { background: rgba(15,23,36,.4); border: 1px solid var(--border); padding: 16px; border-radius: var(--r); border-left: 3px solid var(--pri); }
-    .tut-card h4 { margin: 0 0 8px 0; color: var(--text); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;}
-    .tut-card p { margin: 0; font-size: 11px; color: var(--muted); line-height: 1.6; font-weight: 600; }
-    .tut-card:nth-child(2) { border-left-color: var(--pu); }
-    .tut-card:nth-child(3) { border-left-color: var(--cy); }
-    .tut-card:nth-child(4) { border-left-color: var(--gr); }
+    .site-footer{
+      text-align:center;padding:20px 0;margin-top:auto;color:var(--muted);font-size:11px;font-weight:700;
+      border-top:1px dashed var(--border);letter-spacing:1px;text-transform:uppercase;
+    }
 
+    .tutorial-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:12px;margin-top:12px}
+    .tut-card{background:rgba(15,23,36,.4);border:1px solid var(--border);padding:16px;border-radius:var(--r);border-left:3px solid var(--pri)}
+    .tut-card h4{margin:0 0 8px 0;color:var(--text);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.5px}
+    .tut-card p{margin:0;font-size:11px;color:var(--muted);line-height:1.6;font-weight:600}
+    .tut-card:nth-child(2){border-left-color:var(--pu)}
+    .tut-card:nth-child(3){border-left-color:var(--cy)}
+    .tut-card:nth-child(4){border-left-color:var(--gr)}
   </style>
 </head>
 
@@ -160,7 +175,7 @@
 
     <header class="topbar">
       <div class="brand">
-        <h1>RPL Dispatch <span>7.1</span></h1>
+        <h1>RPL Dispatch <span>7.3</span></h1>
         <div class="sub">Ops Dashboard Flight Simmer</div>
       </div>
 
@@ -190,17 +205,16 @@
           <h3>Status do Sistema</h3>
           <div class="row">
             <div class="card" style="flex:1">
-              <div style="font-size:10px;color:var(--muted);font-weight:900;text-transform:uppercase;letter-spacing:.8px">BANCO RPL</div>
+              <div style="font-size:10px;color:var(--muted);font-weight:900;text-transform:uppercase;letter-spacing:.8px">Banco RPL</div>
               <div class="mono" id="db-status" style="font-size:18px;margin-top:8px;color:var(--gr)">ONLINE</div>
             </div>
-            
+
             <div class="card" style="flex:3; display:flex; flex-direction:column; justify-content:center;">
-              <div style="font-size:10px;color:var(--muted);font-weight:900;text-transform:uppercase;letter-spacing:.8px; margin-bottom: 12px;">VOO SUGERIDO</div>
+              <div style="font-size:10px;color:var(--muted);font-weight:900;text-transform:uppercase;letter-spacing:.8px; margin-bottom:12px;">Voo Sugerido</div>
               <div id="suggested-flight-container">
-                 <div class="mono" style="font-size:13px; color:var(--cy);">Sincronizando...</div>
+                <div class="mono" style="font-size:13px; color:var(--cy);">Sincronizando...</div>
               </div>
             </div>
-
           </div>
         </div>
 
@@ -215,77 +229,76 @@
         </div>
       </div>
 
-      <div class="card" style="margin-top: 14px;">
+      <div class="card" style="margin-top:14px;">
         <h3>Guia Rápido do Sistema</h3>
         <div class="tutorial-grid">
-            <div class="tut-card">
-                <h4>🔎 Busca e Escalas</h4>
-                <p>Na aba <b>Voos</b>, busque rotas ou use o <strong>Gerador de Escala Auto</strong> para criar uma jornada (pernas) com 45m de turnaround realista no solo.</p>
-            </div>
-            <div class="tut-card">
-                <h4>🎲 Escala HUB</h4>
-                <p>Na nova aba <strong>Escala HUB</strong>, o painel sorteia uma de suas aeronaves estacionadas e constrói uma jornada. <b>Despache para o Simbrief e veja seu avião se mover!</b></p>
-            </div>
-            <div class="tut-card">
-                <h4>✈️ Meu HUB</h4>
-                <p>Gerencie sua frota. Ao despachar qualquer voo pelo SimBrief, a aeronave será estacionada automaticamente no HUB de destino.</p>
-            </div>
-            <div class="tut-card">
-                <h4>📖 Logbook Inteligente</h4>
-                <p>Acompanhe suas horas de voo totais. Exporte (<strong>Backup ⬇️</strong>) toda a sua progressão, HUB e escalas para o seu computador.</p>
-            </div>
+          <div class="tut-card">
+            <h4>🔎 Busca e Escalas</h4>
+            <p>Na aba <b>Voos</b>, busque rotas ou use o <strong>Gerador de Escala Auto</strong> para criar uma jornada com 45m de turnaround.</p>
+          </div>
+          <div class="tut-card">
+            <h4>🎲 Escala HUB</h4>
+            <p>Na aba <strong>Escala HUB</strong>, o sistema sorteia uma aeronave do HUB e monta uma jornada respeitando companhia, equipamento e posição atual.</p>
+          </div>
+          <div class="tut-card">
+            <h4>✈️ Meu HUB</h4>
+            <p>Gerencie sua frota. O HUB só é atualizado quando você clicar em <strong>Concluir</strong> o voo.</p>
+          </div>
+          <div class="tut-card">
+            <h4>📖 Logbook Inteligente</h4>
+            <p>Clicar em <strong>SimBrief</strong> agora envia o voo para a <strong>Escala</strong> como <strong>PROGRAMADO</strong> e abre a aba automaticamente.</p>
+          </div>
         </div>
       </div>
-
     </section>
 
     <section class="panel" id="tab-board" role="tabpanel">
-      
       <div class="grid2">
         <div class="card">
-            <h3>Filtros Avançados e Escalas</h3>
-            <div class="row">
-                <div>
-                    <label>Companhia Aérea</label>
-                    <div class="filter-wrapper">
-                        <button class="btn-filter active" onclick="setFilter('todas', this)">Todas</button>
-                        <button class="btn-filter" data-cia="LATAM" onclick="setFilter('LATAM', this)">Latam</button>
-                        <button class="btn-filter" data-cia="GOL" onclick="setFilter('GOL', this)">Gol</button>
-                        <button class="btn-filter" data-cia="AZUL" onclick="setFilter('AZUL', this)">Azul</button>
-                    </div>
-                </div>
-                <div>
-                    <label>Gerar Escala Auto</label>
-                    <div class="filter-wrapper">
-                        <button class="btn-filter" onclick="generateRealTimeChain(1)">1 Perna</button>
-                        <button class="btn-filter" onclick="generateRealTimeChain(2)">2 Pernas</button>
-                        <button class="btn-filter" onclick="generateRealTimeChain(3)">3 Pernas</button>
-                    </div>
-                </div>
+          <h3>Filtros Avançados e Escalas</h3>
+          <div class="row">
+            <div>
+              <label>Companhia Aérea</label>
+              <div class="filter-wrapper" id="cia-filter-group">
+                <button class="btn-filter active" data-cia="TODAS" onclick="setFilter('todas', this)">Todas</button>
+                <button class="btn-filter" data-cia="LATAM" onclick="setFilter('LATAM', this)">Latam</button>
+                <button class="btn-filter" data-cia="GOL" onclick="setFilter('GOL', this)">Gol</button>
+                <button class="btn-filter" data-cia="AZUL" onclick="setFilter('AZUL', this)">Azul</button>
+              </div>
             </div>
+
+            <div>
+              <label>Gerar Escala Auto</label>
+              <div class="filter-wrapper">
+                <button class="btn-filter" onclick="generateRealTimeChain(1)">1 Perna</button>
+                <button class="btn-filter" onclick="generateRealTimeChain(2)">2 Pernas</button>
+                <button class="btn-filter" onclick="generateRealTimeChain(3)">3 Pernas</button>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="card">
-            <h3>Busca de Rotas</h3>
-            <div class="row">
-                <div>
-                    <label>Origem (ICAO)</label>
-                    <input id="airport-search" placeholder="Ex: SBGR" style="width: 140px; min-width: auto;" onkeydown="if(event.key==='Enter') searchFlights()"/>
-                </div>
-                <div>
-                    <label>Destino (Opcional)</label>
-                    <input id="destination-search" placeholder="Ex: SBSP" style="width: 140px; min-width: auto;" onkeydown="if(event.key==='Enter') searchFlights()"/>
-                </div>
-                <div>
-                    <label>Nº VOO</label>
-                    <input id="search-input" placeholder="Ex: 1234" style="width: 120px; min-width: auto;" onkeydown="if(event.key==='Enter') manualSearch()"/>
-                </div>
+          <h3>Busca de Rotas</h3>
+          <div class="row">
+            <div>
+              <label>Origem (ICAO)</label>
+              <input id="airport-search" placeholder="Ex: SBGR" style="width:140px; min-width:auto;" onkeydown="if(event.key==='Enter') searchFlights()"/>
             </div>
-            <div class="row" style="margin-top: 15px;">
-                <button class="btn pu" onclick="searchFlights()">🔎 BUSCAR VOOS</button>
-                <button class="btn pri" onclick="manualSearch()">BUSCAR POR Nº VOO</button>
-                <button class="btn ghost" onclick="resetPanel()">🧹 Limpar</button>
+            <div>
+              <label>Destino (Opcional)</label>
+              <input id="destination-search" placeholder="Ex: SBSP" style="width:140px; min-width:auto;" onkeydown="if(event.key==='Enter') searchFlights()"/>
             </div>
+            <div>
+              <label>Nº VOO</label>
+              <input id="search-input" placeholder="Ex: 1234" style="width:120px; min-width:auto;" onkeydown="if(event.key==='Enter') manualSearch()"/>
+            </div>
+          </div>
+          <div class="row" style="margin-top:15px;">
+            <button class="btn pu" onclick="searchFlights()">🔎 Buscar Voos</button>
+            <button class="btn pri" onclick="manualSearch()">Buscar por Nº Voo</button>
+            <button class="btn ghost" onclick="resetPanel()">🧹 Limpar</button>
+          </div>
         </div>
       </div>
 
@@ -318,11 +331,17 @@
     <section class="panel" id="tab-roster" role="tabpanel">
       <div class="card">
         <h3>Minha Escala <span id="roster-badge" style="background:var(--cy); color:#000; padding:2px 8px; border-radius:10px; font-size:12px; margin-left:10px;">0</span></h3>
+
+        <div id="roster-notice" class="card" style="margin-bottom:12px; display:none; border-left:4px solid var(--gr);">
+          <div id="roster-notice-text" style="font-size:12px; font-weight:800; color:var(--text);"></div>
+        </div>
+
         <div class="tableWrap">
           <table>
             <thead>
               <tr>
                 <th style="text-align:center">Gerenciar</th>
+                <th>Status</th>
                 <th>Voo</th>
                 <th>Cia</th>
                 <th>Aeronave</th>
@@ -358,7 +377,7 @@
             <label>Local (ICAO)</label>
             <input id="hangar-loc" placeholder="Ex: SBSP" style="text-transform:uppercase"/>
           </div>
-          <button class="btn pri" onclick="addAircraftToHangar()" style="height: 38px;">➕ Adicionar Aeronave</button>
+          <button class="btn pri" onclick="addAircraftToHangar()" style="height:38px;">➕ Adicionar Aeronave</button>
         </div>
       </div>
 
@@ -384,17 +403,19 @@
     <section class="panel" id="tab-hangar-roster" role="tabpanel">
       <div class="card">
         <h3>Gerador de Escala Baseado no HUB</h3>
-        <p style="font-size: 11px; color: var(--muted); margin-top: 0; margin-bottom: 12px; font-weight: 600;">Sorteia uma aeronave estacionada no seu HUB e cria uma jornada de voos aleatória respeitando a Companhia Aérea, a Localização atual, o Equipamento e os tempos de solo (45 min).</p>
+        <p style="font-size:11px; color:var(--muted); margin-top:0; margin-bottom:12px; font-weight:600;">
+          Sorteia uma aeronave estacionada no seu HUB e cria uma jornada aleatória respeitando Companhia, Localização atual, Equipamento e 45 min de solo.
+        </p>
         <div class="row">
-           <button class="btn pri" onclick="generateHangarSchedule(1)">🎲 Gerar 1 Perna</button>
-           <button class="btn pri" onclick="generateHangarSchedule(2)">🎲 Gerar 2 Pernas</button>
-           <button class="btn pri" onclick="generateHangarSchedule(3)">🎲 Gerar 3 Pernas</button>
-           <button class="btn pu" id="btn-add-all-hangar" style="display:none;">➕ Adicionar Tudo à Escala Principal</button>
+          <button class="btn pri" onclick="generateHangarSchedule(1)">🎲 Gerar 1 Perna</button>
+          <button class="btn pri" onclick="generateHangarSchedule(2)">🎲 Gerar 2 Pernas</button>
+          <button class="btn pri" onclick="generateHangarSchedule(3)">🎲 Gerar 3 Pernas</button>
+          <button class="btn pu" id="btn-add-all-hangar" style="display:none;">➕ Adicionar Tudo à Escala Principal</button>
         </div>
       </div>
 
       <div class="card" style="margin-top:12px">
-        <h3>Jornada Sorteada <span id="hangar-acft-info" style="color:var(--cy); font-family:'JetBrains Mono'; margin-left:10px; font-size: 12px;"></span></h3>
+        <h3>Jornada Sorteada <span id="hangar-acft-info" style="color:var(--cy); font-family:'JetBrains Mono'; margin-left:10px; font-size:12px;"></span></h3>
         <div class="tableWrap">
           <table>
             <thead>
@@ -437,7 +458,7 @@
             <input type="file" id="backup-file-input" style="display:none" onchange="restoreLogbook(event)" />
             <button class="btn ghost" onclick="backupLogbook()">⬇️ Fazer Backup</button>
             <button class="btn ghost" onclick="document.getElementById('backup-file-input').click()">⬆️ Restaurar</button>
-            <button class="btn rd" onclick="clearLogbook()">🗑️ Limpar Tudo</button>
+            <button class="btn rd" onclick="clearAllData()">🗑️ Limpar Tudo</button>
           </div>
         </div>
 
@@ -447,12 +468,18 @@
             <table style="min-width:900px">
               <thead>
                 <tr>
-                  <th>Data</th><th>Voo</th><th>Origem</th><th>Destino</th><th>Tempo</th><th>Aeronave</th><th style="text-align:center">Ações</th>
+                  <th>Data</th>
+                  <th>Voo</th>
+                  <th>Origem</th>
+                  <th>Destino</th>
+                  <th>Tempo</th>
+                  <th>Aeronave</th>
+                  <th style="text-align:center">Ações</th>
                 </tr>
               </thead>
               <tbody id="logbook-body"></tbody>
             </table>
-            <div class="empty" id="logbook-empty">Nenhum registro ainda. Os voos despachados via Simbrief aparecerão aqui.</div>
+            <div class="empty" id="logbook-empty">Nenhum registro ainda. Os voos concluídos aparecerão aqui.</div>
           </div>
         </div>
       </div>
@@ -468,9 +495,10 @@
           </div>
           <div class="card" style="flex:1; background: var(--input);">
             <div style="font-size:11px;color:var(--muted);font-weight:800;line-height:1.6">
-              ✅ <b>Regra:</b> O sistema envia a Rota, Callsign, Equipamento e Nível de Voo (FL) extraídos puramente do RPL.<br/>
-              ✅ <b>Horários:</b> O SimBrief recebe os horários UTC do RPL processados automaticamente.<br/>
-              ✅ A base de dados funciona 100% offline após o primeiro carregamento dos .TXT.
+              ✅ <b>Regra:</b> o sistema envia Rota, Callsign, Equipamento e FL extraídos do RPL.<br/>
+              ✅ <b>Horários:</b> o SimBrief recebe os horários UTC do RPL processados automaticamente.<br/>
+              ✅ <b>Novo fluxo:</b> clicar em <b>SimBrief</b> adiciona automaticamente o voo à Escala com status <b>PROGRAMADO</b>.<br/>
+              ✅ <b>Dica:</b> para carregar os TXT com <code>fetch()</code>, abra o HTML por <b>localhost</b>.
             </div>
           </div>
         </div>
@@ -478,1101 +506,1424 @@
     </section>
 
     <div class="site-footer">
-        DADOS TABULADOS: DECEA
+      DADOS TABULADOS: DECEA
     </div>
-
   </div>
 
   <div id="flight-modal" class="modal-overlay">
-      <div class="modal-content">
-          <div class="modal-header">
-              <div class="modal-title">
-                  <span id="modal-cia-badge" class="cia-badge" style="font-size:14px;">CIA</span>
-                  <span id="modal-flight-num" style="margin-left:10px;">VOO 1234</span>
-              </div>
-              <button class="close-modal" aria-label="Fechar" onclick="closeModal()">×</button>
-          </div>
-          
-          <div id="modal-body">
-              <div class="detail-row"><span class="detail-label">Aeronave</span> <span class="detail-val" id="md-acft"></span></div>
-               <div class="detail-row"><span class="detail-label">Rota Completa</span> <span class="detail-val" id="md-route" style="font-size:12px;"></span></div>
-               <div class="detail-row"><span class="detail-label">Trecho</span> <span class="detail-val" id="md-deparr"></span></div>
-               <div class="detail-row"><span class="detail-label">Tempo Estimado</span> <span class="detail-val" id="md-eet"></span></div>
-               <div class="detail-row"><span class="detail-label">Nível (FL)</span> <span class="detail-val" id="md-fl"></span></div>
-               <div class="detail-row"><span class="detail-label">Dias de Operação</span> <span class="detail-val" id="md-days" style="color:var(--text);"></span></div>
-               <div class="detail-row" style="border-bottom:none;"><span class="detail-label">Observações</span> <span class="detail-val" id="md-obs" style="color:var(--muted); font-size:11px;"></span></div>
-          </div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span id="modal-cia-badge" class="cia-badge" style="font-size:14px;">CIA</span>
+          <span id="modal-flight-num" style="margin-left:10px;">VOO 1234</span>
+        </div>
+        <button class="close-modal" aria-label="Fechar" onclick="closeModal()">×</button>
       </div>
+
+      <div id="modal-body">
+        <div class="detail-row"><span class="detail-label">Aeronave</span> <span class="detail-val" id="md-acft"></span></div>
+        <div class="detail-row"><span class="detail-label">Rota Completa</span> <span class="detail-val" id="md-route" style="font-size:12px;"></span></div>
+        <div class="detail-row"><span class="detail-label">Trecho</span> <span class="detail-val" id="md-deparr"></span></div>
+        <div class="detail-row"><span class="detail-label">Tempo Estimado</span> <span class="detail-val" id="md-eet"></span></div>
+        <div class="detail-row"><span class="detail-label">Nível (FL)</span> <span class="detail-val" id="md-fl"></span></div>
+        <div class="detail-row"><span class="detail-label">Dias de Operação</span> <span class="detail-val" id="md-days" style="color:var(--text);"></span></div>
+        <div class="detail-row" style="border-bottom:none;"><span class="detail-label">Observações</span> <span class="detail-val" id="md-obs" style="color:var(--muted); font-size:11px;"></span></div>
+      </div>
+    </div>
   </div>
 
   <script>
-    // === NAVEGAÇÃO POR ABAS ===
-    const tabs = document.querySelectorAll('.tab');
-    const panels = document.querySelectorAll('.panel');
-
-    function switchTab(targetId) {
-        tabs.forEach(t => t.setAttribute('aria-selected', 'false'));
-        panels.forEach(p => p.classList.remove('active'));
-
-        const targetTab = document.querySelector(`.tab[data-tab="${targetId}"]`);
-        if(targetTab) targetTab.setAttribute('aria-selected', 'true');
-        
-        const targetPanel = document.getElementById(`tab-${targetId}`);
-        if(targetPanel) targetPanel.classList.add('active');
-
-        if(targetId === 'dashboard') updateDatabaseStatus(); 
-        if(targetId === 'hangar') renderHangar();
-        if(targetId === 'logbook') renderLogbook();
-        if(targetId === 'roster') renderRoster();
-    }
-
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            switchTab(tab.getAttribute('data-tab'));
-        });
-    });
-
-    // === LÓGICA DO SISTEMA ===
-    const USE_REAL_TIME_DATE = true; 
-    const SIMULATE_DATE_FIXED = "2026-02-07"; 
-    const TURNAROUND_MINUTES = 45; 
+    const BRT_TIMEZONE = 'America/Sao_Paulo';
+    const USE_REAL_TIME_DATE = true;
+    const SIMULATE_DATE_FIXED = "2026-02-07";
+    const TURNAROUND_MINUTES = 45;
 
     const airlineConfig = [
-        { id: 'LATAM', name: 'LATAM', file: 'Cia_TAM_CS.txt', color: '#1B0088' },
-        { id: 'GOL', name: 'GOL', file: 'Cia_GLO_CS.txt', color: '#FF5E00' },
-        { id: 'AZUL', name: 'AZUL', file: 'Cia_AZU_CS.txt', color: '#0055A4' }
+      { id: 'LATAM', name: 'LATAM', file: 'Cia_TAM_CS.txt', color: '#1B0088' },
+      { id: 'GOL', name: 'GOL', file: 'Cia_GLO_CS.txt', color: '#FF5E00' },
+      { id: 'AZUL', name: 'AZUL', file: 'Cia_AZU_CS.txt', color: '#0055A4' }
     ];
 
     let allFlightsDB = [];
     let currentFilter = 'todas';
     let displayedFlights = [];
-    let displayedHangarChain = []; 
+    let displayedHangarChain = [];
     let validityUpdated = false;
     let currentSuggestedFlight = null;
 
+    const tabs = document.querySelectorAll('.tab');
+    const panels = document.querySelectorAll('.panel');
+
+    function makeId() {
+      return (window.crypto && crypto.randomUUID)
+        ? crypto.randomUUID()
+        : `id_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
     function getSafeStorage(key) {
-        try {
-            const data = localStorage.getItem(key);
-            return data ? JSON.parse(data) : [];
-        } catch (e) { return []; }
+      try {
+        const data = localStorage.getItem(key);
+        return data ? JSON.parse(data) : [];
+      } catch (e) {
+        return [];
+      }
     }
 
-    document.addEventListener("DOMContentLoaded", () => {
-        const savedID = localStorage.getItem("simbrief_id");
-        if (savedID) document.getElementById("sb-id").value = savedID;
-        renderHangar();
-        renderLogbook();
-        renderRoster();
-        loadAllFiles(); 
-    });
-
-    function saveSBID() {
-        localStorage.setItem("simbrief_id", document.getElementById("sb-id").value);
+    function saveJSON(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
     }
 
-    // --- VOO SUGERIDO INTELIGENTE (ESTILO GOOGLE FLIGHTS) ---
-    function renderSuggestedFlight() {
-        const container = document.getElementById('suggested-flight-container');
-        if (allFlightsDB.length === 0) return;
-
-        let candidates = getUpcomingFlights(null, null, 'todas', 3);
-        candidates = candidates.filter(f => f.sortMins >= 30);
-
-        if (candidates.length === 0) {
-            container.innerHTML = `<div class="mono" style="font-size:13px; color:var(--or);">Sem voos nas próximas horas.</div>`;
-            return;
-        }
-
-        const seed = candidates[Math.floor(Math.random() * candidates.length)];
-        currentSuggestedFlight = enrichFlightData(seed);
-
-        const f = currentSuggestedFlight;
-        const acftType = f.type.split('/')[0];
-        
-        const h = Math.floor(f.durMin / 60);
-        const m = f.durMin % 60;
-        const durStr = (h > 0 ? `${h} h ` : '') + `${m} min`;
-        
-        container.innerHTML = `
-            <div style="display:flex; flex-direction:column; gap:12px; width: 100%;">
-                
-                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <span class="cia-badge" style="background-color: ${f.airline.color}; margin:0;">${f.airline.name}</span>
-                        <span class="col-flight" style="font-size:15px; margin:0;" onclick="openModalWithFlight(currentSuggestedFlight)">${f.ident}</span>
-                        <span style="border: 1px solid var(--gr); color: var(--gr); padding: 2px 6px; border-radius: 4px; font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; background: rgba(16, 185, 129, 0.05);">Programado</span>
-                    </div>
-                    <div style="font-size:10px; color:var(--cy); font-weight:800; text-transform:uppercase;">
-                        PARTIDA EM ${f.sortMins} MIN
-                    </div>
-                </div>
-
-                <div style="display:flex; align-items:center; justify-content: space-between; background: var(--input); padding: 16px 20px; border-radius: 12px; border: 1px solid var(--border);">
-                    <div style="text-align: left; min-width: 60px;">
-                        <div style="font-size: 32px; font-weight: 400; font-family: 'Inter', sans-serif; color: var(--text); line-height: 1;">${f.origin}</div>
-                    </div>
-                    
-                    <div style="flex: 1; margin: 0 15px; position: relative; display: flex; flex-direction: column; justify-content: center;">
-                        <div style="text-align: center; font-size: 14px; color: var(--text); font-weight: 400; margin-bottom: 6px; font-family: 'Inter', sans-serif;">${durStr}</div>
-                        <div style="display: flex; align-items: center; width: 100%;">
-                             <svg fill="var(--gr)" width="20" height="20" viewBox="0 0 24 24" style="transform: rotate(90deg); margin-right: 4px; flex-shrink:0;"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
-                             <div style="flex: 1; height: 1px; background-color: #475569;"></div>
-                        </div>
-                    </div>
-
-                    <div style="text-align: right; min-width: 60px;">
-                        <div style="font-size: 32px; font-weight: 400; font-family: 'Inter', sans-serif; color: var(--text); line-height: 1;">${f.dest}</div>
-                    </div>
-                </div>
-
-                <div style="display: flex; justify-content: space-between; margin-top: 4px; padding: 0 4px;">
-                    <div style="text-align: left;">
-                        <div style="font-size: 11px; color: var(--muted); font-weight: 600; margin-bottom: 4px;">Partida programada:</div>
-                        <div style="font-size: 18px; font-weight: 600; color: var(--gr); font-family: 'JetBrains Mono';">${f.depDisplay}</div>
-                    </div>
-                    <div style="text-align: right;">
-                        <div style="font-size: 11px; color: var(--muted); font-weight: 600; margin-bottom: 4px;">Chegada programada:</div>
-                        <div style="font-size: 18px; font-weight: 600; color: var(--gr); font-family: 'JetBrains Mono';">
-                            ${f.arrDisplay} ${f.isNextDay ? '<span style="font-size:12px; color:var(--or);">(+1)</span>' : ''}
-                        </div>
-                    </div>
-                </div>
-
-                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-top: 8px;">
-                     <div style="font-family:'JetBrains Mono'; font-size:11px; font-weight:700; color:var(--muted);">
-                        EQPT: <span style="color:var(--text);">${acftType}</span>
-                    </div>
-                    <div style="display:flex; gap:6px;">
-                        <button class="btn ghost small" onclick="renderSuggestedFlight()" title="Sugerir outro voo">🔄 Outro</button>
-                        <button class="btn pri small" onclick="scheduleSuggestedFlight()" title="Adicionar à Escala">➕ Escala</button>
-                        <button class="btn pu small" onclick="dispatchSuggestedFlight()">Simbrief ↗</button>
-                    </div>
-                </div>
-            </div>
-        `;
+    function timeStrToMinutes(str) {
+      return (parseInt(str.substring(0,2), 10) * 60) + parseInt(str.substring(2,4), 10);
     }
-
-    function dispatchSuggestedFlight() {
-        if(currentSuggestedFlight) openSimBriefWithData(currentSuggestedFlight);
-    }
-
-    function scheduleSuggestedFlight() {
-        if (!currentSuggestedFlight) return;
-        let roster = getSafeStorage('myPilotRoster');
-        roster.push({ id: Date.now(), flightData: currentSuggestedFlight });
-        roster.sort((a, b) => (a.flightData.sortMins || 0) - (b.flightData.sortMins || 0));
-        localStorage.setItem('myPilotRoster', JSON.stringify(roster));
-        renderRoster();
-        alert(`Voo ${currentSuggestedFlight.ident} adicionado à sua Escala!`);
-    }
-
-    // --- INTEGRAÇÃO SIMBRIEF (COM LÓGICA UNIVERSAL DE HUB CORRIGIDA) ---
-    function openSimBriefWithData(flight, moveAcftId = null) {
-        const sbID = document.getElementById("sb-id").value;
-        if (!sbID) {
-            alert("Preencha o ID do SimBrief na aba de Configurações.");
-            switchTab('settings');
-            document.getElementById("sb-id").focus();
-            return;
-        }
-
-        saveToLogbook(flight);
-
-        // LÓGICA DE HUB UNIVERSAL
-        let hangar = getSafeStorage('myPilotHangar');
-        
-        if (moveAcftId) {
-            let idx = hangar.findIndex(a => String(a.id) === String(moveAcftId));
-            if (idx !== -1) {
-                hangar[idx].loc = flight.dest;
-                localStorage.setItem('myPilotHangar', JSON.stringify(hangar));
-            } else {
-                console.warn("Aeronave não encontrada no HUB com o ID:", moveAcftId);
-            }
-        } else {
-            let cia = flight.airline ? flight.airline.name : flight.ident.replace(/[0-9]/g, '');
-            let acftType = flight.type ? flight.type.split('/')[0] : "DESCONHECIDO";
-            hangar.push({ id: Date.now(), cia: cia, type: acftType, loc: flight.dest });
-            localStorage.setItem('myPilotHangar', JSON.stringify(hangar));
-        }
-        renderHangar(); 
-
-        const airlineCode = flight.ident.match(/^[A-Z]+/)[0];
-        const fltNumber = flight.ident.match(/\d+/)[0];
-        let cleanType = flight.type.split('/')[0]; 
-        const routeEncoded = encodeURIComponent(flight.rota);
-
-        let hours = Math.floor(flight.depMinUTC / 60);
-        let minutes = flight.depMinUTC % 60;
-        if (hours >= 24) hours = hours % 24;
-
-        const dateObj = getSimulationDate(); 
-        if (flight.offsetDay) {
-            dateObj.setDate(dateObj.getDate() + flight.offsetDay);
-        }
-        
-        let depMinBRT = flight.depMinUTC - 180;
-        if (depMinBRT < 0) depMinBRT += 1440;
-        dateObj.setHours(Math.floor(depMinBRT / 60), depMinBRT % 60, 0, 0);
-
-        const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
-        const day = String(dateObj.getUTCDate()).padStart(2, '0');
-        const month = monthNames[dateObj.getUTCMonth()];
-        const year = String(dateObj.getUTCFullYear()).slice(-2); 
-        const sbDate = `${day}${month}${year}`;
-
-        const url = `https://www.simbrief.com/system/dispatch.php?userid=${sbID}&airline=${airlineCode}&fltnum=${fltNumber}&orig=${flight.origin}&dest=${flight.dest}&route=${routeEncoded}&type=${cleanType}&date=${sbDate}&deph=${hours}&depm=${minutes}&fl=${flight.fl}`;
-        window.open(url, '_blank');
-    }
-
-    function openSimBriefFromIndex(index) {
-        const flight = displayedFlights[index];
-        if (!flight) return;
-        openSimBriefWithData(flight);
-    }
-
-    // --- BUSCA E FILTROS ---
-    function resetPanel() {
-        document.getElementById('board-content').innerHTML = '';
-        document.getElementById('empty-msg').style.display = 'block';
-        document.getElementById('empty-msg').innerText = "Painel limpo. Selecione os filtros acima.";
-        document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
-        
-        document.getElementById('search-input').value = '';
-        document.getElementById('airport-search').value = '';
-        document.getElementById('destination-search').value = '';
-        
-        displayedFlights = [];
-    }
-
-    function setFilter(filterName, btnElement) {
-        document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
-        btnElement.classList.add('active');
-        currentFilter = filterName;
-    }
-
-    function getUpcomingFlights(orig, dest = null, ciaFilter = 'todas', maxHours = 48, typeFilter = null) {
-        const now = getSimulationDate();
-        const currentBRTMinutes = (now.getHours() * 60) + now.getMinutes();
-        const currentLocalDay = now.getDay();
-        const rplCurrentLocalDayIdx = currentLocalDay === 0 ? 6 : currentLocalDay - 1; 
-        
-        let results = [];
-        allFlightsDB.forEach(f => {
-            if (orig && f.origin !== orig) return;
-            if (dest && f.dest !== dest) return;
-            if (ciaFilter !== 'todas' && f.airline.name !== ciaFilter) return;
-            if (typeFilter && f.type.split('/')[0] !== typeFilter) return; // Nova trava do equipamento
-
-            let depMinBRT = f.depMinUTC - 180;
-            if (depMinBRT < 0) depMinBRT += 1440;
-
-            for (let offset = 0; offset <= 2; offset++) {
-                const checkLocalDayIdx = (rplCurrentLocalDayIdx + offset) % 7;
-                let utcDayIdx = checkLocalDayIdx;
-                if (f.depMinUTC < 180) { utcDayIdx = (checkLocalDayIdx + 1) % 7; }
-
-                if (f.daysOp.charAt(utcDayIdx) !== '0' && f.daysOp.charAt(utcDayIdx) !== ' ') {
-                    let minsFromNow = (offset * 1440) + depMinBRT - currentBRTMinutes;
-                    if (minsFromNow >= 0 && minsFromNow <= (maxHours * 60)) { 
-                        results.push({ ...f, offsetDay: offset, sortMins: minsFromNow });
-                    }
-                }
-            }
-        });
-        results.sort((a, b) => a.sortMins - b.sortMins);
-        return results;
-    }
-
-    function manualSearch() {
-        const rawInput = document.getElementById('search-input').value;
-        const input = rawInput ? rawInput.toUpperCase().replace(/\s+/g, '') : "";
-
-        if (input.length < 3) { alert("Digite pelo menos 3 caracteres."); return; }
-        if(allFlightsDB.length === 0) { alert("Aguarde o carregamento."); return; }
-
-        const now = getSimulationDate();
-        const currentBRTMinutes = (now.getHours() * 60) + now.getMinutes();
-        const currentLocalDay = now.getDay();
-        const rplCurrentLocalDayIdx = currentLocalDay === 0 ? 6 : currentLocalDay - 1;
-
-        let matches = [];
-        allFlightsDB.forEach(f => {
-            if (f.ident.includes(input)) {
-                let depMinBRT = f.depMinUTC - 180;
-                if (depMinBRT < 0) depMinBRT += 1440;
-
-                for (let offset = 0; offset <= 2; offset++) {
-                    const checkLocalDayIdx = (rplCurrentLocalDayIdx + offset) % 7;
-                    let utcDayIdx = checkLocalDayIdx;
-                    if (f.depMinUTC < 180) utcDayIdx = (checkLocalDayIdx + 1) % 7;
-
-                    if (f.daysOp.charAt(utcDayIdx) !== '0' && f.daysOp.charAt(utcDayIdx) !== ' ') {
-                        let minsFromNow = (offset * 1440) + depMinBRT - currentBRTMinutes;
-                        if(minsFromNow > -1440 && minsFromNow <= 2880) {
-                            matches.push({ ...f, offsetDay: offset, sortMins: minsFromNow });
-                        }
-                    }
-                }
-            }
-        });
-
-        if (matches.length === 0) { alert("Voo não encontrado."); return; }
-
-        matches.sort((a,b) => a.sortMins - b.sortMins);
-        displayedFlights = matches.map(f => enrichFlightData(f));
-        renderRows(displayedFlights);
-        document.getElementById('empty-msg').style.display = 'none';
-    }
-
-    function searchFlights() {
-        const rawOrig = document.getElementById('airport-search').value;
-        const orig = rawOrig ? rawOrig.toUpperCase().trim() : "";
-        const rawDest = document.getElementById('destination-search').value;
-        const dest = rawDest ? rawDest.toUpperCase().trim() : "";
-        
-        if (orig.length < 3) { alert("Preencha pelo menos 3 caracteres na Origem (Ex: SBGR)."); return; }
-        if(allFlightsDB.length === 0) { alert("Aguarde o carregamento da malha."); return; }
-
-        const matches = getUpcomingFlights(orig, dest.length >= 3 ? dest : null, currentFilter, 48);
-
-        if (matches.length === 0) {
-            if (dest.length >= 3) alert(`Nenhum voo direto encontrado de ${orig} para ${dest} nas próximas 48 horas.`);
-            else alert(`Nenhuma partida encontrada saindo de ${orig} nas próximas 48 horas.`);
-            return;
-        }
-
-        displayedFlights = matches.map(f => enrichFlightData(f));
-        renderRows(displayedFlights);
-        document.getElementById('empty-msg').style.display = 'none';
-    }
-
-    function generateRealTimeChain(chainLength) {
-        const orig = document.getElementById('airport-search').value.toUpperCase().trim();
-        
-        let candidates = getUpcomingFlights(orig.length >= 3 ? orig : null, null, currentFilter, 24);
-        if (candidates.length === 0) { alert("Sem voos disponíveis nas próximas horas."); return; }
-        
-        let seedCandidates = candidates.filter(f => f.sortMins >= 30 && f.sortMins <= 180);
-        if (seedCandidates.length === 0) seedCandidates = candidates;
-
-        const seed = seedCandidates[Math.floor(Math.random() * Math.min(15, seedCandidates.length))];
-        let chain = [enrichFlightData(seed)];
-
-        const targetType = seed.type.split('/')[0];
-
-        for (let i = 1; i < chainLength; i++) {
-            const prev = chain[i-1];
-            const prevArrMinsFromNow = prev.sortMins + prev.durMin;
-            const minNextDepMinsFromNow = prevArrMinsFromNow + TURNAROUND_MINUTES;
-            
-            // Usando a trava nativa do novo getUpcomingFlights
-            let nextLegs = getUpcomingFlights(prev.dest, null, prev.airline.name, 48, targetType);
-            nextLegs = nextLegs.filter(f => f.sortMins >= minNextDepMinsFromNow);
-            
-            if (nextLegs.length > 0) {
-                let validNext = nextLegs.filter(f => f.sortMins <= minNextDepMinsFromNow + 180);
-                if(validNext.length === 0) validNext = nextLegs;
-
-                const nextLeg = validNext[Math.floor(Math.random() * Math.min(5, validNext.length))];
-                chain.push(enrichFlightData(nextLeg));
-            }
-            else break;
-        }
-        
-        displayedFlights = chain;
-        renderRows(chain);
-        document.getElementById('empty-msg').style.display = 'none';
-    }
-
-    // --- GERADOR DE ESCALA DO HUB E FUNÇÕES DE DESPACHO ---
-    function generateHangarSchedule(chainLength) {
-        let hangar = getSafeStorage('myPilotHangar');
-        if (hangar.length === 0) {
-            alert("Seu HUB está vazio. Adicione e estacione aeronaves primeiro!");
-            return;
-        }
-
-        const randomAcft = hangar[Math.floor(Math.random() * hangar.length)];
-        const orig = randomAcft.loc;
-        const cia = randomAcft.cia;
-        const targetType = randomAcft.type; 
-
-        // Agora busca nativamente passando o targetType
-        let candidates = getUpcomingFlights(orig, null, cia, 24, targetType);
-        
-        if (candidates.length === 0) {
-            alert(`Sorteio: ${cia} em ${orig} (${targetType}). Sem voos disponíveis para este equipamento nas próximas 24h. Tente rodar o sorteio novamente.`);
-            return;
-        }
-
-        let seedCandidates = candidates.filter(f => f.sortMins >= 30 && f.sortMins <= 240);
-        if (seedCandidates.length === 0) seedCandidates = candidates;
-
-        const seed = seedCandidates[Math.floor(Math.random() * Math.min(10, seedCandidates.length))];
-        let chain = [enrichFlightData(seed)];
-
-        for (let i = 1; i < chainLength; i++) {
-            const prev = chain[i-1];
-            const prevArrMinsFromNow = prev.sortMins + prev.durMin;
-            const minNextDepMinsFromNow = prevArrMinsFromNow + TURNAROUND_MINUTES;
-
-            let nextLegs = getUpcomingFlights(prev.dest, null, prev.airline.name, 48, targetType);
-            nextLegs = nextLegs.filter(f => f.sortMins >= minNextDepMinsFromNow);
-
-            if (nextLegs.length > 0) {
-                let validNext = nextLegs.filter(f => f.sortMins <= minNextDepMinsFromNow + 180);
-                if(validNext.length === 0) validNext = nextLegs;
-
-                const nextLeg = validNext[Math.floor(Math.random() * Math.min(5, validNext.length))];
-                chain.push(enrichFlightData(nextLeg));
-            } else {
-                break;
-            }
-        }
-
-        displayedHangarChain = chain;
-        renderHangarRosterTable(chain, randomAcft);
-    }
-
-    function renderHangarRosterTable(chain, acft) {
-        const tbody = document.getElementById('hangar-roster-body');
-        const emptyMsg = document.getElementById('hangar-roster-empty');
-        const infoSpan = document.getElementById('hangar-acft-info');
-        const btnAddAll = document.getElementById('btn-add-all-hangar');
-
-        tbody.innerHTML = '';
-        if (chain.length === 0) {
-            emptyMsg.style.display = 'block';
-            infoSpan.innerText = '';
-            btnAddAll.style.display = 'none';
-            return;
-        }
-
-        emptyMsg.style.display = 'none';
-        infoSpan.innerText = `[Aeronave Sorteada: ${acft.cia} | ${acft.type} | Sai de: ${acft.loc}]`;
-        btnAddAll.style.display = 'inline-flex';
-        btnAddAll.onclick = () => scheduleEntireHangarChain(String(acft.id));
-
-        chain.forEach((f, index) => {
-            const tr = document.createElement('tr');
-            
-            const sbButton = `<button class="btn pu small" title="Abrir no SimBrief e Mover Aeronave" onclick="dispatchHangarFlight(${index}, '${acft.id}')">Simbrief ↗</button>`;
-            const scheduleButton = `<button class="btn pri small" title="Agendar na escala" onclick="scheduleHangarFlight(${index}, '${acft.id}')">➕ Escala</button>`;
-            
-            const arrHtml = f.isNextDay ? `<span style="color:var(--or); font-size:9px; display:block; margin-top:2px;">(+1)</span>` : ``;
-            const depCell = `<div class="time-pill">${f.depPrefix || ''}<div class="tp-utc">${f.depDisplayUTC}z</div><div class="tp-local">${f.depDisplay}</div></div>`;
-            const arrCell = `<div class="time-pill arr"><div class="tp-utc">${f.arrDisplayUTC}z</div><div class="tp-local">${f.arrDisplay}</div>${arrHtml}</div>`;
-            const acftType = f.type.split('/')[0];
-
-            tr.innerHTML = `
-                <td><div style="display:flex; gap:5px; justify-content:center;">${sbButton}${scheduleButton}</div></td>
-                <td class="col-flight" onclick="openModalWithFlight(displayedHangarChain[${index}])">${f.ident}</td>
-                <td><span class="cia-badge" style="background-color: ${f.airline.color}">${f.airline.name}</span></td>
-                <td style="font-weight:800; font-family:'JetBrains Mono';">${acftType}</td>
-                <td style="font-size: 11px; color: var(--muted); max-width: 120px;">${formatDaysLocal(f.daysOp, f.depMinUTC)}</td>
-                <td style="font-weight:800; font-family:'JetBrains Mono'; font-size: 15px;">${f.origin}</td>
-                <td style="text-align:center;">${depCell}</td>
-                <td style="font-weight:800; font-family:'JetBrains Mono'; font-size: 15px;">${f.dest}</td>
-                <td style="text-align:center;">${arrCell}</td>
-                <td class="col-fl">${f.fl}</td>
-                <td style="font-family:'JetBrains Mono'; font-size: 11px; color: var(--muted); max-width:250px;">${f.rota}</td>
-            `;
-            tbody.appendChild(tr);
-        });
-    }
-
-    function dispatchHangarFlight(index, acftId) {
-        const flight = displayedHangarChain[index];
-        if (!flight) return;
-        
-        openSimBriefWithData(flight, acftId);
-        
-        alert(`🛫 Aeronave despachada e movida para ${flight.dest} no seu HUB!`);
-    }
-
-    function scheduleHangarFlight(index, acftId) {
-        const flight = displayedHangarChain[index];
-        if (!flight) return;
-        let roster = getSafeStorage('myPilotRoster');
-        roster.push({ id: Date.now() + Math.random(), flightData: flight, hubAcftId: String(acftId) });
-        roster.sort((a, b) => (a.flightData.sortMins || 0) - (b.flightData.sortMins || 0));
-        localStorage.setItem('myPilotRoster', JSON.stringify(roster));
-        renderRoster();
-        alert(`Voo ${flight.ident} adicionado à Escala Principal! O dispatch via Roster vai atualizar o seu HUB.`);
-    }
-
-    function scheduleEntireHangarChain(acftId) {
-        if(displayedHangarChain.length === 0) return;
-        let roster = getSafeStorage('myPilotRoster');
-        displayedHangarChain.forEach(f => {
-            roster.push({ id: Date.now() + Math.random(), flightData: f, hubAcftId: String(acftId) });
-        });
-        roster.sort((a, b) => (a.flightData.sortMins || 0) - (b.flightData.sortMins || 0));
-        localStorage.setItem('myPilotRoster', JSON.stringify(roster));
-        renderRoster();
-        alert(`Jornada completa (${displayedHangarChain.length} voos) adicionada à Escala Principal!`);
-    }
-
-
-    // --- FUNÇÕES DE SUPORTE (RESTANTE) ---
-    function enrichFlightData(flight) {
-        const toBRT = (utc) => { let b = utc - 180; if(b<0) b+=1440; if(b>=1440) b-=1440; return b; };
-        const depMinBRT = toBRT(flight.depMinUTC);
-        const arrMinBRT = toBRT(flight.arrMinUTC);
-        let arrUtc = flight.arrMinUTC >= 1440 ? flight.arrMinUTC - 1440 : flight.arrMinUTC;
-        let nextDay = arrMinBRT < depMinBRT;
-        
-        let depPrefix = "";
-        if (flight.offsetDay === 1) depPrefix = `<span style="color:var(--or); font-size:9px; display:block; margin-bottom:2px; font-weight:800; letter-spacing:1px;">AMANHÃ</span>`;
-        else if (flight.offsetDay > 1) depPrefix = `<span style="color:var(--or); font-size:9px; display:block; margin-bottom:2px; font-weight:800; letter-spacing:1px;">+${flight.offsetDay} DIAS</span>`;
-
-        return {
-            ...flight,
-            depDisplay: minutesToTimeStr(depMinBRT),
-            arrDisplay: minutesToTimeStr(arrMinBRT),
-            depDisplayUTC: minutesToTimeStr(flight.depMinUTC),
-            arrDisplayUTC: minutesToTimeStr(arrUtc),
-            isNextDay: nextDay,
-            depPrefix: depPrefix
-        };
-    }
-
-    function timeStrToMinutes(str) { return (parseInt(str.substring(0,2))*60) + parseInt(str.substring(2,4)); }
 
     function minutesToTimeStr(min) {
-        let h = Math.floor(min/60)%24; let m = Math.floor(min%60);
-        return String(h).padStart(2,'0') + ":" + String(m).padStart(2,'0');
+      let h = Math.floor(min / 60) % 24;
+      let m = Math.floor(min % 60);
+      return String(h).padStart(2, '0') + ":" + String(m).padStart(2, '0');
+    }
+
+    function getCurrentBRTParts() {
+      const parts = new Intl.DateTimeFormat('en-US', {
+        timeZone: BRT_TIMEZONE,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        weekday: 'short',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+      }).formatToParts(new Date());
+
+      const map = {};
+      parts.forEach(p => {
+        if (p.type !== 'literal') map[p.type] = p.value;
+      });
+
+      const weekdayMap = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+
+      return {
+        year: Number(map.year),
+        month: Number(map.month),
+        day: Number(map.day),
+        hour: Number(map.hour),
+        minute: Number(map.minute),
+        second: Number(map.second),
+        weekday: weekdayMap[map.weekday] ?? 0
+      };
+    }
+
+    function getSimulationDate() {
+      const brt = getCurrentBRTParts();
+
+      if (USE_REAL_TIME_DATE) {
+        return new Date(brt.year, brt.month - 1, brt.day, brt.hour, brt.minute, brt.second);
+      }
+
+      const [y, m, d] = SIMULATE_DATE_FIXED.split('-').map(Number);
+      return new Date(y, m - 1, d, brt.hour, brt.minute, brt.second);
     }
 
     function formatDaysLocal(daysStr, depMinUTC) {
-        if (!daysStr) return "N/A";
-        const labels = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
-        let localDaysActive = [false, false, false, false, false, false, false];
-        let shift = depMinUTC < 180 ? -1 : 0;
-        for (let i = 0; i < daysStr.length; i++) {
-            if (daysStr[i] !== ' ' && daysStr[i] !== '0') {
-                let localDayIdx = (i + shift + 7) % 7;
-                localDaysActive[localDayIdx] = true;
-            }
+      if (!daysStr) return "N/A";
+
+      const labels = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+      let localDaysActive = [false, false, false, false, false, false, false];
+      let shift = depMinUTC < 180 ? -1 : 0;
+
+      for (let i = 0; i < daysStr.length; i++) {
+        if (daysStr[i] !== ' ' && daysStr[i] !== '0') {
+          let localDayIdx = (i + shift + 7) % 7;
+          localDaysActive[localDayIdx] = true;
         }
-        let active = [];
-        for (let i = 0; i < 7; i++) { if (localDaysActive[i]) active.push(labels[i]); }
-        return active.length > 0 ? active.join(', ') : "Não especificado";
+      }
+
+      let active = [];
+      for (let i = 0; i < 7; i++) {
+        if (localDaysActive[i]) active.push(labels[i]);
+      }
+
+      return active.length > 0 ? active.join(', ') : "Não especificado";
     }
 
-    function scheduleFlight(index) {
-        const flight = displayedFlights[index];
-        if (!flight) return;
-        let roster = getSafeStorage('myPilotRoster');
-        roster.push({ id: Date.now(), flightData: flight });
-        roster.sort((a, b) => (a.flightData.sortMins || 0) - (b.flightData.sortMins || 0));
-        localStorage.setItem('myPilotRoster', JSON.stringify(roster));
-        renderRoster();
+    function getAirlineCodeFromCallsign(callsign) {
+      if (!callsign) return "DESCONHECIDA";
+      if (callsign.startsWith("TAM") || callsign.startsWith("LTG")) return "LATAM";
+      if (callsign.startsWith("GLO")) return "GOL";
+      if (callsign.startsWith("AZU")) return "AZUL";
+      const match = callsign.match(/^[A-Z]+/);
+      return match ? match[0] : "DESCONHECIDA";
     }
 
-    function renderRows(flights) {
-        const tbody = document.getElementById('board-content');
-        tbody.innerHTML = '';
-        flights.forEach((f, index) => {
-            const tr = document.createElement('tr');
-            
-            const sbButton = `<button class="btn pu small" title="Abrir no SimBrief" onclick="openSimBriefFromIndex(${index})">Simbrief ↗</button>`;
-            const scheduleButton = `<button class="btn pri small" title="Agendar na escala" onclick="scheduleFlight(${index})">➕</button>`;
-            
-            const arrHtml = f.isNextDay ? `<span style="color:var(--or); font-size:9px; display:block; margin-top:2px;">(+1)</span>` : ``;
-            const depCell = `<div class="time-pill">${f.depPrefix || ''}<div class="tp-utc">${f.depDisplayUTC}z</div><div class="tp-local">${f.depDisplay}</div></div>`;
-            const arrCell = `<div class="time-pill arr"><div class="tp-utc">${f.arrDisplayUTC}z</div><div class="tp-local">${f.arrDisplay}</div>${arrHtml}</div>`;
-            const acftType = f.type.split('/')[0];
+    function getAirlineBadgeColor(cia) {
+      if (cia === 'LATAM') return '#1B0088';
+      if (cia === 'GOL') return '#FF5E00';
+      if (cia === 'AZUL') return '#0055A4';
+      return '#475569';
+    }
 
-            tr.innerHTML = `
-                <td><div style="display:flex; gap:5px; justify-content:center;">${sbButton}${scheduleButton}</div></td>
-                <td class="col-flight" onclick="showFlightDetails(${index})">${f.ident}</td>
-                <td><span class="cia-badge" style="background-color: ${f.airline.color}">${f.airline.name}</span></td>
-                <td style="font-weight:800; font-family:'JetBrains Mono';">${acftType}</td>
-                <td style="font-size: 11px; color: var(--muted); max-width: 120px;">${formatDaysLocal(f.daysOp, f.depMinUTC)}</td>
-                <td style="font-weight:800; font-family:'JetBrains Mono'; font-size: 15px;">${f.origin}</td>
-                <td style="text-align:center;">${depCell}</td>
-                <td style="font-weight:800; font-family:'JetBrains Mono'; font-size: 15px;">${f.dest}</td>
-                <td style="text-align:center;">${arrCell}</td>
-                <td class="col-fl">${f.fl}</td>
-                <td style="font-family:'JetBrains Mono'; font-size: 11px; color: var(--muted); max-width:250px;">${f.rota}</td>
-            `;
-            tbody.appendChild(tr);
+    function getFlightSignature(flight, hubAcftId = null) {
+      return [
+        flight.ident,
+        flight.origin,
+        flight.dest,
+        flight.depMinUTC,
+        flight.arrMinUTC,
+        flight.offsetDay || 0,
+        hubAcftId || ''
+      ].join('|');
+    }
+
+    function showRosterNotice(message) {
+      const box = document.getElementById('roster-notice');
+      const text = document.getElementById('roster-notice-text');
+      if (!box || !text) return;
+      text.textContent = message;
+      box.style.display = 'block';
+    }
+
+    function addFlightToRoster(flight, { status = 'na_escala', hubAcftId = null, source = 'manual' } = {}) {
+      let roster = getSafeStorage('myPilotRoster');
+      const signature = getFlightSignature(flight, hubAcftId);
+
+      const existingIndex = roster.findIndex(e => e.signature === signature);
+
+      if (existingIndex !== -1) {
+        const currentStatus = roster[existingIndex].status || 'na_escala';
+        roster[existingIndex].status = (currentStatus === 'programado' || status === 'programado')
+          ? 'programado'
+          : 'na_escala';
+        roster[existingIndex].updatedAt = Date.now();
+      } else {
+        roster.push({
+          id: makeId(),
+          signature,
+          status,
+          source,
+          createdAt: Date.now(),
+          flightData: flight,
+          hubAcftId
         });
+      }
+
+      roster.sort((a, b) => (a.flightData.sortMins || 0) - (b.flightData.sortMins || 0));
+      saveJSON('myPilotRoster', roster);
+      renderRoster();
+
+      return roster.find(e => e.signature === signature);
     }
 
-    function renderRoster() {
-        const roster = getSafeStorage('myPilotRoster');
-        const tbody = document.getElementById('roster-body');
-        const emptyMsg = document.getElementById('roster-empty');
-        
-        document.getElementById('roster-badge').innerText = roster.length;
+    function switchTab(targetId) {
+      tabs.forEach(t => t.setAttribute('aria-selected', 'false'));
+      panels.forEach(p => p.classList.remove('active'));
 
-        tbody.innerHTML = '';
-        if (roster.length === 0) { emptyMsg.style.display = 'block'; return; }
-        else { emptyMsg.style.display = 'none'; }
+      const targetTab = document.querySelector(`.tab[data-tab="${targetId}"]`);
+      if (targetTab) targetTab.setAttribute('aria-selected', 'true');
 
-        roster.forEach(entry => {
-            const f = entry.flightData;
-            const tr = document.createElement('tr');
-            
-            const sbButton = `<button class="btn pu small" title="Abrir no SimBrief" onclick="dispatchRosterFlight(${entry.id})">Simbrief ↗</button>`;
-            const removeButton = `<button class="btn rd small" title="Remover da Escala" onclick="deleteRosterEntry(${entry.id})">✕</button>`;
+      const targetPanel = document.getElementById(`tab-${targetId}`);
+      if (targetPanel) targetPanel.classList.add('active');
 
-            const arrHtml = f.isNextDay ? `<span style="color:var(--or); font-size:9px; display:block; margin-top:2px;">(+1)</span>` : ``;
-            const depCell = `<div class="time-pill">${f.depPrefix || ''}<div class="tp-utc">${f.depDisplayUTC}z</div><div class="tp-local">${f.depDisplay}</div></div>`;
-            const arrCell = `<div class="time-pill arr"><div class="tp-utc">${f.arrDisplayUTC}z</div><div class="tp-local">${f.arrDisplay}</div>${arrHtml}</div>`;
-            const acftType = f.type.split('/')[0];
-
-            tr.innerHTML = `
-                <td><div style="display:flex; gap:5px; justify-content:center;">${sbButton}${removeButton}</div></td>
-                <td class="col-flight" onclick="showRosterFlightDetails(${entry.id})">${f.ident}</td>
-                <td><span class="cia-badge" style="background-color: ${f.airline.color}">${f.airline.name}</span></td>
-                <td style="font-weight:800; font-family:'JetBrains Mono';">${acftType}</td>
-                <td style="font-size: 11px; color: var(--muted); max-width: 120px;">${formatDaysLocal(f.daysOp, f.depMinUTC)}</td>
-                <td style="font-weight:800; font-family:'JetBrains Mono'; font-size: 15px;">${f.origin}</td>
-                <td style="text-align:center;">${depCell}</td>
-                <td style="font-weight:800; font-family:'JetBrains Mono'; font-size: 15px;">${f.dest}</td>
-                <td style="text-align:center;">${arrCell}</td>
-                <td class="col-fl">${f.fl}</td>
-                <td style="font-family:'JetBrains Mono'; font-size: 11px; color: var(--muted); max-width:250px;">${f.rota}</td>
-            `;
-            tbody.appendChild(tr);
-        });
+      if (targetId === 'dashboard') updateDatabaseStatus();
+      if (targetId === 'hangar') renderHangar();
+      if (targetId === 'logbook') renderLogbook();
+      if (targetId === 'roster') renderRoster();
     }
 
-    function dispatchRosterFlight(id) {
-        const roster = getSafeStorage('myPilotRoster');
-        const entry = roster.find(e => e.id === id);
-        if (entry) {
-            openSimBriefWithData(entry.flightData, entry.hubAcftId); 
-            if(entry.hubAcftId) {
-                alert(`🛫 Aeronave despachada e movida para ${entry.flightData.dest} no HUB!`);
-            }
-        }
-    }
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        switchTab(tab.getAttribute('data-tab'));
+      });
+    });
 
-    function deleteRosterEntry(id) {
-        if(!confirm("Remover da escala?")) return;
-        let roster = getSafeStorage('myPilotRoster');
-        roster = roster.filter(e => e.id !== id);
-        localStorage.setItem('myPilotRoster', JSON.stringify(roster));
-        renderRoster();
-    }
+    document.addEventListener("DOMContentLoaded", () => {
+      const savedID = localStorage.getItem("simbrief_id");
+      if (savedID) document.getElementById("sb-id").value = savedID;
 
-    // --- LOGICA DO HUB ---
-    function renderHangar() {
-        const hangar = getSafeStorage('myPilotHangar');
-        const tbody = document.getElementById('hangar-body');
-        const emptyMsg = document.getElementById('hangar-empty');
-        
-        tbody.innerHTML = '';
-        if (hangar.length === 0) { emptyMsg.style.display = 'block'; return; }
-        else { emptyMsg.style.display = 'none'; }
+      renderHangar();
+      renderLogbook();
+      renderRoster();
+      loadAllFiles();
+      updateClock();
+      setInterval(updateClock, 1000);
+    });
 
-        hangar.forEach(acft => {
-            const displayCia = acft.cia || acft.reg || 'N/A';
-            const badgeColor = displayCia === 'LATAM' ? '#1B0088' : (displayCia === 'GOL' ? '#FF5E00' : (displayCia === 'AZUL' ? '#0055A4' : 'var(--border)'));
-
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td><span class="cia-badge" style="background-color: ${badgeColor}; padding: 6px 12px; font-size: 11px;">${displayCia}</span></td>
-                <td style="font-weight:800; font-size: 15px; font-family: 'JetBrains Mono';">${acft.type}</td>
-                <td style="font-weight:800; font-size: 15px; font-family: 'JetBrains Mono'; color:var(--cy);">${acft.loc}</td>
-                <td>
-                    <div style="display:flex; gap:5px; justify-content:center;">
-                        <button class="btn pri small" title="Procurar voos saindo daqui" onclick="flyFromHangar('${acft.loc}', '${displayCia}', '${acft.type}')">🛫 VOAR DAQUI</button>
-                        <button class="btn rd small" title="Remover do HUB" onclick="removeAircraftFromHangar(${acft.id})">🗑️</button>
-                    </div>
-                </td>
-            `;
-            tbody.appendChild(tr);
-        });
-    }
-
-    function addAircraftToHangar() {
-        const cia = document.getElementById('hangar-cia').value.toUpperCase().trim();
-        const type = document.getElementById('hangar-type').value.toUpperCase().trim();
-        const loc = document.getElementById('hangar-loc').value.toUpperCase().trim();
-
-        if(!cia || !type || !loc) { alert("Preencha Cia, Tipo e Localização (ICAO)."); return; }
-        if(loc.length !== 4) { alert("O ICAO deve ter exatamente 4 letras (Ex: SBGR)."); return; }
-
-        let hangar = getSafeStorage('myPilotHangar');
-        hangar.push({ id: Date.now(), cia, type, loc });
-        localStorage.setItem('myPilotHangar', JSON.stringify(hangar));
-        
-        document.getElementById('hangar-cia').value = '';
-        document.getElementById('hangar-type').value = '';
-        document.getElementById('hangar-loc').value = '';
-        
-        renderHangar();
-    }
-
-    function removeAircraftFromHangar(id) {
-        if(!confirm("Tem certeza que deseja remover esta aeronave do HUB?")) return;
-        let hangar = getSafeStorage('myPilotHangar');
-        hangar = hangar.filter(a => a.id !== id);
-        localStorage.setItem('myPilotHangar', JSON.stringify(hangar));
-        renderHangar();
-    }
-
-    // MODIFICADO: Função VOAR DAQUI agora força a pesquisa customizada apenas do modelo exato do HUB
-    function flyFromHangar(loc, cia, type) {
-        document.getElementById('airport-search').value = loc;
-        document.getElementById('destination-search').value = '';
-        
-        const btn = document.querySelector(`.btn-filter[data-cia="${cia}"]`);
-        if (btn) setFilter(cia, btn);
-        else {
-            const allBtn = document.querySelector('.btn-filter');
-            setFilter('todas', allBtn);
-        }
-
-        if(allFlightsDB.length === 0) { alert("Aguarde o carregamento da malha."); return; }
-
-        const matches = getUpcomingFlights(loc, null, cia, 48, type);
-
-        // Se não encontrar voos, avisa e interrompe a função (continuando na aba atual do HUB)
-        if (matches.length === 0) {
-            alert(`Nenhuma partida encontrada saindo de ${loc} com o equipamento ${type} nas próximas 48 horas.`);
-            return;
-        }
-
-        // Se chegou aqui, é porque encontrou voos. Então mudamos para a aba 'Voos' e mostramos os resultados.
-        switchTab('board');
-        
-        displayedFlights = matches.map(f => enrichFlightData(f));
-        renderRows(displayedFlights);
-        document.getElementById('empty-msg').style.display = 'none';
-    }
-
-    function parkFromLogbook(callsign, type, arrLoc) {
-        let cia = "";
-        if(callsign.startsWith("TAM") || callsign.startsWith("LTG")) cia = "LATAM";
-        else if(callsign.startsWith("GLO")) cia = "GOL";
-        else if(callsign.startsWith("AZU")) cia = "AZUL";
-        else {
-            const match = callsign.match(/^[A-Z]+/);
-            cia = match ? match[0] : "DESCONHECIDA";
-        }
-
-        let hangar = getSafeStorage('myPilotHangar');
-        hangar.push({ id: Date.now(), cia: cia, type: type.toUpperCase(), loc: arrLoc.toUpperCase() });
-        localStorage.setItem('myPilotHangar', JSON.stringify(hangar));
-        
-        alert(`✈️ Aeronave da ${cia} (${type}) estacionada com sucesso em ${arrLoc}!`);
-        renderHangar();
-    }
-
-    // --- LOGICA DO LOGBOOK ---
-    function saveToLogbook(flight) {
-        let logbook = getSafeStorage('myPilotLogbook');
-        const now = new Date();
-        const dateStr = now.toLocaleDateString('pt-BR');
-        
-        const durHours = Math.floor(flight.durMin / 60);
-        const durMins = flight.durMin % 60;
-        const durStr = String(durHours).padStart(2,'0') + ":" + String(durMins).padStart(2,'0');
-
-        logbook.unshift({
-            id: Date.now(),
-            date: dateStr,
-            callsign: flight.ident,
-            dep: flight.origin,
-            arr: flight.dest,
-            time: durStr,
-            acft: flight.type.split('/')[0]
-        });
-        localStorage.setItem('myPilotLogbook', JSON.stringify(logbook));
-        renderLogbook();
-    }
-
-    function renderLogbook() {
-        const logbook = getSafeStorage('myPilotLogbook');
-        const tbody = document.getElementById('logbook-body');
-        const emptyMsg = document.getElementById('logbook-empty');
-        
-        let totalMinutes = 0;
-        logbook.forEach(e => {
-            const parts = e.time.split(':');
-            totalMinutes += (parseInt(parts[0]) * 60) + parseInt(parts[1]);
-        });
-        const totalH = Math.floor(totalMinutes / 60);
-        const totalM = totalMinutes % 60;
-        
-        document.getElementById('stats-count').innerText = logbook.length;
-        document.getElementById('stats-hours').innerText = `${String(totalH).padStart(2,'0')}h ${String(totalM).padStart(2,'0')}m`;
-
-        tbody.innerHTML = '';
-        if (logbook.length === 0) { emptyMsg.style.display = 'block'; return; }
-        else { emptyMsg.style.display = 'none'; }
-
-        logbook.forEach(entry => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td style="color:var(--muted);">${entry.date}</td>
-                <td style="font-weight:800; color:var(--cy); font-family:'JetBrains Mono';">${entry.callsign}</td>
-                <td style="font-family:'JetBrains Mono'; font-weight:700;">${entry.dep}</td>
-                <td style="font-family:'JetBrains Mono'; font-weight:700;">${entry.arr}</td>
-                <td style="color:var(--gr); font-weight:700;">${entry.time}</td>
-                <td style="font-weight:700;">${entry.acft}</td>
-                <td>
-                    <div style="display:flex; gap:5px; justify-content:center;">
-                        <button class="btn ghost small" title="Estacionar aeronave no HUB" onclick="parkFromLogbook('${entry.callsign}', '${entry.acft}', '${entry.arr}')">🅿️ HUB</button>
-                        <button class="btn rd small" title="Apagar Registro" onclick="deleteLogbookEntry(${entry.id})">🗑️</button>
-                    </div>
-                </td>
-            `;
-            tbody.appendChild(tr);
-        });
-    }
-
-    function deleteLogbookEntry(id) {
-        if(!confirm("Excluir registro?")) return;
-        let logbook = getSafeStorage('myPilotLogbook');
-        logbook = logbook.filter(entry => entry.id !== id);
-        localStorage.setItem('myPilotLogbook', JSON.stringify(logbook));
-        renderLogbook();
-    }
-
-    function clearLogbook() {
-        if(confirm("Apagar todo o histórico?")) {
-            localStorage.removeItem('myPilotLogbook');
-            renderLogbook();
-        }
-    }
-
-    function backupLogbook() {
-        const dataStr = JSON.stringify({
-            version: "7.1",
-            date: new Date().toISOString(),
-            simbrief_id: localStorage.getItem('simbrief_id') || "",
-            logbook: getSafeStorage('myPilotLogbook'),
-            roster: getSafeStorage('myPilotRoster'),
-            hangar: getSafeStorage('myPilotHangar')
-        }, null, 2);
-        
-        const blob = new Blob([dataStr], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `backup_rpl_v7_${new Date().toISOString().split('T')[0]}.json`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-    }
-
-    function restoreLogbook(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            try {
-                const data = JSON.parse(e.target.result);
-                if (data.logbook) {
-                    if(confirm("Restaurar backup?")) {
-                        localStorage.setItem('myPilotLogbook', JSON.stringify(data.logbook));
-                        if (data.roster) localStorage.setItem('myPilotRoster', JSON.stringify(data.roster));
-                        if (data.hangar) localStorage.setItem('myPilotHangar', JSON.stringify(data.hangar));
-                        if (data.simbrief_id) {
-                            localStorage.setItem('simbrief_id', data.simbrief_id);
-                            document.getElementById('sb-id').value = data.simbrief_id;
-                        }
-                        renderLogbook();
-                        renderRoster();
-                        renderHangar();
-                        alert("Restaurado com sucesso!");
-                    }
-                }
-            } catch (err) { alert("Erro ao ler o arquivo de backup."); }
-            event.target.value = '';
-        };
-        reader.readAsText(file);
-    }
-
-    // --- MODAL ---
-    function openModalWithFlight(f) {
-        document.getElementById('modal-cia-badge').innerText = f.airline.name;
-        document.getElementById('modal-cia-badge').style.backgroundColor = f.airline.color;
-        document.getElementById('modal-flight-num').innerText = f.ident;
-        document.getElementById('md-acft').innerText = f.type;
-        document.getElementById('md-route').textContent = f.rota; 
-        document.getElementById('md-deparr').innerText = `${f.origin} -> ${f.dest}`;
-        document.getElementById('md-eet').innerText = minutesToTimeStr(f.durMin).replace(':', 'h ') + 'm';
-        document.getElementById('md-fl').innerText = f.fl;
-        document.getElementById('md-days').innerText = formatDaysLocal(f.daysOp, f.depMinUTC);
-        document.getElementById('md-obs').textContent = f.obs;
-        document.getElementById('flight-modal').style.display = 'flex';
-    }
-
-    function showFlightDetails(index) {
-        const f = displayedFlights[index];
-        if (f) openModalWithFlight(f);
-    }
-
-    function showRosterFlightDetails(id) {
-        const roster = getSafeStorage('myPilotRoster');
-        const entry = roster.find(e => e.id === id);
-        if (entry) openModalWithFlight(entry.flightData);
-    }
-
-    function closeModal() { document.getElementById('flight-modal').style.display = 'none'; }
-    window.onclick = function(event) {
-        if (event.target == document.getElementById('flight-modal')) closeModal();
-    }
-
-    // --- RELÓGIO E DADOS ---
-    function getSimulationDate() {
-        if (USE_REAL_TIME_DATE) return new Date();
-        const realNow = new Date();
-        const [y, m, d] = SIMULATE_DATE_FIXED.split('-').map(Number);
-        return new Date(y, m - 1, d, realNow.getHours(), realNow.getMinutes(), realNow.getSeconds());
+    function saveSBID() {
+      localStorage.setItem("simbrief_id", document.getElementById("sb-id").value.trim());
     }
 
     function updateClock() {
-        const now = getSimulationDate(); 
-        const timeOptions = { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
-        const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        document.getElementById('brt-clock').innerText = now.toLocaleTimeString('pt-BR', timeOptions);
-        document.getElementById('brt-date').innerText = now.toLocaleDateString('pt-BR', dateOptions).toUpperCase();
+      const now = getSimulationDate();
+      const timeOptions = { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
+      const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+
+      document.getElementById('brt-clock').innerText = now.toLocaleTimeString('pt-BR', timeOptions);
+      document.getElementById('brt-date').innerText = now.toLocaleDateString('pt-BR', dateOptions).toUpperCase();
     }
-    setInterval(updateClock, 1000);
-    updateClock();
+
+    function renderSuggestedFlight() {
+      const container = document.getElementById('suggested-flight-container');
+      if (allFlightsDB.length === 0) return;
+
+      let candidates = getUpcomingFlights(null, null, 'todas', 3);
+      candidates = candidates.filter(f => f.sortMins >= 30);
+
+      if (candidates.length === 0) {
+        container.innerHTML = `<div class="mono" style="font-size:13px; color:var(--or);">Sem voos nas próximas horas.</div>`;
+        return;
+      }
+
+      const seed = candidates[Math.floor(Math.random() * candidates.length)];
+      currentSuggestedFlight = enrichFlightData(seed);
+
+      const f = currentSuggestedFlight;
+      const acftType = escapeHtml(f.type.split('/')[0]);
+      const h = Math.floor(f.durMin / 60);
+      const m = f.durMin % 60;
+      const durStr = (h > 0 ? `${h} h ` : '') + `${m} min`;
+
+      container.innerHTML = `
+        <div style="display:flex; flex-direction:column; gap:12px; width:100%;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="cia-badge" style="background-color:${escapeHtml(f.airline.color)}; margin:0;">${escapeHtml(f.airline.name)}</span>
+              <span class="col-flight" style="font-size:15px; margin:0;" onclick="openModalWithFlight(currentSuggestedFlight)">${escapeHtml(f.ident)}</span>
+              <span style="border:1px solid var(--gr); color:var(--gr); padding:2px 6px; border-radius:4px; font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; background:rgba(16,185,129,0.05);">Programado</span>
+            </div>
+            <div style="font-size:10px; color:var(--cy); font-weight:800; text-transform:uppercase;">
+              Partida em ${escapeHtml(f.sortMins)} min
+            </div>
+          </div>
+
+          <div style="display:flex; align-items:center; justify-content:space-between; background:var(--input); padding:16px 20px; border-radius:12px; border:1px solid var(--border);">
+            <div style="text-align:left; min-width:60px;">
+              <div style="font-size:32px; font-weight:400; font-family:'Inter', sans-serif; color:var(--text); line-height:1;">${escapeHtml(f.origin)}</div>
+            </div>
+
+            <div style="flex:1; margin:0 15px; position:relative; display:flex; flex-direction:column; justify-content:center;">
+              <div style="text-align:center; font-size:14px; color:var(--text); font-weight:400; margin-bottom:6px; font-family:'Inter', sans-serif;">${escapeHtml(durStr)}</div>
+              <div style="display:flex; align-items:center; width:100%;">
+                <svg fill="var(--gr)" width="20" height="20" viewBox="0 0 24 24" style="transform: rotate(90deg); margin-right:4px; flex-shrink:0;"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+                <div style="flex:1; height:1px; background-color:#475569;"></div>
+              </div>
+            </div>
+
+            <div style="text-align:right; min-width:60px;">
+              <div style="font-size:32px; font-weight:400; font-family:'Inter', sans-serif; color:var(--text); line-height:1;">${escapeHtml(f.dest)}</div>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; margin-top:4px; padding:0 4px;">
+            <div style="text-align:left;">
+              <div style="font-size:11px; color:var(--muted); font-weight:600; margin-bottom:4px;">Partida programada:</div>
+              <div style="font-size:18px; font-weight:600; color:var(--gr); font-family:'JetBrains Mono';">${escapeHtml(f.depDisplay)}</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:11px; color:var(--muted); font-weight:600; margin-bottom:4px;">Chegada programada:</div>
+              <div style="font-size:18px; font-weight:600; color:var(--gr); font-family:'JetBrains Mono';">
+                ${escapeHtml(f.arrDisplay)} ${f.isNextDay ? '<span style="font-size:12px; color:var(--or);">(+1)</span>' : ''}
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-top:8px;">
+            <div style="font-family:'JetBrains Mono'; font-size:11px; font-weight:700; color:var(--muted);">
+              EQPT: <span style="color:var(--text);">${acftType}</span>
+            </div>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <button class="btn ghost small" onclick="renderSuggestedFlight()">🔄 Outro</button>
+              <button class="btn pri small" onclick="scheduleSuggestedFlight()">➕ Escala</button>
+              <button class="btn pu small" onclick="dispatchSuggestedFlight()">SimBrief ↗</button>
+              <button class="btn gr small" onclick="completeSuggestedFlight()">✅ Concluir</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function scheduleSuggestedFlight() {
+      if (!currentSuggestedFlight) return;
+      addFlightToRoster(currentSuggestedFlight, {
+        status: 'na_escala',
+        hubAcftId: null,
+        source: 'manual'
+      });
+      showRosterNotice(`Voo ${currentSuggestedFlight.ident} adicionado à Escala.`);
+    }
+
+    function dispatchSuggestedFlight() {
+      if (!currentSuggestedFlight) return;
+      programFlightAndOpenSimBrief(currentSuggestedFlight);
+    }
+
+    function completeSuggestedFlight() {
+      if (!currentSuggestedFlight) return;
+      registerCompletedFlight(currentSuggestedFlight, null);
+      alert(`Voo ${currentSuggestedFlight.ident} concluído, logado e estacionado no HUB em ${currentSuggestedFlight.dest}.`);
+    }
+
+    function programFlightAndOpenSimBrief(flight, hubAcftId = null) {
+      addFlightToRoster(flight, {
+        status: 'programado',
+        hubAcftId,
+        source: 'simbrief'
+      });
+
+      showRosterNotice(`Voo ${flight.ident} enviado ao SimBrief e incluído na Escala como PROGRAMADO.`);
+      switchTab('roster');
+      openSimBriefWithData(flight);
+    }
+
+    function openSimBriefWithData(flight) {
+      const sbID = document.getElementById("sb-id").value.trim();
+      if (!sbID) {
+        alert("Preencha o ID do SimBrief na aba de Configurações.");
+        switchTab('settings');
+        document.getElementById("sb-id").focus();
+        return;
+      }
+
+      const airlineCodeMatch = flight.ident.match(/^[A-Z]+/);
+      const fltNumberMatch = flight.ident.match(/\d+/);
+      if (!airlineCodeMatch || !fltNumberMatch) {
+        alert("Não foi possível extrair o callsign corretamente para o SimBrief.");
+        return;
+      }
+
+      const airlineCode = airlineCodeMatch[0];
+      const fltNumber = fltNumberMatch[0];
+      const cleanType = flight.type.split('/')[0];
+      const routeEncoded = encodeURIComponent(flight.rota);
+
+      let hours = Math.floor(flight.depMinUTC / 60) % 24;
+      let minutes = flight.depMinUTC % 60;
+
+      const dateObj = getSimulationDate();
+      if (flight.offsetDay) dateObj.setDate(dateObj.getDate() + flight.offsetDay);
+
+      const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+      const day = String(dateObj.getDate()).padStart(2, '0');
+      const month = monthNames[dateObj.getMonth()];
+      const year = String(dateObj.getFullYear()).slice(-2);
+      const sbDate = `${day}${month}${year}`;
+
+      const url = `https://www.simbrief.com/system/dispatch.php?userid=${encodeURIComponent(sbID)}&airline=${encodeURIComponent(airlineCode)}&fltnum=${encodeURIComponent(fltNumber)}&orig=${encodeURIComponent(flight.origin)}&dest=${encodeURIComponent(flight.dest)}&route=${routeEncoded}&type=${encodeURIComponent(cleanType)}&date=${encodeURIComponent(sbDate)}&deph=${encodeURIComponent(hours)}&depm=${encodeURIComponent(minutes)}&fl=${encodeURIComponent(flight.fl)}`;
+      window.open(url, '_blank');
+    }
+
+    function registerCompletedFlight(flight, moveAcftId = null, rosterIdToRemove = null) {
+      saveToLogbook(flight);
+      updateHangarAfterFlight(flight, moveAcftId);
+
+      if (rosterIdToRemove) {
+        deleteRosterEntryInternal(rosterIdToRemove);
+      }
+
+      renderHangar();
+      renderLogbook();
+      renderRoster();
+    }
+
+    function updateHangarAfterFlight(flight, moveAcftId = null) {
+      let hangar = getSafeStorage('myPilotHangar');
+
+      if (moveAcftId) {
+        const idx = hangar.findIndex(a => String(a.id) === String(moveAcftId));
+        if (idx !== -1) {
+          hangar[idx].loc = flight.dest;
+        } else {
+          hangar.push({
+            id: makeId(),
+            cia: flight.airline?.name || getAirlineCodeFromCallsign(flight.ident),
+            type: flight.type.split('/')[0],
+            loc: flight.dest
+          });
+        }
+      } else {
+        hangar.push({
+          id: makeId(),
+          cia: flight.airline?.name || getAirlineCodeFromCallsign(flight.ident),
+          type: flight.type.split('/')[0],
+          loc: flight.dest
+        });
+      }
+
+      saveJSON('myPilotHangar', hangar);
+    }
+
+    function setFilter(filterName, btnElement) {
+      const groupButtons = document.querySelectorAll('#cia-filter-group .btn-filter');
+      groupButtons.forEach(b => b.classList.remove('active'));
+      btnElement.classList.add('active');
+      currentFilter = filterName;
+    }
+
+    function resetPanel() {
+      document.getElementById('board-content').innerHTML = '';
+      document.getElementById('empty-msg').style.display = 'block';
+      document.getElementById('empty-msg').innerText = "Painel limpo. Selecione os filtros acima.";
+
+      document.getElementById('search-input').value = '';
+      document.getElementById('airport-search').value = '';
+      document.getElementById('destination-search').value = '';
+
+      currentFilter = 'todas';
+      displayedFlights = [];
+
+      const groupButtons = document.querySelectorAll('#cia-filter-group .btn-filter');
+      groupButtons.forEach(b => b.classList.remove('active'));
+      const allBtn = document.querySelector('#cia-filter-group .btn-filter[data-cia="TODAS"]');
+      if (allBtn) allBtn.classList.add('active');
+    }
+
+    function getUpcomingFlights(orig, dest = null, ciaFilter = 'todas', maxHours = 48, typeFilter = null) {
+      const now = getSimulationDate();
+      const currentBRTMinutes = (now.getHours() * 60) + now.getMinutes();
+      const currentLocalDay = now.getDay();
+      const rplCurrentLocalDayIdx = currentLocalDay === 0 ? 6 : currentLocalDay - 1;
+
+      let results = [];
+
+      allFlightsDB.forEach(f => {
+        if (orig && f.origin !== orig) return;
+        if (dest && f.dest !== dest) return;
+        if (ciaFilter !== 'todas' && f.airline.name !== ciaFilter) return;
+        if (typeFilter && f.type.split('/')[0] !== typeFilter) return;
+
+        let depMinBRT = f.depMinUTC - 180;
+        if (depMinBRT < 0) depMinBRT += 1440;
+
+        for (let offset = 0; offset <= 2; offset++) {
+          const checkLocalDayIdx = (rplCurrentLocalDayIdx + offset) % 7;
+          let utcDayIdx = checkLocalDayIdx;
+
+          if (f.depMinUTC < 180) utcDayIdx = (checkLocalDayIdx + 1) % 7;
+
+          if (f.daysOp.charAt(utcDayIdx) !== '0' && f.daysOp.charAt(utcDayIdx) !== ' ') {
+            let minsFromNow = (offset * 1440) + depMinBRT - currentBRTMinutes;
+            if (minsFromNow >= 0 && minsFromNow <= (maxHours * 60)) {
+              results.push({ ...f, offsetDay: offset, sortMins: minsFromNow });
+            }
+          }
+        }
+      });
+
+      results.sort((a, b) => a.sortMins - b.sortMins);
+      return results;
+    }
+
+    function manualSearch() {
+      const rawInput = document.getElementById('search-input').value;
+      const input = rawInput ? rawInput.toUpperCase().replace(/\s+/g, '') : "";
+
+      if (input.length < 3) {
+        alert("Digite pelo menos 3 caracteres.");
+        return;
+      }
+
+      if (allFlightsDB.length === 0) {
+        alert("Aguarde o carregamento.");
+        return;
+      }
+
+      const now = getSimulationDate();
+      const currentBRTMinutes = (now.getHours() * 60) + now.getMinutes();
+      const currentLocalDay = now.getDay();
+      const rplCurrentLocalDayIdx = currentLocalDay === 0 ? 6 : currentLocalDay - 1;
+
+      let matches = [];
+
+      allFlightsDB.forEach(f => {
+        if (f.ident.includes(input)) {
+          let depMinBRT = f.depMinUTC - 180;
+          if (depMinBRT < 0) depMinBRT += 1440;
+
+          for (let offset = 0; offset <= 2; offset++) {
+            const checkLocalDayIdx = (rplCurrentLocalDayIdx + offset) % 7;
+            let utcDayIdx = checkLocalDayIdx;
+            if (f.depMinUTC < 180) utcDayIdx = (checkLocalDayIdx + 1) % 7;
+
+            if (f.daysOp.charAt(utcDayIdx) !== '0' && f.daysOp.charAt(utcDayIdx) !== ' ') {
+              let minsFromNow = (offset * 1440) + depMinBRT - currentBRTMinutes;
+              if (minsFromNow > -1440 && minsFromNow <= 2880) {
+                matches.push({ ...f, offsetDay: offset, sortMins: minsFromNow });
+              }
+            }
+          }
+        }
+      });
+
+      if (matches.length === 0) {
+        alert("Voo não encontrado.");
+        return;
+      }
+
+      matches.sort((a, b) => a.sortMins - b.sortMins);
+      displayedFlights = matches.map(f => enrichFlightData(f));
+      renderRows(displayedFlights);
+      document.getElementById('empty-msg').style.display = 'none';
+    }
+
+    function searchFlights() {
+      const rawOrig = document.getElementById('airport-search').value;
+      const orig = rawOrig ? rawOrig.toUpperCase().trim() : "";
+      const rawDest = document.getElementById('destination-search').value;
+      const dest = rawDest ? rawDest.toUpperCase().trim() : "";
+
+      if (orig.length < 3) {
+        alert("Preencha pelo menos 3 caracteres na Origem (Ex: SBGR).");
+        return;
+      }
+
+      if (allFlightsDB.length === 0) {
+        alert("Aguarde o carregamento da malha.");
+        return;
+      }
+
+      const matches = getUpcomingFlights(orig, dest.length >= 3 ? dest : null, currentFilter, 48);
+
+      if (matches.length === 0) {
+        if (dest.length >= 3) alert(`Nenhum voo direto encontrado de ${orig} para ${dest} nas próximas 48 horas.`);
+        else alert(`Nenhuma partida encontrada saindo de ${orig} nas próximas 48 horas.`);
+        return;
+      }
+
+      displayedFlights = matches.map(f => enrichFlightData(f));
+      renderRows(displayedFlights);
+      document.getElementById('empty-msg').style.display = 'none';
+    }
+
+    function generateRealTimeChain(chainLength) {
+      const orig = document.getElementById('airport-search').value.toUpperCase().trim();
+
+      let candidates = getUpcomingFlights(orig.length >= 3 ? orig : null, null, currentFilter, 24);
+      if (candidates.length === 0) {
+        alert("Sem voos disponíveis nas próximas horas.");
+        return;
+      }
+
+      let seedCandidates = candidates.filter(f => f.sortMins >= 30 && f.sortMins <= 180);
+      if (seedCandidates.length === 0) seedCandidates = candidates;
+
+      const seed = seedCandidates[Math.floor(Math.random() * Math.min(15, seedCandidates.length))];
+      let chain = [enrichFlightData(seed)];
+      const targetType = seed.type.split('/')[0];
+
+      for (let i = 1; i < chainLength; i++) {
+        const prev = chain[i - 1];
+        const prevArrMinsFromNow = prev.sortMins + prev.durMin;
+        const minNextDepMinsFromNow = prevArrMinsFromNow + TURNAROUND_MINUTES;
+
+        let nextLegs = getUpcomingFlights(prev.dest, null, prev.airline.name, 48, targetType);
+        nextLegs = nextLegs.filter(f => f.sortMins >= minNextDepMinsFromNow);
+
+        if (nextLegs.length > 0) {
+          let validNext = nextLegs.filter(f => f.sortMins <= minNextDepMinsFromNow + 180);
+          if (validNext.length === 0) validNext = nextLegs;
+
+          const nextLeg = validNext[Math.floor(Math.random() * Math.min(5, validNext.length))];
+          chain.push(enrichFlightData(nextLeg));
+        } else {
+          break;
+        }
+      }
+
+      displayedFlights = chain;
+      renderRows(chain);
+      document.getElementById('empty-msg').style.display = 'none';
+    }
+
+    function generateHangarSchedule(chainLength) {
+      let hangar = getSafeStorage('myPilotHangar');
+      if (hangar.length === 0) {
+        alert("Seu HUB está vazio. Adicione e estacione aeronaves primeiro.");
+        return;
+      }
+
+      const randomAcft = hangar[Math.floor(Math.random() * hangar.length)];
+      const orig = randomAcft.loc;
+      const cia = randomAcft.cia;
+      const targetType = randomAcft.type;
+
+      let candidates = getUpcomingFlights(orig, null, cia, 24, targetType);
+
+      if (candidates.length === 0) {
+        alert(`Sorteio: ${cia} em ${orig} (${targetType}). Sem voos disponíveis para este equipamento nas próximas 24h.`);
+        return;
+      }
+
+      let seedCandidates = candidates.filter(f => f.sortMins >= 30 && f.sortMins <= 240);
+      if (seedCandidates.length === 0) seedCandidates = candidates;
+
+      const seed = seedCandidates[Math.floor(Math.random() * Math.min(10, seedCandidates.length))];
+      let chain = [enrichFlightData(seed)];
+
+      for (let i = 1; i < chainLength; i++) {
+        const prev = chain[i - 1];
+        const prevArrMinsFromNow = prev.sortMins + prev.durMin;
+        const minNextDepMinsFromNow = prevArrMinsFromNow + TURNAROUND_MINUTES;
+
+        let nextLegs = getUpcomingFlights(prev.dest, null, prev.airline.name, 48, targetType);
+        nextLegs = nextLegs.filter(f => f.sortMins >= minNextDepMinsFromNow);
+
+        if (nextLegs.length > 0) {
+          let validNext = nextLegs.filter(f => f.sortMins <= minNextDepMinsFromNow + 180);
+          if (validNext.length === 0) validNext = nextLegs;
+
+          const nextLeg = validNext[Math.floor(Math.random() * Math.min(5, validNext.length))];
+          chain.push(enrichFlightData(nextLeg));
+        } else {
+          break;
+        }
+      }
+
+      displayedHangarChain = chain;
+      renderHangarRosterTable(chain, randomAcft);
+    }
+
+    function renderHangarRosterTable(chain, acft) {
+      const tbody = document.getElementById('hangar-roster-body');
+      const emptyMsg = document.getElementById('hangar-roster-empty');
+      const infoSpan = document.getElementById('hangar-acft-info');
+      const btnAddAll = document.getElementById('btn-add-all-hangar');
+
+      tbody.innerHTML = '';
+
+      if (chain.length === 0) {
+        emptyMsg.style.display = 'block';
+        infoSpan.innerText = '';
+        btnAddAll.style.display = 'none';
+        return;
+      }
+
+      emptyMsg.style.display = 'none';
+      infoSpan.innerText = `[Aeronave Sorteada: ${acft.cia} | ${acft.type} | Sai de: ${acft.loc}]`;
+      btnAddAll.style.display = 'inline-flex';
+      btnAddAll.onclick = () => scheduleEntireHangarChain(String(acft.id));
+
+      chain.forEach((f, index) => {
+        const tr = document.createElement('tr');
+
+        const arrHtml = f.isNextDay ? `<span style="color:var(--or); font-size:9px; display:block; margin-top:2px;">(+1)</span>` : '';
+        const depCell = `<div class="time-pill">${f.depPrefix || ''}<div class="tp-utc">${escapeHtml(f.depDisplayUTC)}z</div><div class="tp-local">${escapeHtml(f.depDisplay)}</div></div>`;
+        const arrCell = `<div class="time-pill arr"><div class="tp-utc">${escapeHtml(f.arrDisplayUTC)}z</div><div class="tp-local">${escapeHtml(f.arrDisplay)}</div>${arrHtml}</div>`;
+        const acftType = escapeHtml(f.type.split('/')[0]);
+
+        tr.innerHTML = `
+          <td>
+            <div style="display:flex; gap:5px; justify-content:center; flex-wrap:wrap;">
+              <button class="btn pu small" title="Abrir no SimBrief" onclick="dispatchHangarFlight(${index}, '${String(acft.id)}')">SimBrief ↗</button>
+              <button class="btn gr small" title="Concluir voo e mover aeronave" onclick="completeHangarFlight(${index}, '${String(acft.id)}')">✅</button>
+              <button class="btn pri small" title="Agendar na escala" onclick="scheduleHangarFlight(${index}, '${String(acft.id)}')">➕ Escala</button>
+            </div>
+          </td>
+          <td class="col-flight" onclick="openModalWithFlight(displayedHangarChain[${index}])">${escapeHtml(f.ident)}</td>
+          <td><span class="cia-badge" style="background-color:${escapeHtml(f.airline.color)}">${escapeHtml(f.airline.name)}</span></td>
+          <td style="font-weight:800; font-family:'JetBrains Mono';">${acftType}</td>
+          <td style="font-size:11px; color:var(--muted); max-width:120px;">${escapeHtml(formatDaysLocal(f.daysOp, f.depMinUTC))}</td>
+          <td style="font-weight:800; font-family:'JetBrains Mono'; font-size:15px;">${escapeHtml(f.origin)}</td>
+          <td style="text-align:center;">${depCell}</td>
+          <td style="font-weight:800; font-family:'JetBrains Mono'; font-size:15px;">${escapeHtml(f.dest)}</td>
+          <td style="text-align:center;">${arrCell}</td>
+          <td class="col-fl">${escapeHtml(f.fl)}</td>
+          <td style="font-family:'JetBrains Mono'; font-size:11px; color:var(--muted); max-width:250px;">${escapeHtml(f.rota)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function dispatchHangarFlight(index, acftId) {
+      const flight = displayedHangarChain[index];
+      if (!flight) return;
+      programFlightAndOpenSimBrief(flight, String(acftId));
+    }
+
+    function completeHangarFlight(index, acftId) {
+      const flight = displayedHangarChain[index];
+      if (!flight) return;
+      registerCompletedFlight(flight, acftId);
+      alert(`🛫 Voo concluído. Aeronave movida para ${flight.dest} no HUB e logbook atualizado.`);
+    }
+
+    function scheduleHangarFlight(index, acftId) {
+      const flight = displayedHangarChain[index];
+      if (!flight) return;
+
+      addFlightToRoster(flight, {
+        status: 'na_escala',
+        hubAcftId: String(acftId),
+        source: 'manual'
+      });
+
+      showRosterNotice(`Voo ${flight.ident} adicionado à Escala Principal.`);
+    }
+
+    function scheduleEntireHangarChain(acftId) {
+      if (displayedHangarChain.length === 0) return;
+
+      displayedHangarChain.forEach(f => {
+        addFlightToRoster(f, {
+          status: 'na_escala',
+          hubAcftId: String(acftId),
+          source: 'manual'
+        });
+      });
+
+      showRosterNotice(`Jornada completa (${displayedHangarChain.length} voos) adicionada à Escala Principal.`);
+    }
+
+    function enrichFlightData(flight) {
+      const toBRT = (utc) => {
+        let b = utc - 180;
+        if (b < 0) b += 1440;
+        if (b >= 1440) b -= 1440;
+        return b;
+      };
+
+      const depMinBRT = toBRT(flight.depMinUTC);
+      const arrMinBRT = toBRT(flight.arrMinUTC);
+      let arrUtc = flight.arrMinUTC >= 1440 ? flight.arrMinUTC - 1440 : flight.arrMinUTC;
+      let nextDay = arrMinBRT < depMinBRT;
+
+      let depPrefix = "";
+      if (flight.offsetDay === 1) depPrefix = `<span style="color:var(--or); font-size:9px; display:block; margin-bottom:2px; font-weight:800; letter-spacing:1px;">AMANHÃ</span>`;
+      else if (flight.offsetDay > 1) depPrefix = `<span style="color:var(--or); font-size:9px; display:block; margin-bottom:2px; font-weight:800; letter-spacing:1px;">+${flight.offsetDay} DIAS</span>`;
+
+      return {
+        ...flight,
+        depDisplay: minutesToTimeStr(depMinBRT),
+        arrDisplay: minutesToTimeStr(arrMinBRT),
+        depDisplayUTC: minutesToTimeStr(flight.depMinUTC),
+        arrDisplayUTC: minutesToTimeStr(arrUtc),
+        isNextDay: nextDay,
+        depPrefix
+      };
+    }
+
+    function renderRows(flights) {
+      const tbody = document.getElementById('board-content');
+      tbody.innerHTML = '';
+
+      flights.forEach((f, index) => {
+        const tr = document.createElement('tr');
+
+        const arrHtml = f.isNextDay ? `<span style="color:var(--or); font-size:9px; display:block; margin-top:2px;">(+1)</span>` : '';
+        const depCell = `<div class="time-pill">${f.depPrefix || ''}<div class="tp-utc">${escapeHtml(f.depDisplayUTC)}z</div><div class="tp-local">${escapeHtml(f.depDisplay)}</div></div>`;
+        const arrCell = `<div class="time-pill arr"><div class="tp-utc">${escapeHtml(f.arrDisplayUTC)}z</div><div class="tp-local">${escapeHtml(f.arrDisplay)}</div>${arrHtml}</div>`;
+        const acftType = escapeHtml(f.type.split('/')[0]);
+
+        tr.innerHTML = `
+          <td>
+            <div style="display:flex; gap:5px; justify-content:center; flex-wrap:wrap;">
+              <button class="btn pu small" title="Abrir no SimBrief" onclick="openSimBriefFromIndex(${index})">SimBrief ↗</button>
+              <button class="btn gr small" title="Concluir voo" onclick="completeFlightFromBoard(${index})">✅</button>
+              <button class="btn pri small" title="Agendar na escala" onclick="scheduleFlight(${index})">➕</button>
+            </div>
+          </td>
+          <td class="col-flight" onclick="showFlightDetails(${index})">${escapeHtml(f.ident)}</td>
+          <td><span class="cia-badge" style="background-color:${escapeHtml(f.airline.color)}">${escapeHtml(f.airline.name)}</span></td>
+          <td style="font-weight:800; font-family:'JetBrains Mono';">${acftType}</td>
+          <td style="font-size:11px; color:var(--muted); max-width:120px;">${escapeHtml(formatDaysLocal(f.daysOp, f.depMinUTC))}</td>
+          <td style="font-weight:800; font-family:'JetBrains Mono'; font-size:15px;">${escapeHtml(f.origin)}</td>
+          <td style="text-align:center;">${depCell}</td>
+          <td style="font-weight:800; font-family:'JetBrains Mono'; font-size:15px;">${escapeHtml(f.dest)}</td>
+          <td style="text-align:center;">${arrCell}</td>
+          <td class="col-fl">${escapeHtml(f.fl)}</td>
+          <td style="font-family:'JetBrains Mono'; font-size:11px; color:var(--muted); max-width:250px;">${escapeHtml(f.rota)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function openSimBriefFromIndex(index) {
+      const flight = displayedFlights[index];
+      if (!flight) return;
+      programFlightAndOpenSimBrief(flight);
+    }
+
+    function completeFlightFromBoard(index) {
+      const flight = displayedFlights[index];
+      if (!flight) return;
+
+      registerCompletedFlight(flight, null);
+      alert(`Voo ${flight.ident} concluído, logado e estacionado no HUB em ${flight.dest}.`);
+    }
+
+    function scheduleFlight(index) {
+      const flight = displayedFlights[index];
+      if (!flight) return;
+
+      addFlightToRoster(flight, {
+        status: 'na_escala',
+        hubAcftId: null,
+        source: 'manual'
+      });
+
+      showRosterNotice(`Voo ${flight.ident} adicionado à Escala.`);
+    }
+
+    function renderRoster() {
+      const roster = getSafeStorage('myPilotRoster');
+      const tbody = document.getElementById('roster-body');
+      const emptyMsg = document.getElementById('roster-empty');
+
+      document.getElementById('roster-badge').innerText = roster.length;
+
+      tbody.innerHTML = '';
+      if (roster.length === 0) {
+        emptyMsg.style.display = 'block';
+        return;
+      } else {
+        emptyMsg.style.display = 'none';
+      }
+
+      roster.forEach(entry => {
+        const f = entry.flightData;
+        const tr = document.createElement('tr');
+
+        const statusClass = entry.status === 'programado' ? 'programado' : 'na-escala';
+        const statusLabel = entry.status === 'programado' ? 'PROGRAMADO' : 'NA ESCALA';
+
+        const arrHtml = f.isNextDay ? `<span style="color:var(--or); font-size:9px; display:block; margin-top:2px;">(+1)</span>` : '';
+        const depCell = `<div class="time-pill">${f.depPrefix || ''}<div class="tp-utc">${escapeHtml(f.depDisplayUTC)}z</div><div class="tp-local">${escapeHtml(f.depDisplay)}</div></div>`;
+        const arrCell = `<div class="time-pill arr"><div class="tp-utc">${escapeHtml(f.arrDisplayUTC)}z</div><div class="tp-local">${escapeHtml(f.arrDisplay)}</div>${arrHtml}</div>`;
+        const acftType = escapeHtml(f.type.split('/')[0]);
+
+        tr.innerHTML = `
+          <td>
+            <div style="display:flex; gap:5px; justify-content:center; flex-wrap:wrap;">
+              <button class="btn pu small" title="Abrir no SimBrief" onclick="dispatchRosterFlight('${String(entry.id)}')">SimBrief ↗</button>
+              <button class="btn gr small" title="Concluir voo" onclick="completeRosterFlight('${String(entry.id)}')">✅</button>
+              <button class="btn rd small" title="Remover da Escala" onclick="deleteRosterEntry('${String(entry.id)}')">✕</button>
+            </div>
+          </td>
+          <td><span class="status-pill ${statusClass}">${statusLabel}</span></td>
+          <td class="col-flight" onclick="showRosterFlightDetails('${String(entry.id)}')">${escapeHtml(f.ident)}</td>
+          <td><span class="cia-badge" style="background-color:${escapeHtml(f.airline.color)}">${escapeHtml(f.airline.name)}</span></td>
+          <td style="font-weight:800; font-family:'JetBrains Mono';">${acftType}</td>
+          <td style="font-size:11px; color:var(--muted); max-width:120px;">${escapeHtml(formatDaysLocal(f.daysOp, f.depMinUTC))}</td>
+          <td style="font-weight:800; font-family:'JetBrains Mono'; font-size:15px;">${escapeHtml(f.origin)}</td>
+          <td style="text-align:center;">${depCell}</td>
+          <td style="font-weight:800; font-family:'JetBrains Mono'; font-size:15px;">${escapeHtml(f.dest)}</td>
+          <td style="text-align:center;">${arrCell}</td>
+          <td class="col-fl">${escapeHtml(f.fl)}</td>
+          <td style="font-family:'JetBrains Mono'; font-size:11px; color:var(--muted); max-width:250px;">${escapeHtml(f.rota)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function dispatchRosterFlight(id) {
+      let roster = getSafeStorage('myPilotRoster');
+      const idx = roster.findIndex(e => String(e.id) === String(id));
+      if (idx === -1) return;
+
+      roster[idx].status = 'programado';
+      roster[idx].updatedAt = Date.now();
+      saveJSON('myPilotRoster', roster);
+
+      renderRoster();
+      showRosterNotice(`Voo ${roster[idx].flightData.ident} reenviado ao SimBrief e marcado como PROGRAMADO.`);
+      switchTab('roster');
+      openSimBriefWithData(roster[idx].flightData);
+    }
+
+    function completeRosterFlight(id) {
+      const roster = getSafeStorage('myPilotRoster');
+      const entry = roster.find(e => String(e.id) === String(id));
+      if (!entry) return;
+
+      registerCompletedFlight(entry.flightData, entry.hubAcftId, entry.id);
+      showRosterNotice(`Voo ${entry.flightData.ident} concluído. Logbook e HUB atualizados.`);
+    }
+
+    function deleteRosterEntry(id) {
+      if (!confirm("Remover da escala?")) return;
+      deleteRosterEntryInternal(id);
+      renderRoster();
+    }
+
+    function deleteRosterEntryInternal(id) {
+      let roster = getSafeStorage('myPilotRoster');
+      roster = roster.filter(e => String(e.id) !== String(id));
+      saveJSON('myPilotRoster', roster);
+    }
+
+    function renderHangar() {
+      const hangar = getSafeStorage('myPilotHangar');
+      const tbody = document.getElementById('hangar-body');
+      const emptyMsg = document.getElementById('hangar-empty');
+
+      tbody.innerHTML = '';
+      if (hangar.length === 0) {
+        emptyMsg.style.display = 'block';
+        return;
+      } else {
+        emptyMsg.style.display = 'none';
+      }
+
+      hangar.forEach(acft => {
+        const displayCia = acft.cia || acft.reg || 'N/A';
+        const badgeColor = getAirlineBadgeColor(displayCia);
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><span class="cia-badge" style="background-color:${escapeHtml(badgeColor)}; padding:6px 12px; font-size:11px;">${escapeHtml(displayCia)}</span></td>
+          <td style="font-weight:800; font-size:15px; font-family:'JetBrains Mono';">${escapeHtml(acft.type)}</td>
+          <td style="font-weight:800; font-size:15px; font-family:'JetBrains Mono'; color:var(--cy);">${escapeHtml(acft.loc)}</td>
+          <td>
+            <div style="display:flex; gap:5px; justify-content:center; flex-wrap:wrap;">
+              <button class="btn pri small" title="Procurar voos saindo daqui" onclick="flyFromHangar('${String(acft.loc)}', '${String(displayCia)}', '${String(acft.type)}')">🛫 Voar daqui</button>
+              <button class="btn rd small" title="Remover do HUB" onclick="removeAircraftFromHangar('${String(acft.id)}')">🗑️</button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function addAircraftToHangar() {
+      const cia = document.getElementById('hangar-cia').value.toUpperCase().trim();
+      const type = document.getElementById('hangar-type').value.toUpperCase().trim();
+      const loc = document.getElementById('hangar-loc').value.toUpperCase().trim();
+
+      if (!cia || !type || !loc) {
+        alert("Preencha Cia, Tipo e Localização (ICAO).");
+        return;
+      }
+
+      if (loc.length !== 4) {
+        alert("O ICAO deve ter exatamente 4 letras (Ex: SBGR).");
+        return;
+      }
+
+      let hangar = getSafeStorage('myPilotHangar');
+      hangar.push({ id: makeId(), cia, type, loc });
+      saveJSON('myPilotHangar', hangar);
+
+      document.getElementById('hangar-cia').value = '';
+      document.getElementById('hangar-type').value = '';
+      document.getElementById('hangar-loc').value = '';
+
+      renderHangar();
+    }
+
+    function removeAircraftFromHangar(id) {
+      if (!confirm("Tem certeza que deseja remover esta aeronave do HUB?")) return;
+      let hangar = getSafeStorage('myPilotHangar');
+      hangar = hangar.filter(a => String(a.id) !== String(id));
+      saveJSON('myPilotHangar', hangar);
+      renderHangar();
+    }
+
+    function flyFromHangar(loc, cia, type) {
+      document.getElementById('airport-search').value = loc;
+      document.getElementById('destination-search').value = '';
+
+      const btn = document.querySelector(`#cia-filter-group .btn-filter[data-cia="${cia}"]`);
+      if (btn) setFilter(cia, btn);
+      else {
+        const allBtn = document.querySelector('#cia-filter-group .btn-filter[data-cia="TODAS"]');
+        if (allBtn) setFilter('todas', allBtn);
+      }
+
+      if (allFlightsDB.length === 0) {
+        alert("Aguarde o carregamento da malha.");
+        return;
+      }
+
+      const matches = getUpcomingFlights(loc, null, cia, 48, type);
+
+      if (matches.length === 0) {
+        alert(`Nenhuma partida encontrada saindo de ${loc} com o equipamento ${type} nas próximas 48 horas.`);
+        return;
+      }
+
+      switchTab('board');
+      displayedFlights = matches.map(f => enrichFlightData(f));
+      renderRows(displayedFlights);
+      document.getElementById('empty-msg').style.display = 'none';
+    }
+
+    function parkFromLogbook(callsign, type, arrLoc) {
+      const cia = getAirlineCodeFromCallsign(callsign);
+      let hangar = getSafeStorage('myPilotHangar');
+
+      hangar.push({
+        id: makeId(),
+        cia,
+        type: String(type).toUpperCase(),
+        loc: String(arrLoc).toUpperCase()
+      });
+
+      saveJSON('myPilotHangar', hangar);
+      alert(`✈️ Aeronave da ${cia} (${type}) estacionada com sucesso em ${arrLoc}.`);
+      renderHangar();
+    }
+
+    function saveToLogbook(flight) {
+      let logbook = getSafeStorage('myPilotLogbook');
+      const now = getSimulationDate();
+      const dateStr = now.toLocaleDateString('pt-BR');
+
+      const durHours = Math.floor(flight.durMin / 60);
+      const durMins = flight.durMin % 60;
+      const durStr = String(durHours).padStart(2, '0') + ":" + String(durMins).padStart(2, '0');
+
+      logbook.unshift({
+        id: makeId(),
+        date: dateStr,
+        callsign: flight.ident,
+        dep: flight.origin,
+        arr: flight.dest,
+        time: durStr,
+        acft: flight.type.split('/')[0]
+      });
+
+      saveJSON('myPilotLogbook', logbook);
+    }
+
+    function renderLogbook() {
+      const logbook = getSafeStorage('myPilotLogbook');
+      const tbody = document.getElementById('logbook-body');
+      const emptyMsg = document.getElementById('logbook-empty');
+
+      let totalMinutes = 0;
+      logbook.forEach(e => {
+        const parts = e.time.split(':');
+        totalMinutes += (parseInt(parts[0], 10) * 60) + parseInt(parts[1], 10);
+      });
+
+      const totalH = Math.floor(totalMinutes / 60);
+      const totalM = totalMinutes % 60;
+
+      document.getElementById('stats-count').innerText = logbook.length;
+      document.getElementById('stats-hours').innerText = `${String(totalH).padStart(2,'0')}h ${String(totalM).padStart(2,'0')}m`;
+
+      tbody.innerHTML = '';
+      if (logbook.length === 0) {
+        emptyMsg.style.display = 'block';
+        return;
+      } else {
+        emptyMsg.style.display = 'none';
+      }
+
+      logbook.forEach(entry => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="color:var(--muted);">${escapeHtml(entry.date)}</td>
+          <td style="font-weight:800; color:var(--cy); font-family:'JetBrains Mono';">${escapeHtml(entry.callsign)}</td>
+          <td style="font-family:'JetBrains Mono'; font-weight:700;">${escapeHtml(entry.dep)}</td>
+          <td style="font-family:'JetBrains Mono'; font-weight:700;">${escapeHtml(entry.arr)}</td>
+          <td style="color:var(--gr); font-weight:700;">${escapeHtml(entry.time)}</td>
+          <td style="font-weight:700;">${escapeHtml(entry.acft)}</td>
+          <td>
+            <div style="display:flex; gap:5px; justify-content:center; flex-wrap:wrap;">
+              <button class="btn ghost small" title="Estacionar aeronave no HUB" onclick='parkFromLogbook(${JSON.stringify(entry.callsign)}, ${JSON.stringify(entry.acft)}, ${JSON.stringify(entry.arr)})'>🅿️ HUB</button>
+              <button class="btn rd small" title="Apagar Registro" onclick="deleteLogbookEntry('${String(entry.id)}')">🗑️</button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function deleteLogbookEntry(id) {
+      if (!confirm("Excluir registro?")) return;
+      let logbook = getSafeStorage('myPilotLogbook');
+      logbook = logbook.filter(entry => String(entry.id) !== String(id));
+      saveJSON('myPilotLogbook', logbook);
+      renderLogbook();
+    }
+
+    function clearAllData() {
+      if (!confirm("Apagar logbook, escala, HUB e SimBrief ID?")) return;
+
+      localStorage.removeItem('myPilotLogbook');
+      localStorage.removeItem('myPilotRoster');
+      localStorage.removeItem('myPilotHangar');
+      localStorage.removeItem('simbrief_id');
+
+      document.getElementById('sb-id').value = '';
+      currentSuggestedFlight = null;
+      displayedFlights = [];
+      displayedHangarChain = [];
+
+      renderLogbook();
+      renderRoster();
+      renderHangar();
+      resetPanel();
+      renderSuggestedFlight();
+
+      const notice = document.getElementById('roster-notice');
+      if (notice) notice.style.display = 'none';
+
+      alert("Todos os dados locais foram apagados.");
+    }
+
+    function backupLogbook() {
+      const dataStr = JSON.stringify({
+        version: "7.3",
+        date: new Date().toISOString(),
+        simbrief_id: localStorage.getItem('simbrief_id') || "",
+        logbook: getSafeStorage('myPilotLogbook'),
+        roster: getSafeStorage('myPilotRoster'),
+        hangar: getSafeStorage('myPilotHangar')
+      }, null, 2);
+
+      const blob = new Blob([dataStr], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `backup_rpl_v73_${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function restoreLogbook(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = JSON.parse(e.target.result);
+
+          if (confirm("Restaurar backup?")) {
+            if (data.logbook) saveJSON('myPilotLogbook', data.logbook);
+            if (data.roster) saveJSON('myPilotRoster', data.roster);
+            if (data.hangar) saveJSON('myPilotHangar', data.hangar);
+            if (typeof data.simbrief_id === 'string') {
+              localStorage.setItem('simbrief_id', data.simbrief_id);
+              document.getElementById('sb-id').value = data.simbrief_id;
+            }
+
+            renderLogbook();
+            renderRoster();
+            renderHangar();
+            alert("Restaurado com sucesso.");
+          }
+        } catch (err) {
+          alert("Erro ao ler o arquivo de backup.");
+        }
+
+        event.target.value = '';
+      };
+      reader.readAsText(file);
+    }
+
+    function openModalWithFlight(f) {
+      if (!f) return;
+
+      const badge = document.getElementById('modal-cia-badge');
+      badge.innerText = f.airline.name;
+      badge.style.backgroundColor = f.airline.color;
+
+      document.getElementById('modal-flight-num').innerText = f.ident;
+      document.getElementById('md-acft').innerText = f.type;
+      document.getElementById('md-route').textContent = f.rota;
+      document.getElementById('md-deparr').innerText = `${f.origin} -> ${f.dest}`;
+      document.getElementById('md-eet').innerText = minutesToTimeStr(f.durMin).replace(':', 'h ') + 'm';
+      document.getElementById('md-fl').innerText = f.fl;
+      document.getElementById('md-days').innerText = formatDaysLocal(f.daysOp, f.depMinUTC);
+      document.getElementById('md-obs').textContent = f.obs || '-';
+      document.getElementById('flight-modal').style.display = 'flex';
+    }
+
+    function showFlightDetails(index) {
+      const f = displayedFlights[index];
+      if (f) openModalWithFlight(f);
+    }
+
+    function showRosterFlightDetails(id) {
+      const roster = getSafeStorage('myPilotRoster');
+      const entry = roster.find(e => String(e.id) === String(id));
+      if (entry) openModalWithFlight(entry.flightData);
+    }
+
+    function closeModal() {
+      document.getElementById('flight-modal').style.display = 'none';
+    }
+
+    window.onclick = function(event) {
+      if (event.target === document.getElementById('flight-modal')) closeModal();
+    };
 
     function updateDatabaseStatus() {
-        const dbCount = allFlightsDB.length;
-        const dbStatus = document.getElementById('db-status');
-        if (dbCount > 0) {
-            dbStatus.innerText = "ONLINE";
-            dbStatus.style.color = "var(--gr)";
-            renderSuggestedFlight();
-        } else {
-            dbStatus.innerText = "Sincronizando..."; 
-            dbStatus.style.color = "var(--cy)";
-        }
+      const dbCount = allFlightsDB.length;
+      const dbStatus = document.getElementById('db-status');
+
+      if (dbCount > 0) {
+        dbStatus.innerText = `ONLINE • ${dbCount} voos`;
+        dbStatus.style.color = "var(--gr)";
+        renderSuggestedFlight();
+      } else {
+        dbStatus.innerText = "Sincronizando...";
+        dbStatus.style.color = "var(--cy)";
+      }
     }
 
     async function loadAllFiles() {
-        allFlightsDB = [];
-        const dbStatus = document.getElementById('db-status');
-        dbStatus.innerText = "Sincronizando...";
-        dbStatus.style.color = "var(--cy)";
-        
-        try {
-            const promises = airlineConfig.map(async (airline) => {
-                try {
-                    const response = await fetch(airline.file);
-                    if (!response.ok) throw new Error("404");
-                    const text = await response.text();
-                    checkValidityDate(text);
-                    const flights = parseRPLData(text, airline);
-                    return { status: "OK", flights: flights };
-                } catch (error) { return { status: "Erro", flights: [] }; }
-            });
-            const results = await Promise.all(promises);
-            results.forEach(res => { if(res.flights.length > 0) allFlightsDB = allFlightsDB.concat(res.flights); });
-            
-            updateDatabaseStatus();
+      allFlightsDB = [];
+      const dbStatus = document.getElementById('db-status');
+      dbStatus.innerText = "Sincronizando...";
+      dbStatus.style.color = "var(--cy)";
 
-            if (allFlightsDB.length === 0) {
-                dbStatus.innerText = "ERRO DE LEITURA";
-                dbStatus.style.color = "var(--rd)";
-            }
-        } catch (e) {
-            dbStatus.innerText = "FALHA";
-            dbStatus.style.color = "var(--rd)";
+      try {
+        const promises = airlineConfig.map(async (airline) => {
+          try {
+            const response = await fetch(airline.file);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const text = await response.text();
+
+            checkValidityDate(text);
+            const flights = parseRPLData(text, airline);
+            return { status: "OK", flights };
+          } catch (error) {
+            console.warn(`Falha ao carregar ${airline.file}:`, error);
+            return { status: "Erro", flights: [] };
+          }
+        });
+
+        const results = await Promise.all(promises);
+        results.forEach(res => {
+          if (res.flights.length > 0) allFlightsDB = allFlightsDB.concat(res.flights);
+        });
+
+        updateDatabaseStatus();
+
+        if (allFlightsDB.length === 0) {
+          if (location.protocol === 'file:') {
+            dbStatus.innerText = "ABRA VIA LOCALHOST";
+          } else {
+            dbStatus.innerText = "ERRO DE LEITURA";
+          }
+          dbStatus.style.color = "var(--rd)";
         }
+      } catch (e) {
+        dbStatus.innerText = "FALHA";
+        dbStatus.style.color = "var(--rd)";
+      }
     }
 
     function checkValidityDate(text) {
-        if (validityUpdated) return; 
-        const regex = /IN[IÍ]CIO DE VALIDADE:\s*(\d{2})([a-z]{3})\.(\d{4})/i;
-        const match = text.match(regex);
-        if (match) {
-            const day = parseInt(match[1]);
-            const monthStr = match[2].toLowerCase();
-            const year = parseInt(match[3]);
-            const months = { 'jan':0, 'fev':1, 'mar':2, 'abr':3, 'mai':4, 'jun':5, 'jul':6, 'ago':7, 'set':8, 'out':9, 'nov':10, 'dez':11 };
-            
-            if (months[monthStr] !== undefined) {
-                const startDate = new Date(year, months[monthStr], day);
-                const endDate = new Date(startDate);
-                endDate.setDate(startDate.getDate() + 6); 
-                const opts = { day: '2-digit', month: 'short', year: 'numeric' };
-                const startFmt = startDate.toLocaleDateString('pt-BR', opts).toUpperCase().replace('.', '');
-                const endFmt = endDate.toLocaleDateString('pt-BR', opts).toUpperCase().replace('.', '');
-                const cleanStart = startFmt.replace(' DE ', ' ');
-                const cleanEnd = endFmt.replace(' DE ', ' ');
-                document.getElementById("validity-box").innerText = `CYCLE: ${cleanStart} - ${cleanEnd}`;
-                validityUpdated = true;
-            }
+      if (validityUpdated) return;
+
+      const regex = /IN[IÍ]CIO DE VALIDADE:\s*(\d{2})([a-z]{3})\.(\d{4})/i;
+      const match = text.match(regex);
+
+      if (match) {
+        const day = parseInt(match[1], 10);
+        const monthStr = match[2].toLowerCase();
+        const year = parseInt(match[3], 10);
+        const months = { 'jan':0, 'fev':1, 'mar':2, 'abr':3, 'mai':4, 'jun':5, 'jul':6, 'ago':7, 'set':8, 'out':9, 'nov':10, 'dez':11 };
+
+        if (months[monthStr] !== undefined) {
+          const startDate = new Date(year, months[monthStr], day);
+          const endDate = new Date(startDate);
+          endDate.setDate(startDate.getDate() + 6);
+
+          const opts = { day: '2-digit', month: 'short', year: 'numeric' };
+          const startFmt = startDate.toLocaleDateString('pt-BR', opts).toUpperCase().replace('.', '');
+          const endFmt = endDate.toLocaleDateString('pt-BR', opts).toUpperCase().replace('.', '');
+          const cleanStart = startFmt.replace(' DE ', ' ');
+          const cleanEnd = endFmt.replace(' DE ', ' ');
+
+          document.getElementById("validity-box").innerText = `CYCLE: ${cleanStart} - ${cleanEnd}`;
+          validityUpdated = true;
         }
+      }
     }
 
     function parseRPLData(textData, airlineInfo) {
-        const lines = textData.split('\n');
-        const flights = [];
-        let currentFlight = null;
+      const lines = textData.split('\n');
+      const flights = [];
+      let currentFlight = null;
 
-        for (let rawLine of lines) {
-            if (rawLine.trim() === '' || 
-                rawLine.includes('Planos de Voo') || 
-                rawLine.includes('Classificação:') || 
-                rawLine.includes('CIA:') || 
-                rawLine.includes('---') || 
-                rawLine.includes('VALIDO') || 
-                rawLine.includes('DESDE')) {
-                continue;
-            }
-
-            if (/^\s*\d{6}\s+\d{6}/.test(rawLine)) {
-                let line = rawLine.trim();
-                const parts = line.split(/\s+/);
-                const speedIndex = parts.findIndex(p => /^[NM]\d{3,4}$/.test(p));
-                
-                if (speedIndex !== -1 && parts.length > speedIndex + 3) {
-                    try {
-                        const daysOp = parts[2]; 
-                        const ident = parts[3]; 
-                        const type = parts[4];
-                        const adepEobt = parts[speedIndex - 1]; 
-                        const origin = adepEobt.substring(0, 4); 
-                        const depTimeUTC = adepEobt.substring(4, 8); 
-                        const fl = parts[speedIndex + 1];
-                        let destIndex = parts.findIndex((p, idx) => idx > speedIndex && /^[A-Z]{4}\d{4}$/.test(p));
-                        
-                        if (destIndex !== -1) {
-                            const destEet = parts[destIndex];
-                            const dest = destEet.substring(0, 4); 
-                            const eetStr = destEet.substring(4, 8); 
-                            const rota = parts.slice(speedIndex + 2, destIndex).join(' ');
-                            const obs = parts.slice(destIndex + 1).join(' ');
-                            const depMinUTC = timeStrToMinutes(depTimeUTC); 
-                            const durMin = timeStrToMinutes(eetStr);
-                            
-                            currentFlight = {
-                                airline: airlineInfo, ident, type, origin, dest, depMinUTC,
-                                arrMinUTC: depMinUTC + durMin, durMin, fl, rota, obs, daysOp
-                            };
-                            flights.push(currentFlight);
-                        } else {
-                            currentFlight = null;
-                        }
-                    } catch(e) { currentFlight = null; }
-                } else {
-                    currentFlight = null;
-                }
-            } else if (currentFlight && rawLine.length > 50) {
-                let routeCont = rawLine.substring(58, 94).trim();
-                let obsCont = rawLine.substring(94).trim();
-
-                if (routeCont) currentFlight.rota += ' ' + routeCont;
-                if (obsCont) currentFlight.obs += ' ' + obsCont;
-            }
+      for (let rawLine of lines) {
+        if (
+          rawLine.trim() === '' ||
+          rawLine.includes('Planos de Voo') ||
+          rawLine.includes('Classificação:') ||
+          rawLine.includes('CIA:') ||
+          rawLine.includes('---') ||
+          rawLine.includes('VALIDO') ||
+          rawLine.includes('DESDE')
+        ) {
+          continue;
         }
-        return flights;
+
+        if (/^\s*\d{6}\s+\d{6}/.test(rawLine)) {
+          let line = rawLine.trim();
+          const parts = line.split(/\s+/);
+          const speedIndex = parts.findIndex(p => /^[NM]\d{3,4}$/.test(p));
+
+          if (speedIndex !== -1 && parts.length > speedIndex + 3) {
+            try {
+              const daysOp = parts[2];
+              const ident = parts[3];
+              const type = parts[4];
+              const adepEobt = parts[speedIndex - 1];
+              const origin = adepEobt.substring(0, 4);
+              const depTimeUTC = adepEobt.substring(4, 8);
+              const fl = parts[speedIndex + 1];
+              let destIndex = parts.findIndex((p, idx) => idx > speedIndex && /^[A-Z]{4}\d{4}$/.test(p));
+
+              if (destIndex !== -1) {
+                const destEet = parts[destIndex];
+                const dest = destEet.substring(0, 4);
+                const eetStr = destEet.substring(4, 8);
+                const rota = parts.slice(speedIndex + 2, destIndex).join(' ');
+                const obs = parts.slice(destIndex + 1).join(' ');
+                const depMinUTC = timeStrToMinutes(depTimeUTC);
+                const durMin = timeStrToMinutes(eetStr);
+
+                currentFlight = {
+                  airline: airlineInfo,
+                  ident,
+                  type,
+                  origin,
+                  dest,
+                  depMinUTC,
+                  arrMinUTC: depMinUTC + durMin,
+                  durMin,
+                  fl,
+                  rota,
+                  obs,
+                  daysOp
+                };
+
+                flights.push(currentFlight);
+              } else {
+                currentFlight = null;
+              }
+            } catch (e) {
+              currentFlight = null;
+            }
+          } else {
+            currentFlight = null;
+          }
+        } else if (currentFlight && rawLine.length > 50) {
+          let routeCont = rawLine.substring(58, 94).trim();
+          let obsCont = rawLine.substring(94).trim();
+
+          if (routeCont) currentFlight.rota += ' ' + routeCont;
+          if (obsCont) currentFlight.obs += ' ' + obsCont;
+        }
+      }
+
+      return flights;
     }
   </script>
 </body>
