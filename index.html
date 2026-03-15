@@ -666,7 +666,7 @@
         alert(`Voo ${currentSuggestedFlight.ident} adicionado à sua Escala!`);
     }
 
-    // --- INTEGRAÇÃO SIMBRIEF (AGORA COM MOVIMENTO NO HUB) ---
+    // --- INTEGRAÇÃO SIMBRIEF (COM MOVIMENTO NO HUB) ---
     function openSimBriefWithData(flight, moveAcftId = null) {
         const sbID = document.getElementById("sb-id").value;
         if (!sbID) {
@@ -678,7 +678,7 @@
 
         saveToLogbook(flight);
 
-        // === NOVA LÓGICA: MOVER AERONAVE NO HUB ===
+        // LÓGICA: MOVER AERONAVE NO HUB
         if (moveAcftId) {
             let hangar = getSafeStorage('myPilotHangar');
             let idx = hangar.findIndex(a => a.id === moveAcftId);
@@ -688,7 +688,6 @@
                 renderHangar(); // Atualiza a tabela do HUB em background
             }
         }
-        // ==========================================
 
         const airlineCode = flight.ident.match(/^[A-Z]+/)[0];
         const fltNumber = flight.ident.match(/\d+/)[0];
@@ -879,11 +878,15 @@
         const randomAcft = hangar[Math.floor(Math.random() * hangar.length)];
         const orig = randomAcft.loc;
         const cia = randomAcft.cia;
+        const targetType = randomAcft.type; // <-- PEGA O TIPO EXATO (ex: B738)
 
         let candidates = getUpcomingFlights(orig, null, cia, 24);
         
+        // FILTRO DE TIPO DE AERONAVE NA 1ª PERNA
+        candidates = candidates.filter(f => f.type.split('/')[0] === targetType);
+        
         if (candidates.length === 0) {
-            alert(`Sorteio: ${cia} em ${orig}. Sem voos disponíveis para esta combinação nas próximas 24h. Tente rodar o sorteio novamente.`);
+            alert(`Sorteio: ${cia} em ${orig} (${targetType}). Sem voos disponíveis para este equipamento nas próximas 24h. Tente rodar o sorteio novamente.`);
             return;
         }
 
@@ -899,7 +902,9 @@
             const minNextDepMinsFromNow = prevArrMinsFromNow + TURNAROUND_MINUTES;
 
             let nextLegs = getUpcomingFlights(prev.dest, null, prev.airline.name, 48);
-            nextLegs = nextLegs.filter(f => f.sortMins >= minNextDepMinsFromNow);
+            
+            // FILTRO DE TEMPO DE SOLO E TIPO DE EQUIPAMENTO NAS PERNAS SEGUINTES
+            nextLegs = nextLegs.filter(f => f.sortMins >= minNextDepMinsFromNow && f.type.split('/')[0] === targetType);
 
             if (nextLegs.length > 0) {
                 let validNext = nextLegs.filter(f => f.sortMins <= minNextDepMinsFromNow + 180);
@@ -933,12 +938,11 @@
         emptyMsg.style.display = 'none';
         infoSpan.innerText = `[Aeronave Sorteada: ${acft.cia} | ${acft.type} | Sai de: ${acft.loc}]`;
         btnAddAll.style.display = 'inline-flex';
-        btnAddAll.onclick = () => scheduleEntireHangarChain(acft.id); // Bind da ação
+        btnAddAll.onclick = () => scheduleEntireHangarChain(acft.id);
 
         chain.forEach((f, index) => {
             const tr = document.createElement('tr');
             
-            // Botões conectam diretamente o ACFT ID com a lógica
             const sbButton = `<button class="btn pu small" title="Abrir no SimBrief e Mover Aeronave" onclick="dispatchHangarFlight(${index}, ${acft.id})">Simbrief ↗</button>`;
             const scheduleButton = `<button class="btn pri small" title="Agendar na escala" onclick="scheduleHangarFlight(${index}, ${acft.id})">➕ Escala</button>`;
             
@@ -1128,7 +1132,7 @@
         const roster = getSafeStorage('myPilotRoster');
         const entry = roster.find(e => e.id === id);
         if (entry) {
-            openSimBriefWithData(entry.flightData, entry.hubAcftId); // Se for vinculado ao HUB, envia a ID para mover
+            openSimBriefWithData(entry.flightData, entry.hubAcftId); 
             if(entry.hubAcftId) {
                 alert(`🛫 Aeronave despachada e movida para ${entry.flightData.dest} no HUB!`);
             }
