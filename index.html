@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>RPL Dispatch 7.3</title>
+  <title>RPL Dispatch 7.4</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -175,7 +175,7 @@
 
     <header class="topbar">
       <div class="brand">
-        <h1>RPL Dispatch <span>7.3</span></h1>
+        <h1>RPL Dispatch <span>7.4</span></h1>
         <div class="sub">Ops Dashboard Flight Simmer</div>
       </div>
 
@@ -246,7 +246,7 @@
           </div>
           <div class="tut-card">
             <h4>📖 Logbook Inteligente</h4>
-            <p>Clicar em <strong>SimBrief</strong> agora envia o voo para a <strong>Escala</strong> como <strong>PROGRAMADO</strong> e abre a aba automaticamente.</p>
+            <p>Clicar em <strong>SimBrief</strong> envia o voo para a Escala como <strong>PROGRAMADO</strong>. O aviso some sozinho e também some quando não houver mais voos.</p>
           </div>
         </div>
       </div>
@@ -498,6 +498,7 @@
               ✅ <b>Regra:</b> o sistema envia Rota, Callsign, Equipamento e FL extraídos do RPL.<br/>
               ✅ <b>Horários:</b> o SimBrief recebe os horários UTC do RPL processados automaticamente.<br/>
               ✅ <b>Novo fluxo:</b> clicar em <b>SimBrief</b> adiciona automaticamente o voo à Escala com status <b>PROGRAMADO</b>.<br/>
+              ✅ <b>Correção:</b> o aviso da Escala não fica mais preso quando você apaga os voos.<br/>
               ✅ <b>Dica:</b> para carregar os TXT com <code>fetch()</code>, abra o HTML por <b>localhost</b>.
             </div>
           </div>
@@ -550,6 +551,7 @@
     let displayedHangarChain = [];
     let validityUpdated = false;
     let currentSuggestedFlight = null;
+    let rosterNoticeTimer = null;
 
     const tabs = document.querySelectorAll('.tab');
     const panels = document.querySelectorAll('.panel');
@@ -684,12 +686,37 @@
       ].join('|');
     }
 
-    function showRosterNotice(message) {
+    function clearRosterNotice() {
+      const box = document.getElementById('roster-notice');
+      const text = document.getElementById('roster-notice-text');
+
+      if (rosterNoticeTimer) {
+        clearTimeout(rosterNoticeTimer);
+        rosterNoticeTimer = null;
+      }
+
+      if (text) text.textContent = '';
+      if (box) box.style.display = 'none';
+    }
+
+    function showRosterNotice(message, autoHide = true) {
       const box = document.getElementById('roster-notice');
       const text = document.getElementById('roster-notice-text');
       if (!box || !text) return;
+
+      if (rosterNoticeTimer) {
+        clearTimeout(rosterNoticeTimer);
+        rosterNoticeTimer = null;
+      }
+
       text.textContent = message;
       box.style.display = 'block';
+
+      if (autoHide) {
+        rosterNoticeTimer = setTimeout(() => {
+          clearRosterNotice();
+        }, 6000);
+      }
     }
 
     function addFlightToRoster(flight, { status = 'na_escala', hubAcftId = null, source = 'manual' } = {}) {
@@ -1381,6 +1408,7 @@
       tbody.innerHTML = '';
       if (roster.length === 0) {
         emptyMsg.style.display = 'block';
+        clearRosterNotice();
         return;
       } else {
         emptyMsg.style.display = 'none';
@@ -1443,13 +1471,24 @@
       if (!entry) return;
 
       registerCompletedFlight(entry.flightData, entry.hubAcftId, entry.id);
-      showRosterNotice(`Voo ${entry.flightData.ident} concluído. Logbook e HUB atualizados.`);
+
+      const updatedRoster = getSafeStorage('myPilotRoster');
+      if (updatedRoster.length > 0) {
+        showRosterNotice(`Voo ${entry.flightData.ident} concluído. Logbook e HUB atualizados.`);
+      } else {
+        clearRosterNotice();
+      }
     }
 
     function deleteRosterEntry(id) {
       if (!confirm("Remover da escala?")) return;
       deleteRosterEntryInternal(id);
       renderRoster();
+
+      const updatedRoster = getSafeStorage('myPilotRoster');
+      if (updatedRoster.length === 0) {
+        clearRosterNotice();
+      }
     }
 
     function deleteRosterEntryInternal(id) {
@@ -1658,21 +1697,19 @@
       displayedFlights = [];
       displayedHangarChain = [];
 
+      clearRosterNotice();
       renderLogbook();
       renderRoster();
       renderHangar();
       resetPanel();
       renderSuggestedFlight();
 
-      const notice = document.getElementById('roster-notice');
-      if (notice) notice.style.display = 'none';
-
       alert("Todos os dados locais foram apagados.");
     }
 
     function backupLogbook() {
       const dataStr = JSON.stringify({
-        version: "7.3",
+        version: "7.4",
         date: new Date().toISOString(),
         simbrief_id: localStorage.getItem('simbrief_id') || "",
         logbook: getSafeStorage('myPilotLogbook'),
@@ -1684,7 +1721,7 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `backup_rpl_v73_${new Date().toISOString().split('T')[0]}.json`;
+      a.download = `backup_rpl_v74_${new Date().toISOString().split('T')[0]}.json`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -1712,6 +1749,7 @@
             renderLogbook();
             renderRoster();
             renderHangar();
+            clearRosterNotice();
             alert("Restaurado com sucesso.");
           }
         } catch (err) {
