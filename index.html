@@ -93,6 +93,7 @@
     .btn-filter[data-cia="LATAM"].active{background:#1B0088;color:white;border:none}
     .btn-filter[data-cia="GOL"].active{background:#FF5E00;color:white;border:none}
     .btn-filter[data-cia="AZUL"].active{background:#0055A4;color:white;border:none}
+    .btn-filter[data-cia="ACN"].active{background:#009DE0;color:white;border:none}
 
     .tableWrap{overflow:auto;border:1px solid var(--border);border-radius:var(--r)}
     table{border-collapse:separate;border-spacing:0;min-width:1150px;width:100%}
@@ -264,6 +265,7 @@
                 <button class="btn-filter" data-cia="LATAM" onclick="setFilter('LATAM', this)">Latam</button>
                 <button class="btn-filter" data-cia="GOL" onclick="setFilter('GOL', this)">Gol</button>
                 <button class="btn-filter" data-cia="AZUL" onclick="setFilter('AZUL', this)">Azul</button>
+                <button class="btn-filter" data-cia="ACN" onclick="setFilter('AZUL CONECTA', this)">Conecta</button>
               </div>
             </div>
 
@@ -501,10 +503,10 @@
           <div class="card" style="flex:1; background: var(--input);">
             <div style="font-size:11px;color:var(--muted);font-weight:800;line-height:1.6">
               ✅ <b>Regra:</b> o sistema envia Rota, Callsign, Equipamento e FL extraídos do RPL.<br/>
-              ✅ <b>Horários:</b> o SimBrief recebe os horários UTC do RPL processados automaticamente.<br/>
-              ✅ <b>Novo fluxo:</b> clicar em <b>SimBrief</b> adiciona automaticamente o voo à Escala com status <b>PROGRAMADO</b>.<br/>
-              ✅ <b>Correção:</b> o aviso da Escala não fica mais preso quando você apaga os voos.<br/>
-              ✅ <b>Dica:</b> para carregar os TXT com <code>fetch()</code>, abra o HTML por <b>localhost</b>.
+              ✅ <b>Horários:</b> o SimBrief recebe horários UTC processados automaticamente.<br/>
+              ✅ <b>Novo fluxo:</b> clicar em <b>SimBrief</b> adiciona o voo à Escala como <b>PROGRAMADO</b>.<br/>
+              ✅ <b>Companhias:</b> Latam, Gol, Azul e Azul Conecta integradas.<br/>
+              ✅ <b>Dica:</b> para carregar os TXT com <code>fetch()</code>, abra via <b>localhost</b>.
             </div>
           </div>
         </div>
@@ -547,7 +549,8 @@
     const airlineConfig = [
       { id: 'LATAM', name: 'LATAM', file: 'Cia_TAM_CS.txt', color: '#1B0088' },
       { id: 'GOL', name: 'GOL', file: 'Cia_GLO_CS.txt', color: '#FF5E00' },
-      { id: 'AZUL', name: 'AZUL', file: 'Cia_AZU_CS.txt', color: '#0055A4' }
+      { id: 'AZUL', name: 'AZUL', file: 'Cia_AZU_CS.txt', color: '#0055A4' },
+      { id: 'ACN', name: 'AZUL CONECTA', file: 'Cia_ACN_CS.txt', color: '#009DE0' }
     ];
 
     let allFlightsDB = [];
@@ -668,6 +671,7 @@
       if (callsign.startsWith("TAM") || callsign.startsWith("LTG")) return "LATAM";
       if (callsign.startsWith("GLO")) return "GOL";
       if (callsign.startsWith("AZU")) return "AZUL";
+      if (callsign.startsWith("ACN")) return "AZUL CONECTA";
       const match = callsign.match(/^[A-Z]+/);
       return match ? match[0] : "DESCONHECIDA";
     }
@@ -676,6 +680,7 @@
       if (cia === 'LATAM') return '#1B0088';
       if (cia === 'GOL') return '#FF5E00';
       if (cia === 'AZUL') return '#0055A4';
+      if (cia === 'AZUL CONECTA' || cia === 'ACN') return '#009DE0';
       return '#475569';
     }
 
