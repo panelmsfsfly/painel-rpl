@@ -290,6 +290,11 @@
               <input id="destination-search" placeholder="Ex: SBSP" style="width:140px; min-width:auto;" onkeydown="if(event.key==='Enter') searchFlights()"/>
             </div>
             <div>
+              <label>Aeronave (Opc.)</label>
+              <input id="type-search" list="acft-list" placeholder="Ex: B738" style="width:120px; min-width:auto;" onkeydown="if(event.key==='Enter') searchFlights()"/>
+              <datalist id="acft-list"></datalist>
+            </div>
+            <div>
               <label>Nº VOO</label>
               <input id="search-input" placeholder="Ex: 1234" style="width:120px; min-width:auto;" onkeydown="if(event.key==='Enter') manualSearch()"/>
             </div>
@@ -1002,6 +1007,7 @@
       document.getElementById('search-input').value = '';
       document.getElementById('airport-search').value = '';
       document.getElementById('destination-search').value = '';
+      document.getElementById('type-search').value = '';
 
       currentFilter = 'todas';
       displayedFlights = [];
@@ -1010,6 +1016,21 @@
       groupButtons.forEach(b => b.classList.remove('active'));
       const allBtn = document.querySelector('#cia-filter-group .btn-filter[data-cia="TODAS"]');
       if (allBtn) allBtn.classList.add('active');
+    }
+
+    function updateAircraftDatalist() {
+      const types = new Set();
+      allFlightsDB.forEach(f => types.add(f.type.split('/')[0]));
+      
+      const datalist = document.getElementById('acft-list');
+      if (!datalist) return;
+      
+      datalist.innerHTML = '';
+      Array.from(types).sort().forEach(type => {
+        const option = document.createElement('option');
+        option.value = type;
+        datalist.appendChild(option);
+      });
     }
 
     function getUpcomingFlights(orig, dest = null, ciaFilter = 'todas', maxHours = 48, typeFilter = null) {
@@ -1105,6 +1126,9 @@
       const orig = rawOrig ? rawOrig.toUpperCase().trim() : "";
       const rawDest = document.getElementById('destination-search').value;
       const dest = rawDest ? rawDest.toUpperCase().trim() : "";
+      
+      const rawType = document.getElementById('type-search').value;
+      const type = rawType ? rawType.toUpperCase().trim() : null;
 
       if (orig.length < 3) {
         alert("Preencha pelo menos 3 caracteres na Origem (Ex: SBGR).");
@@ -1116,7 +1140,7 @@
         return;
       }
 
-      const matches = getUpcomingFlights(orig, dest.length >= 3 ? dest : null, currentFilter, 48);
+      const matches = getUpcomingFlights(orig, dest.length >= 3 ? dest : null, currentFilter, 48, type);
 
       if (matches.length === 0) {
         if (dest.length >= 3) alert(`Nenhum voo direto encontrado de ${orig} para ${dest} nas próximas 48 horas.`);
@@ -1840,6 +1864,7 @@
         });
 
         updateDatabaseStatus();
+        updateAircraftDatalist();
 
         if (allFlightsDB.length === 0) {
           if (location.protocol === 'file:') {
