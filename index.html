@@ -259,7 +259,7 @@
           <h3>Filtros Avançados e Escalas</h3>
           <div class="row">
             <div>
-              <label>Companhia Aérea</label>
+              <label>Companhia Aérea (Multi-Seleção)</label>
               <div class="filter-wrapper" id="cia-filter-group">
                 <button class="btn-filter active" data-cia="TODAS" onclick="setFilter('todas', this)">Todas</button>
                 <button class="btn-filter" data-cia="LATAM" onclick="setFilter('LATAM', this)">Latam</button>
@@ -554,7 +554,7 @@
     ];
 
     let allFlightsDB = [];
-    let currentFilter = 'todas';
+    let currentFilter = ['todas']; // Agora é um array de múltipla seleção
     let displayedFlights = [];
     let displayedHangarChain = [];
     let validityUpdated = false;
@@ -811,7 +811,7 @@
       const container = document.getElementById('suggested-flight-container');
       if (allFlightsDB.length === 0) return;
 
-      let candidates = getUpcomingFlights(null, null, 'todas', 3);
+      let candidates = getUpcomingFlights(null, null, ['todas'], 3);
       candidates = candidates.filter(f => f.sortMins >= 30);
 
       if (candidates.length === 0) {
@@ -997,11 +997,33 @@
       saveJSON('myPilotHangar', hangar);
     }
 
+    // NOVA FUNÇÃO DE FILTRO: MÚLTIPLA SELEÇÃO
     function setFilter(filterName, btnElement) {
-      const groupButtons = document.querySelectorAll('#cia-filter-group .btn-filter');
-      groupButtons.forEach(b => b.classList.remove('active'));
-      btnElement.classList.add('active');
-      currentFilter = filterName;
+      if (filterName === 'todas') {
+        document.querySelectorAll('#cia-filter-group .btn-filter').forEach(b => b.classList.remove('active'));
+        btnElement.classList.add('active');
+        currentFilter = ['todas'];
+      } else {
+        const todasBtn = document.querySelector('#cia-filter-group .btn-filter[data-cia="TODAS"]');
+        todasBtn.classList.remove('active');
+
+        if (currentFilter.includes('todas')) {
+          currentFilter = [];
+        }
+
+        if (currentFilter.includes(filterName)) {
+          currentFilter = currentFilter.filter(f => f !== filterName);
+          btnElement.classList.remove('active');
+        } else {
+          currentFilter.push(filterName);
+          btnElement.classList.add('active');
+        }
+
+        if (currentFilter.length === 0) {
+          todasBtn.classList.add('active');
+          currentFilter = ['todas'];
+        }
+      }
     }
 
     function resetPanel() {
@@ -1014,11 +1036,10 @@
       document.getElementById('destination-search').value = '';
       document.getElementById('type-search').value = '';
 
-      currentFilter = 'todas';
+      currentFilter = ['todas'];
       displayedFlights = [];
 
-      const groupButtons = document.querySelectorAll('#cia-filter-group .btn-filter');
-      groupButtons.forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#cia-filter-group .btn-filter').forEach(b => b.classList.remove('active'));
       const allBtn = document.querySelector('#cia-filter-group .btn-filter[data-cia="TODAS"]');
       if (allBtn) allBtn.classList.add('active');
     }
@@ -1038,7 +1059,7 @@
       });
     }
 
-    function getUpcomingFlights(orig, dest = null, ciaFilter = 'todas', maxHours = 48, typeFilter = null) {
+    function getUpcomingFlights(orig, dest = null, ciaFilter = ['todas'], maxHours = 48, typeFilter = null) {
       const now = getSimulationDate();
       const currentBRTMinutes = (now.getHours() * 60) + now.getMinutes();
       const currentLocalDay = now.getDay();
@@ -1049,7 +1070,10 @@
       allFlightsDB.forEach(f => {
         if (orig && f.origin !== orig) return;
         if (dest && f.dest !== dest) return;
-        if (ciaFilter !== 'todas' && f.airline.name !== ciaFilter) return;
+        
+        let filters = Array.isArray(ciaFilter) ? ciaFilter : [ciaFilter];
+        if (!filters.includes('todas') && !filters.includes(f.airline.name)) return;
+
         if (typeFilter && f.type.split('/')[0] !== typeFilter) return;
 
         let depMinBRT = f.depMinUTC - 180;
@@ -1163,7 +1187,7 @@
 
       let candidates = getUpcomingFlights(orig.length >= 3 ? orig : null, null, currentFilter, 24);
       if (candidates.length === 0) {
-        alert("Sem voos disponíveis nas próximas horas.");
+        alert("Sem voos disponíveis nas próximas horas para os filtros selecionados.");
         return;
       }
 
@@ -1179,7 +1203,8 @@
         const prevArrMinsFromNow = prev.sortMins + prev.durMin;
         const minNextDepMinsFromNow = prevArrMinsFromNow + TURNAROUND_MINUTES;
 
-        let nextLegs = getUpcomingFlights(prev.dest, null, prev.airline.name, 48, targetType);
+        // USA O currentFilter AQUI PARA PERMITIR CONEXÕES DE MÚLTIPLAS CIAS
+        let nextLegs = getUpcomingFlights(prev.dest, null, currentFilter, 48, targetType);
         nextLegs = nextLegs.filter(f => f.sortMins >= minNextDepMinsFromNow);
 
         if (nextLegs.length > 0) {
@@ -1228,6 +1253,7 @@
         const prevArrMinsFromNow = prev.sortMins + prev.durMin;
         const minNextDepMinsFromNow = prevArrMinsFromNow + TURNAROUND_MINUTES;
 
+        // Hangar deve sempre puxar a mesma companhia pois é um avião físico daquela empresa
         let nextLegs = getUpcomingFlights(prev.dest, null, prev.airline.name, 48, targetType);
         nextLegs = nextLegs.filter(f => f.sortMins >= minNextDepMinsFromNow);
 
@@ -1597,11 +1623,17 @@
       document.getElementById('airport-search').value = loc;
       document.getElementById('destination-search').value = '';
 
-      const btn = document.querySelector(`#cia-filter-group .btn-filter[data-cia="${cia}"]`);
-      if (btn) setFilter(cia, btn);
-      else {
-        const allBtn = document.querySelector('#cia-filter-group .btn-filter[data-cia="TODAS"]');
-        if (allBtn) setFilter('todas', allBtn);
+      document.querySelectorAll('#cia-filter-group .btn-filter').forEach(b => b.classList.remove('active'));
+      const dataCiaCode = cia === 'AZUL CONECTA' ? 'ACN' : cia;
+      const btn = document.querySelector(`#cia-filter-group .btn-filter[data-cia="${dataCiaCode}"]`);
+
+      if (btn) {
+         btn.classList.add('active');
+         currentFilter = [cia];
+      } else {
+         const allBtn = document.querySelector('#cia-filter-group .btn-filter[data-cia="TODAS"]');
+         if(allBtn) allBtn.classList.add('active');
+         currentFilter = ['todas'];
       }
 
       if (allFlightsDB.length === 0) {
@@ -1609,7 +1641,7 @@
         return;
       }
 
-      const matches = getUpcomingFlights(loc, null, cia, 48, type);
+      const matches = getUpcomingFlights(loc, null, currentFilter, 48, type);
 
       if (matches.length === 0) {
         alert(`Nenhuma partida encontrada saindo de ${loc} com o equipamento ${type} nas próximas 48 horas.`);
