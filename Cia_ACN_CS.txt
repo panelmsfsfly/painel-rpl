@@ -3,255 +3,258 @@
                                                Planos de Voo Repetitivos
                                                Classificação: Ident Anv
 
-CIA: ACN                                    INÍCIO DE VALIDADE: 16abr.2026                                       PAG.: 1
+CIA: ACN                                    INÍCIO DE VALIDADE: 30abr.2026                                       PAG.: 1
 -----------------------------------------------------------------------------------------------------------------------------------------
    VALIDO VALIDO DIAS OP  IDENT  TIPO   ADEP     VEL   FL  ROTA                                DEST         OBSERVACOES
    DESDE   ATE   STQQSSD   ANV     TURB     EOBT                                                   EET
 -----------------------------------------------------------------------------------------------------------------------------------------
 
 
-   170426 220426 1030500 ACN5102 C208/L SNRU1855 N0150 065 DCT 0848S03626W DCT                 SNGN0019 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   040526 060526 1030000 ACN5102 C208/L SNGN1955 N0155 075 DCT 0842S03611W/N0155F090 IFR DCT   SBRF0050 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+                                                                                                        OPR/AZUL CONECTA LTDA PER/A   
+   040526 060526 1030000 ACN5102 C208/L SBRF1740 N0155 080 DCT 0816S03554W/N0150F065 VFR DCT   SNRU0030 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                                                                         OPR/AZUL CONECTA LTDA PER/A   
                                                                                                         RALT/F090 DCT SBRF            
-   170426 220426 1030500 ACN5102 C208/L SNGN1955 N0155 075 DCT 0842S03611W/N0155F090 IFR DCT   SBRF0050 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   040526 040526 1000000 ACN5108 C208/L SBBE1530 N0155 100 DCT 0159S04847W DCT 0351S04921W DCT SBCJ0200 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                                                                         OPR/AZUL CONECTA LTDA PER/A   
-   170426 220426 1030500 ACN5102 C208/L SBRF1740 N0155 080 DCT 0816S03554W/N0150F065 VFR DCT   SNRU0030 EQPT/SDFGR/S PBN/B2C2D2O2S1   
-                                                                                                        OPR/AZUL CONECTA LTDA PER/A   
-                                                                                                        RALT/F090 DCT SBRF            
-   170426 170426 0000500 ACN5108 C208/L SBBE1000 N0150 100 DCT LUIZA DCT MOXUG DCT             SDOW0228 EQPT/SDFGR/S PBN/B2C2D2O2S1   
-                                                           0634S05057W/N0150F045 VFR DCT                OPR/AZUL CONECTA LTDA PER/A   
-                                                                                                        RALT/F080 DCT SBCJ            
-   170426 170426 0000500 ACN5108 C208/L SDOW1310 N0155 075 DCT 0640S05055W/N0155F090 IFR DCT   SBCJ0030 EQPT/SDFGR/S PBN/B2C2D2O2S1   
-                                                                                                        OPR/AZUL CONECTA LTDA PER/A   
-   170426 170426 0000500 ACN5109 C208/L SBCJ1440 N0155 090 DCT 0548S04954W DCT 0418S04926W     SBBE0200 EQPT/SDFGR/S PBN/B2C2D2O2S1   
-                                                           DCT LUIZA                                    OPR/AZUL CONECTA LTDA PER/A   
-   160426 210426 0204060 ACN5112 C208/L SBCF1200 N0155 090 DCT 1631S04229W/N0155F075 VFR DCT   SNSS0130 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   040526 040526 1000000 ACN5108 C208/L SBCJ1830 N0155 080 DCT 0618S05018W DCT                 SDOW0030 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+                                                           0641S05056W/N0150F065 VFR                    OPR/AZUL CONECTA LTDA PER/A   
+                                                                                                        RALT/F090 DCT SBCJ            
+   040526 040526 1000000 ACN5108 C208/L SDOW1940 N0150 055 DCT 0635S05057W/N0150F090 IFR       SBBE0228 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+                                                           MOXUG LUIZA                                  OPR/AZUL CONECTA LTDA PER/A   
+   300426 050526 0204000 ACN5112 C208/L SBCF1200 N0155 090 DCT 1631S04229W/N0155F075 VFR DCT   SNSS0130 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                                                                         RALT/F100 DCT SBCF            
                                                                                                         EET/SBRE0120 OPR/AZUL CONECTA 
                                                                                                         LTDA PER/A                    
-   160426 210426 0204060 ACN5113 C208/L SNSS1420 N0155 065 DCT 1631S04229W/N0155F100 IFR DCT   SBCF0126 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   300426 050526 0204000 ACN5113 C208/L SNSS1420 N0155 065 DCT 1631S04229W/N0155F100 IFR DCT   SBCF0126 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                                                                         EET/SBBS0011 OPR/AZUL CONECTA 
                                                                                                         LTDA PER/A                    
-   160426 220426 0234500 ACN5123 C208/L SBCY1100 N0155 100 DCT 1449S05637W DCT 1340S05719W     SSOU0245 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   300426 050526 1204000 ACN5123 C208/L SBCY1100 N0155 100 DCT 1449S05637W DCT 1340S05719W     SSOU0245 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            DCT 1210S05815W DCT                          OPR/AZUL CONECTA LTDA PER/A   
                                                            1029S05916W/N0150F065 VFR DCT                RALT/F100 DCT SBPV            
-   160426 220426 0234500 ACN5124 C208/L SSOU1430 N0155 075 DCT 1057S05900W/N0155F090 IFR DCT   SBCY0325 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   060526 060526 0030000 ACN5123 C208/L SBCY1105 N0155 100 DCT 1449S05637W DCT 1340S05719W     SSOU0245 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+                                                           DCT 1210S05815W DCT                          OPR/AZUL CONECTA LTDA PER/A   
+                                                           1029S05916W/N0150F065 VFR DCT                RALT/F100 DCT SBPV            
+   300426 050526 1204000 ACN5124 C208/L SSOU1430 N0155 075 DCT 1057S05900W/N0155F090 IFR DCT   SBCY0325 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                                                                         OPR/AZUL CONECTA LTDA PER/A   
-   170426 220426 0030500 ACN5130 C208/L SBCF1210 N0155 100 DCT MIMIP DCT 1934S04644W DCT       SBAX0105 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   060526 060526 0030000 ACN5124 C208/L SSOU1435 N0155 075 DCT 1057S05900W/N0155F090 IFR DCT   SBCY0325 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                                                                         OPR/AZUL CONECTA LTDA PER/A   
-   170426 220426 0030500 ACN5131 C208/L SBAX1410 N0155 090 DCT 1934S04644W DCT MIMIP DCT       SBCF0115 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   040526 060526 1030000 ACN5130 C208/L SBCF1210 N0155 100 DCT MIMIP DCT 1934S04644W DCT       SBAX0105 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                                                                         OPR/AZUL CONECTA LTDA PER/A   
-   160426 210426 0204060 ACN5132 C208/L SBCF1205 N0155 100 DCT 1849S04607W/N0140F085 VFR DCT   SNPD0100 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   040526 060526 1030000 ACN5131 C208/L SBAX1410 N0155 090 DCT 1934S04644W DCT MIMIP DCT       SBCF0115 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+                                                                                                        OPR/AZUL CONECTA LTDA PER/A   
+   300426 050526 0204000 ACN5132 C208/L SBCF1205 N0155 100 DCT 1849S04607W/N0140F085 VFR DCT   SNPD0100 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                                                                         OPR/AZUL CONECTA LTDA PER/A   
                                                                                                         RALT/F090 DCT SBCF            
-   160426 210426 0204060 ACN5133 C208/L SNPD1405 N0155 075 DCT 1849S04607W/N0140F090 IFR DCT   SBCF0105 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   300426 050526 0204000 ACN5133 C208/L SNPD1405 N0155 075 DCT 1849S04607W/N0140F090 IFR DCT   SBCF0105 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                                                                         OPR/AZUL CONECTA LTDA PER/A   
-   160426 220426 1234560 ACN5144 C208/L SBKP1205 N0155 090 DCT DORLU DCT 2318S04427W/N0150VFR  SBJR0140 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   300426 300426 0004000 ACN5144 C208/L SBKP1205 N0155 090 DCT DORLU DCT 2318S04427W/N0150VFR  SBJR0140 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            VFR REA                                      EET/SBCW0026 OPR/AZUL CONECTA 
                                                                                                         LTDA PER/A RALT/F090 DCT SBGL 
                                                                                                         RMK/ALT MAX REA FOXTROT       
-   190426 190426 0000007 ACN5144 C208/L SBKP1710 N0155 090 DCT DORLU DCT 2318S04427W/N0150VFR  SBJR0140 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   010526 060526 1230560 ACN5144 C208/L SBKP1210 N0155 090 DCT DORLU DCT 2318S04427W/N0150VFR  SBJR0140 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            VFR REA                                      EET/SBCW0026 OPR/AZUL CONECTA 
                                                                                                         LTDA PER/A RALT/F090 DCT SBGL 
                                                                                                         RMK/ALT MAX REA FOXTROT       
-   160426 220426 1234560 ACN5145 C208/L SBJR1420 N0155 045 REA 2318S04427W/N0155F100 IFR DCT   SBKP0140 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   030526 030526 0000007 ACN5144 C208/L SBKP1705 N0155 090 DCT DORLU DCT 2318S04427W/N0150VFR  SBJR0140 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+                                                           VFR REA                                      EET/SBCW0026 OPR/AZUL CONECTA 
+                                                                                                        LTDA PER/A RALT/F090 DCT SBGL 
+                                                                                                        RMK/ALT MAX REA FOXTROT       
+   300426 060526 1234560 ACN5145 C208/L SBJR1420 N0155 045 REA 2318S04427W/N0155F100 IFR DCT   SBKP0140 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            DORLU DCT                                    EET/SBBS0055 OPR/AZUL CONECTA 
                                                                                                         LTDA PER/A                    
-   190426 190426 0000007 ACN5145 C208/L SBJR1925 N0155 045 REA 2318S04427W/N0155F100 IFR DCT   SBKP0140 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   030526 030526 0000007 ACN5145 C208/L SBJR1925 N0155 045 REA 2318S04427W/N0155F100 IFR DCT   SBKP0140 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            DORLU DCT                                    EET/SBBS0055 OPR/AZUL CONECTA 
                                                                                                         LTDA PER/A                    
-   160426 220426 1234500 ACN5148 C208/L SBCF2125 N0155 100 DCT DEJAN DCT PAI DCT EPGIP DCT     SBJR0142 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   300426 060526 1234000 ACN5148 C208/L SBCF2125 N0155 100 DCT DEJAN DCT PAI DCT EPGIP DCT     SBJR0142 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            2301S04403W/N0155F080 DCT                    EET/SBCW0016 OPR/AZUL CONECTA 
                                                            2314S04407W/N0155VFR VFR REA                 LTDA PER/A RALT/F080 DCT SBRJ 
                                                                                                         RMK/ALT MAX REA FOXTROT       
-   160426 220426 1234500 ACN5149 C208/L SBJR2340 N0155 045 REA 2302S04322W DCT                 SBCF0143 EQPT/SDFGR/S PBN/B2C2D2O2S1   
-                                                           2314S04407W/N0155F110 IFR DCT                EET/SBBS0122 OPR/AZUL CONECTA 
-                                                           EPGIP DCT PAI DCT PAGIG/N0155F090            LTDA PER/A RMK/ALT MAX REA    
-                                                           DCT XONOK DCT 2028S04352W DCT                FOXTROT                       
-   190426 190426 0000007 ACN5172 C208/L SBCF1655 N0155 100 DCT DEJAN DCT PAI DCT EPGIP DCT     SBJR0142 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   010526 010526 0000500 ACN5148 C208/L SBCF1200 N0155 100 DCT DEJAN DCT PAI DCT EPGIP DCT     SBJR0142 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            2301S04403W/N0155F080 DCT                    EET/SBCW0016 OPR/AZUL CONECTA 
                                                            2314S04407W/N0155VFR VFR REA                 LTDA PER/A RALT/F080 DCT SBRJ 
                                                                                                         RMK/ALT MAX REA FOXTROT       
-   190426 190426 0000007 ACN5173 C208/L SBJR1920 N0155 045 REA 2302S04322W DCT                 SBCF0143 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   300426 060526 1234000 ACN5149 C208/L SBJR2340 N0155 045 REA 2302S04322W DCT                 SBCF0143 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            2314S04407W/N0155F110 IFR DCT                EET/SBBS0122 OPR/AZUL CONECTA 
                                                            EPGIP DCT PAI DCT PAGIG/N0155F090            LTDA PER/A RMK/ALT MAX REA    
                                                            DCT XONOK DCT 2028S04352W DCT                FOXTROT                       
-   170426 220426 1030500 ACN5182 C208/L SBCF1630 N0155 090 DCT 1924S04053W/N0155F075 VFR DCT   SNLN0123 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   010526 010526 0000500 ACN5149 C208/L SBJR1430 N0155 045 REA 2302S04322W DCT                 SBCF0143 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+                                                           2314S04407W/N0155F110 IFR DCT                EET/SBBS0122 OPR/AZUL CONECTA 
+                                                           EPGIP DCT PAI DCT PAGIG/N0155F090            LTDA PER/A RMK/ALT MAX REA    
+                                                           DCT XONOK DCT 2028S04352W DCT                FOXTROT                       
+   030526 030526 0000007 ACN5172 C208/L SBCF1655 N0155 100 DCT DEJAN DCT PAI DCT EPGIP DCT     SBJR0142 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+                                                           2301S04403W/N0155F080 DCT                    EET/SBCW0016 OPR/AZUL CONECTA 
+                                                           2314S04407W/N0155VFR VFR REA                 LTDA PER/A RALT/F080 DCT SBRJ 
+                                                                                                        RMK/ALT MAX REA FOXTROT       
+   030526 030526 0000007 ACN5173 C208/L SBJR1920 N0155 045 REA 2302S04322W DCT                 SBCF0143 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+                                                           2314S04407W/N0155F110 IFR DCT                EET/SBBS0122 OPR/AZUL CONECTA 
+                                                           EPGIP DCT PAI DCT PAGIG/N0155F090            LTDA PER/A RMK/ALT MAX REA    
+                                                           DCT XONOK DCT 2028S04352W DCT                FOXTROT                       
+   040526 060526 1030000 ACN5182 C208/L SBCF1630 N0155 090 DCT 1924S04053W/N0155F075 VFR DCT   SNLN0123 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                                                                         RALT/F100 DCT SBCF            
                                                                                                         EET/SBRE0030 OPR/AZUL CONECTA 
                                                                                                         LTDA PER/A                    
-   170426 220426 1030500 ACN5183 C208/L SNLN1845 N0155 065 DCT 1924S04053W/N0155F100 IFR DCT   SBCF0128 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   040526 060526 1030000 ACN5183 C208/L SNLN1845 N0155 065 DCT 1924S04053W/N0155F100 IFR DCT   SBCF0128 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                                                                         EET/SBBS0052 OPR/AZUL CONECTA 
                                                                                                         LTDA PER/A                    
-   160426 210426 0204060 ACN5190 C208/L SNBA2015 N0155 085 DCT 2051S04832W/N0155F100 IFR DCT   SBKP0112 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   300426 050526 0204000 ACN5190 C208/L SNBA2015 N0155 085 DCT 2051S04832W/N0155F100 IFR DCT   SBKP0112 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            LOKAR DCT MEVUT/N0155F090 DCT                OPR/AZUL CONECTA LTDA PER/A   
                                                            UTLOT DCT                                    
-   160426 210426 0204060 ACN5190 C208/L SIMK1900 N0150 045 DCT 2035S04734W/N0155F060 IFR DCT   SNBA0030 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   300426 050526 0204000 ACN5190 C208/L SIMK1900 N0150 045 DCT 2035S04734W/N0155F060 IFR DCT   SNBA0030 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            2034S04831W/N0155F045 VFR DCT                OPR/AZUL CONECTA LTDA PER/A   
                                                                                                         RALT/F080 DCT SBRP            
-   160426 210426 0204060 ACN5190 C208/L SBKP1705 N0155 090 DCT 2233S04704W DCT 2209S04641W     SIMK0110 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   300426 050526 0204000 ACN5190 C208/L SBKP1705 N0155 090 DCT 2233S04704W DCT 2209S04641W     SIMK0110 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            DCT EVTOB/N0155F080 DCT                      OPR/AZUL CONECTA LTDA PER/A   
                                                            2041S04719W/N0155F065 VFR DCT                RALT/F080 DCT SBRP            
-   160426 210426 0204060 ACN5191 C208/L SNJM1825 N0155 085 DCT 2000S04231W/N0155F100 IFR DCT   SBCF0039 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   300426 050526 0204000 ACN5191 C208/L SNJM1825 N0155 085 DCT 2000S04231W/N0155F100 IFR DCT   SBCF0039 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                                                                         EET/SBBS0009 OPR/AZUL CONECTA 
                                                                                                         LTDA PER/A                    
-   160426 210426 0204060 ACN5192 C208/L SBCF1655 N0155 090 DCT 1952S04212W/N0155F085 VFR DCT   SNJM0037 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   300426 050526 0204000 ACN5192 C208/L SBCF1655 N0155 090 DCT 1952S04212W/N0155F085 VFR DCT   SNJM0037 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                                                                         EET/SBRE0028 OPR/AZUL CONECTA 
                                                                                                         LTDA RALT/F100 DCT SBCF PER/A 
-   160426 220426 0234500 ACN5194 C208/L SBCF2020 N0155 100 DCT 1946S04426W DCT                 SNDV0030 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   300426 300426 0004000 ACN5194 C208/L SBCF2020 N0155 100 DCT 1946S04426W DCT                 SNDV0030 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            2008S04450W/N0155F065 VFR DCT                OPR/AZUL CONECTA LTDA PER/A   
                                                                                                         RALT/F090 DCT SBCF            
-   160426 220426 0234500 ACN5195 C208/L SNDV2130 N0155 075 DCT 2008S04448W/N0155F090 IFR DCT   SBCF0030 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   040526 060526 1230000 ACN5194 C208/L SBCF2025 N0155 100 DCT 1946S04426W DCT                 SNDV0030 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+                                                           2008S04450W/N0155F065 VFR DCT                OPR/AZUL CONECTA LTDA PER/A   
+                                                                                                        RALT/F090 DCT SBCF            
+   300426 300426 0004000 ACN5195 C208/L SNDV2130 N0155 075 DCT 2008S04448W/N0155F090 IFR DCT   SBCF0030 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            1947S04413W DCT                              OPR/AZUL CONECTA LTDA PER/A   
-   170426 220426 0030500 ACN5198 C208/L SBKP1750 N0155 100 DCT GENBI DCT MEVUT/N0155F070 DCT   SBAQ0040 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   040526 060526 1230000 ACN5195 C208/L SNDV2140 N0155 075 DCT 2008S04448W/N0155F090 IFR DCT   SBCF0030 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+                                                           1947S04413W DCT                              OPR/AZUL CONECTA LTDA PER/A   
+   040526 060526 1030000 ACN5198 C208/L SBKP1750 N0155 100 DCT GENBI DCT MEVUT/N0155F070 DCT   SBAQ0040 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                                                                         OPR/AZUL CONECTA LTDA PER/A   
-   170426 220426 0030500 ACN5199 C208/L SBAQ1920 N0155 100 DCT MEVUT/N0155F090 DCT UTLOT       SBKP0040 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   040526 060526 1030000 ACN5199 C208/L SBAQ1925 N0155 100 DCT MEVUT/N0155F090 DCT UTLOT       SBKP0040 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                                                                         OPR/AZUL CONECTA LTDA PER/A   
-   170426 220426 1030500 ACN5247 C208/L SBCF1605 N0155 090 DCT ARUDI DCT                       SNTO0110 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   040526 060526 1030000 ACN5247 C208/L SBCF1605 N0155 090 DCT ARUDI DCT                       SNTO0110 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            1802S04143W/N0140F075 VFR DCT                EET/SBRE0040 OPR/AZUL CONECTA 
                                                                                                         LTDA PER/A RALT/F100 DCT SBCF 
-   170426 220426 1030500 ACN5248 C208/L SNTO1800 N0155 065 DCT 1802S04143W/N0155F100 IFR DCT   SBCF0105 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   040526 060526 1030000 ACN5248 C208/L SNTO1800 N0155 065 DCT 1802S04143W/N0155F100 IFR DCT   SBCF0105 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            ARUDI DCT                                    EET/SBBS0025 OPR/AZUL CONECTA 
                                                                                                         LTDA PER/A                    
-   170426 220426 1030500 ACN5252 C208/L SBCF1200 N0155 100 DCT VUKEM DCT                       SBVG0055 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   040526 060526 1030000 ACN5252 C208/L SBCF1150 N0155 100 DCT VUKEM DCT                       SBVG0055 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                                                                         OPR/AZUL CONECTA LTDA PER/A   
-   170426 220426 1030500 ACN5253 C208/L SBVG1345 N0155 090 DCT VUKEM DCT                       SBCF0100 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   040526 060526 1030000 ACN5253 C208/L SBVG1340 N0155 090 DCT VUKEM DCT                       SBCF0100 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                                                                         OPR/AZUL CONECTA LTDA PER/A   
-   160426 210426 0204060 ACN5258 C208/L SBCF1625 N0155 100 DCT MUBOL DCT                       SNZR0125 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   300426 050526 0204000 ACN5258 C208/L SBCF1625 N0155 100 DCT MUBOL DCT                       SNZR0125 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            1733S04633W/N0155F085 VFR DCT                OPR/AZUL CONECTA LTDA PER/A   
                                                                                                         RALT/F090 DCT SBCF            
-   160426 210426 0204060 ACN5259 C208/L SNZR1840 N0155 075 DCT 1733S04633W/N0155F090 IFR DCT   SBCF0130 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   300426 050526 0204000 ACN5259 C208/L SNZR1840 N0155 075 DCT 1733S04633W/N0155F090 IFR DCT   SBCF0130 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            MUBOL DCT                                    OPR/AZUL CONECTA LTDA PER/A   
-   190426 220426 0030007 ACN5313 C208/L SBEG1635 N0155 100 DCT ELOPE DCT                       SBMY0110 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   030526 060526 0030007 ACN5313 C208/L SBEG1635 N0155 100 DCT ELOPE DCT                       SBMY0110 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            0520S06104W/N0155F085 VFR DCT                OPR/AZUL CONECTA LTDA PER/A   
                                                                                                         RALT/F090 DCT SBEG            
-   190426 220426 0030007 ACN5314 C208/L SBMY1830 N0155 075 DCT 0520S06104W/N0155F090 IFR DCT   SBEG0115 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   030526 060526 0030007 ACN5314 C208/L SBMY1830 N0155 075 DCT 0520S06104W/N0155F090 IFR DCT   SBEG0115 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            ELOPE DCT                                    OPR/AZUL CONECTA LTDA PER/A   
                                                                                                         RMK/JAH VOADO VMC             
-   170426 170426 0000500 ACN5315 C208/L SBEG1200 N0155 100 DCT BINAS DCT                       SWBC0130 EQPT/SDFGR/S PBN/B2C2D2O2S1   
-                                                           0118S06233W/N0155F085 VFR DCT                OPR/AZUL CONECTA LTDA PER/A   
-                                                                                                        RALT/F090 DCT SBEG            
-   170426 170426 0000500 ACN5316 C208/L SWBC1405 N0155 075 DCT 0118S06233W/N0150F090 IFR DCT   SBEG0130 EQPT/SDFGR/S PBN/B2C2D2O2S1   
-                                                           BINAS DCT                                    OPR/AZUL CONECTA LTDA PER/A   
-   160426 160426 0004000 ACN5317 C208/L SBEG1640 N0155 090 DCT 0318S05810W/N0150F075 VFR DCT   SWMW0110 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   300426 050526 0204000 ACN5317 C208/L SBEG1640 N0155 090 DCT 0318S05810W/N0150F075 VFR DCT   SWMW0110 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                                                                         OPR/AZUL CONECTA LTDA PER/A   
                                                                                                         RALT/F100 DCT SBEG            
-   160426 160426 0004000 ACN5317 C208/L SWMW1830 N0155 065 DCT 0327S05753W/N0150F080 IFR       SWBR0055 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   300426 050526 0204000 ACN5317 C208/L SWMW1830 N0155 065 DCT 0327S05753W/N0150F080 IFR       SWBR0055 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            0417S05924W/N0150F065 VFR DCT                OPR/AZUL CONECTA LTDA PER/A   
                                                                                                         RALT/F080 DCT SBEG            
-   160426 160426 0004000 ACN5317 C208/L SWBR2010 N0155 055 DCT 0408S05940W/N0155F080 IFR DCT   SBEG0030 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   300426 050526 0204000 ACN5317 C208/L SWBR2010 N0155 055 DCT 0408S05940W/N0155F080 IFR DCT   SBEG0030 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                                                                         OPR/AZUL CONECTA LTDA PER/A   
-   170426 170426 0000500 ACN5318 C208/L SBEG1650 N0155 100 DCT BINAS DCT                       SWBC0130 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   030526 030526 0000007 ACN5318 C208/L SBEG1100 N0155 100 DCT BINAS DCT                       SWBC0130 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            0118S06233W/N0155F085 VFR DCT                OPR/AZUL CONECTA LTDA PER/A   
                                                                                                         RALT/F090 DCT SBEG            
-   190426 220426 0030007 ACN5318 C208/L SBEG1100 N0155 100 DCT BINAS DCT                       SWBC0130 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   050526 050526 0200000 ACN5318 C208/L SBEG1200 N0155 100 DCT BINAS DCT                       SWBC0130 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            0118S06233W/N0155F085 VFR DCT                OPR/AZUL CONECTA LTDA PER/A   
                                                                                                         RALT/F090 DCT SBEG            
-   170426 170426 0000500 ACN5319 C208/L SWBC1855 N0155 075 DCT 0118S06233W/N0150F090 IFR DCT   SBEG0130 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   030526 030526 0000007 ACN5319 C208/L SWBC1305 N0155 075 DCT 0118S06233W/N0150F090 IFR DCT   SBEG0130 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            BINAS DCT                                    OPR/AZUL CONECTA LTDA PER/A   
-   190426 220426 0030007 ACN5319 C208/L SWBC1305 N0155 075 DCT 0118S06233W/N0150F090 IFR DCT   SBEG0130 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   050526 050526 0200000 ACN5319 C208/L SWBC1405 N0155 075 DCT 0118S06233W/N0150F090 IFR DCT   SBEG0130 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            BINAS DCT                                    OPR/AZUL CONECTA LTDA PER/A   
-   220426 220426 0030000 ACN5320 C208/L SBBE1000 N0155 100 DCT APURU DCT                       SBMD0135 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   030526 060526 0030007 ACN5320 C208/L SBBE1000 N0155 100 DCT APURU DCT                       SBMD0135 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            0055S05219W/N0150F065 VFR DCT                OPR/AZUL CONECTA LTDA PER/A   
                                                                                                         RALT/F090 DCT SBBE            
-   220426 220426 0030000 ACN5320 C208/L SNVS1500 N0155 075 DCT 0137S05021W/N0150F090 IFR DCT   SBBE0050 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   030526 060526 0030007 ACN5320 C208/L SNVS1500 N0155 075 DCT 0137S05021W/N0150F090 IFR DCT   SBBE0050 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            PUNEN DCT                                    OPR/AZUL CONECTA LTDA PER/A   
-   220426 220426 0030000 ACN5320 C208/L SBMD1220 N0155 065 DCT 0057S05234W DCT 0139S05216W DCT SNMZ0028 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   030526 060526 0030007 ACN5320 C208/L SBMD1220 N0155 075 DCT 0057S05234W DCT 0139S05217W DCT SNMZ0028 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                                                                         OPR/AZUL CONECTA LTDA PER/A   
                                                                                                         RALT/F090 DCT SBEG            
-   220426 220426 0030000 ACN5320 C208/L SNMZ1325 N0155 055 DCT 0144S05211W/N0150F070 IFR DCT   SNVS0047 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   030526 060526 0030007 ACN5320 C208/L SNMZ1325 N0155 055 DCT 0144S05211W/N0150F070 IFR DCT   SNVS0047 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            0138S05029W/N0155F055 VFR DCT                OPR/AZUL CONECTA LTDA PER/A   
                                                                                                         RALT/F090 DCT SBBE            
-   170426 170426 0000500 ACN5322 C208/L SNSM1905 N0155 085 DCT 0113S04725W/N0155F100 IFR DCT   SBBE0050 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   050526 050526 0200000 ACN5322 C208/L SNSM1805 N0155 085 DCT 0113S04725W/N0155F100 IFR DCT   SBBE0050 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                                                                         OPR/AZUL CONECTA LTDA PER/A   
-   210426 210426 0200000 ACN5322 C208/L SNSM1805 N0155 085 DCT 0113S04725W/N0155F100 IFR DCT   SBBE0050 EQPT/SDFGR/S PBN/B2C2D2O2S1   
-                                                                                                        OPR/AZUL CONECTA LTDA PER/A   
-   170426 170426 0000500 ACN5325 C208/L SBBE1745 N0155 090 DCT 0113S04725W/N0155F075 VFR DCT   SNSM0045 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   050526 050526 0200000 ACN5325 C208/L SBBE1645 N0155 090 DCT 0113S04725W/N0155F075 VFR DCT   SNSM0045 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                                                                         OPR/AZUL CONECTA LTDA PER/A   
                                                                                                         RALT/F100 DCT SBBE            
-   210426 210426 0200000 ACN5325 C208/L SBBE1645 N0155 090 DCT 0113S04725W/N0155F075 VFR DCT   SNSM0045 EQPT/SDFGR/S PBN/B2C2D2O2S1   
-                                                                                                        OPR/AZUL CONECTA LTDA PER/A   
-                                                                                                        RALT/F100 DCT SBBE            
-   160426 210426 0204000 ACN5327 C208/L SBBE1100 N0155 100 DCT LUIZA DCT                       SBTU0110 EQPT/SDFGR/S PBN/B2C2D2O2S1   
-                                                           0316S04928W/N0150F085 VFR DCT                OPR/AZUL CONECTA LTDA PER/A   
-                                                                                                        RALT/F090 DCT SBBE            
-   160426 210426 0204000 ACN5327 C208/L SNEB1435 N0155 085 DCT 0233S04738W/N0150F100 IFR DCT   SBBE0050 EQPT/SDFGR/S PBN/B2C2D2O2S1   
-                                                                                                        OPR/AZUL CONECTA LTDA PER/A   
 
 
-CIA: ACN                                    INÍCIO DE VALIDADE: 16abr.2026                                       PAG.: 2
+CIA: ACN                                    INÍCIO DE VALIDADE: 30abr.2026                                       PAG.: 2
 -----------------------------------------------------------------------------------------------------------------------------------------
    VALIDO VALIDO DIAS OP  IDENT  TIPO   ADEP     VEL   FL  ROTA                                DEST         OBSERVACOES
    DESDE   ATE   STQQSSD   ANV     TURB     EOBT                                                   EET
 -----------------------------------------------------------------------------------------------------------------------------------------
 
 
-   160426 210426 0204000 ACN5327 C208/L SBTU1250 N0150 075 DCT 0345S04939W/N0150F090 IFR DCT   SNEB0110 EQPT/SDFGR/S PBN/B2C2D2O2S1   
-                                                           0303S04727W/N0150F055 VFR DCT                OPR/AZUL CONECTA LTDA PER/A   
-                                                                                                        RALT/F090 DCT SBEG            
-   180426 180426 0000060 ACN5327 C208/L SBBE1530 N0155 100 DCT LUIZA DCT                       SBTU0110 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   300426 050526 0204000 ACN5327 C208/L SBBE1100 N0155 100 DCT LUIZA DCT                       SBTU0110 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            0316S04928W/N0150F085 VFR DCT                OPR/AZUL CONECTA LTDA PER/A   
                                                                                                         RALT/F090 DCT SBBE            
-   180426 180426 0000060 ACN5327 C208/L SNEB1905 N0155 085 DCT 0233S04738W/N0150F100 IFR DCT   SBBE0050 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   300426 050526 0204000 ACN5327 C208/L SNEB1435 N0155 085 DCT 0233S04738W/N0150F100 IFR DCT   SBBE0050 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                                                                         OPR/AZUL CONECTA LTDA PER/A   
-   180426 180426 0000060 ACN5327 C208/L SBTU1720 N0150 075 DCT 0345S04939W/N0150F090 IFR DCT   SNEB0110 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   300426 050526 0204000 ACN5327 C208/L SBTU1250 N0150 075 DCT 0345S04939W/N0150F090 IFR DCT   SNEB0110 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            0303S04727W/N0150F055 VFR DCT                OPR/AZUL CONECTA LTDA PER/A   
                                                                                                         RALT/F090 DCT SBEG            
-   170426 220426 0230500 ACN5340 C208/L SBCY1815 N0155 090 DCT MAGDA DCT MASVO DCT             SBBW0120 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   040526 060526 1030000 ACN5340 C208/L SBCY1815 N0155 090 DCT MAGDA DCT MASVO DCT             SBBW0120 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                                                                         EET/SBBS0048 OPR/AZUL CONECTA 
                                                                                                         LTDA PER/A                    
-   170426 220426 0230500 ACN5341 C208/L SBBW2035 N0155 085 DCT MASVO/N0155F100 IFR DCT MAGDA   SBCY0120 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   040526 060526 1030000 ACN5341 C208/L SBBW2035 N0155 085 DCT MASVO/N0155F100 IFR DCT MAGDA   SBCY0120 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            DCT                                          EET/SBAZ0021 OPR/AZUL CONECTA 
                                                                                                         LTDA PER/A                    
-   180426 200426 1000060 ACN5342 C208/L SBEG1100 N0155 100 DCT 0341S06044W DCT 0433S06140W     SWLB0230 EQPT/SDFGR/S PBN/B2C2D2O2S1   
-                                                           DCT 0523S06234W DCT 0621S06339W              OPR/AZUL CONECTA LTDA PER/A   
-                                                           DCT 0659S06426W/N0150F065 VFR DCT            RALT/F100 DCT SBEG            
-   180426 200426 1000060 ACN5344 C208/L SWLB1425 N0150 055 DCT 0717S06446W/N0150F090 IFR DCT   SBPV0040 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   020526 040526 1000060 ACN5342 C208/L SBEG1100 N0155 100 DCT KIGIM DCT 0523S06234W DCT       SWLB0230 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+                                                           0659S06426W/N0150F065 VFR DCT                OPR/AZUL CONECTA LTDA PER/A   
+                                                                                                        RALT/F100 DCT SBEG            
+   020526 040526 1000060 ACN5344 C208/L SWLB1425 N0150 055 DCT 0717S06446W/N0150F090 IFR DCT   SBPV0040 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                                                                         OPR/AZUL CONECTA LTDA PER/A   
-   180426 200426 1000060 ACN5345 C208/L SBPV1615 N0150 090 DCT ISURA DCT ERVOV DCT ATEKO DCT   SBEG0251 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   020526 040526 1000060 ACN5345 C208/L SBPV1615 N0150 090 DCT ISURA DCT ERVOV DCT ATEKO DCT   SBEG0251 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            ELOPE DCT                                    OPR/AZUL CONECTA LTDA PER/A   
-   160426 210426 0204060 ACN5362 C208/L SNAB1540 N0155 075 DCT 0737S04004W/N0155F090 IFR       SBRF0216 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   300426 050526 0204000 ACN5362 C208/L SNAB1540 N0155 075 DCT 0737S04004W/N0155F090 IFR       SBRF0216 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            TIPDA DCT REC                                OPR/AZUL CONECTA LTDA PER/A   
-   160426 210426 0204060 ACN5362 C208/L SBRF1200 N0155 100 DCT 0807S03608W DCT                 SNHS0125 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   300426 050526 0204000 ACN5362 C208/L SBRF1200 N0155 100 DCT 0807S03608W DCT                 SNHS0125 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            0805S03758W/N0150F065 VFR DCT                OPR/AZUL CONECTA LTDA PER/A   
                                                                                                         RALT/F090 DCT SBRF            
-   160426 210426 0204060 ACN5362 C208/L SNHS1405 N0150 065 DCT 0759S03836W/N0150F080 IFR       SNAB0050 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   300426 050526 0204000 ACN5362 C208/L SNHS1405 N0150 065 DCT 0759S03836W/N0150F080 IFR       SNAB0050 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            0736S04026W/N0150F065 VFR DCT                OPR/AZUL CONECTA LTDA PER/A   
                                                                                                         RALT/F090 DCT SBJU            
-   170426 220426 1030500 ACN5369 C208/L SJZA1500 N0155 075 DCT 0659S03814W/N0155F090 IFR DCT   SBRF0122 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   040526 060526 1030000 ACN5369 C208/L SJZA1500 N0155 075 DCT 0659S03814W/N0155F090 IFR DCT   SBRF0122 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            0725S03658W DCT                              OPR/AZUL CONECTA LTDA PER/A   
-   170426 220426 1030500 ACN5369 C208/L SNTS1345 N0150 045 DCT 0701S03719W/N0150F060 IFR DCT   SJZA0037 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   040526 060526 1030000 ACN5369 C208/L SNTS1345 N0150 045 DCT 0701S03719W/N0150F060 IFR DCT   SJZA0037 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            0653S03835W/N0150F045 VFR DCT                OPR/AZUL CONECTA LTDA PER/A   
                                                                                                         RALT/F100 DCT SBJU            
-   170426 220426 1030500 ACN5369 C208/L SBRF1200 N0155 100 DCT 0711S03655W/N0150F065 VFR DCT   SNTS0100 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   040526 060526 1030000 ACN5369 C208/L SBRF1200 N0155 100 DCT 0711S03655W/N0150F065 VFR DCT   SNTS0100 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                                                                         OPR/AZUL CONECTA LTDA PER/A   
                                                                                                         RALT/F090 DCT SBRF            
-   160426 210426 0204000 ACN5417 C208/L SBCT1135 N0155 100 DCT SERGI DCT 2454S05054W DCT       SSGY0150 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   300426 050526 0204000 ACN5417 C208/L SBCT1135 N0155 100 DCT SERGI DCT 2454S05054W DCT       SSGY0150 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            2438S05203W DCT                              OPR/AZUL CONECTA LTDA PER/A   
                                                            2410S05348W/N0150F085 VFR DCT                RALT/F090 DCT SBCT            
-   160426 210426 0204000 ACN5418 C208/L SSGY1420 N0155 075 DCT 2410S05348W/N0150F090 IFR DCT   SBCT0150 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   300426 050526 0204000 ACN5418 C208/L SSGY1420 N0155 075 DCT 2410S05348W/N0150F090 IFR DCT   SBCT0150 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            2438S05203W DCT 2454S05054W DCT              OPR/AZUL CONECTA LTDA PER/A   
                                                            SERGI DCT                                    
-   160426 210426 0204000 ACN5443 C208/L SBCT1715 N0155 100 DCT KOTIL DCT                       SSUV0050 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   300426 050526 0204000 ACN5443 C208/L SBCT1715 N0155 100 DCT KOTIL DCT                       SSUV0050 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            2605S05038W/N0150F085 VFR DCT                OPR/AZUL CONECTA LTDA PER/A   
                                                                                                         RALT/F090 DCT SBCT            
-   170426 220426 0030500 ACN5445 C208/L SBCT1200 N0155 100 DCT SERGI DCT BRASA DCT             SSVL0045 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   040526 060526 1030000 ACN5445 C208/L SBCT1200 N0155 100 DCT SERGI DCT BRASA DCT             SSVL0045 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                                                                         OPR/AZUL CONECTA LTDA PER/A   
-   170426 220426 0030500 ACN5445 C208/L SSVL1340 N0150 080 DCT UGPIR DCT SIGAR DCT             SSUM0100 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   040526 060526 1030000 ACN5445 C208/L SSVL1340 N0150 080 DCT UGPIR DCT SIGAR DCT             SSUM0100 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            2349S05309W/N0150F065 VFR DCT                OPR/AZUL CONECTA LTDA PER/A   
                                                                                                         RALT/F090 DCT SBMG            
-   170426 220426 0030500 ACN5445 C208/L SSUM1530 N0155 075 DCT 2359S05249W/N0150F090 IFR DCT   SBCT0150 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   040526 060526 1030000 ACN5445 C208/L SSUM1530 N0155 075 DCT 2359S05249W/N0150F090 IFR DCT   SBCT0150 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            2421S05150W DCT 2448S05037W DCT              OPR/AZUL CONECTA LTDA PER/A   
                                                            SERGI DCT                                    
-   160426 210426 0204000 ACN5446 C208/L SSUV1845 N0155 075 DCT 2605S05038W/N0150F090 IFR DCT   SBCT0050 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   300426 300426 0004000 ACN5446 C208/L SSUV1845 N0155 075 DCT 2605S05038W/N0150F090 IFR DCT   SBCT0050 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            KOTIL DCT                                    OPR/AZUL CONECTA LTDA PER/A   
-   180426 180426 0000060 ACN5860 C208/L SBBE1120 N0155 100 DCT PUNEN DCT                       SNVS0045 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   050526 050526 0200000 ACN5446 C208/L SSUV1850 N0155 075 DCT 2605S05038W/N0150F090 IFR DCT   SBCT0050 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+                                                           KOTIL DCT                                    OPR/AZUL CONECTA LTDA PER/A   
+   020526 020526 0000060 ACN5860 C208/L SBBE1120 N0155 100 DCT PUNEN DCT                       SNVS0045 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            0137S05022W/N0150F045 VFR DCT                OPR/AZUL CONECTA LTDA PER/A   
                                                                                                         RALT/F090 DCT SBBE            
-   180426 180426 0000060 ACN5861 C208/L SNVS1325 N0155 075 DCT 0137S05021W/N0150F090 IFR DCT   SBBE0050 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   020526 020526 0000060 ACN5861 C208/L SNVS1325 N0155 075 DCT 0137S05021W/N0150F090 IFR DCT   SBBE0050 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            PUNEN DCT                                    OPR/AZUL CONECTA LTDA PER/A   
-   200426 200426 1000000 ACN5862 C208/L SBBE1120 N0155 100 DCT PUNEN DCT                       SNVS0045 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   040526 040526 1000000 ACN5862 C208/L SBBE1120 N0155 100 DCT PUNEN DCT                       SNVS0045 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            0137S05022W/N0150F045 VFR DCT                OPR/AZUL CONECTA LTDA PER/A   
                                                                                                         RALT/F090 DCT SBBE            
-   200426 200426 1000000 ACN5863 C208/L SNVS1325 N0155 075 DCT 0137S05021W/N0150F090 IFR DCT   SBBE0050 EQPT/SDFGR/S PBN/B2C2D2O2S1   
+   040526 040526 1000000 ACN5863 C208/L SNVS1325 N0155 075 DCT 0137S05021W/N0150F090 IFR DCT   SBBE0050 EQPT/SDFGR/S PBN/B2C2D2O2S1   
                                                            PUNEN DCT                                    OPR/AZUL CONECTA LTDA PER/A   
