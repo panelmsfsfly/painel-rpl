@@ -2,9 +2,8 @@ name: Atualizar Malha RPL CGNA
 
 on:
   schedule:
-    # Roda toda quinta-feira às 03:00 UTC
     - cron: '0 3 * * 4'
-  workflow_dispatch: # Permite rodar manualmente no botão "Run workflow"
+  workflow_dispatch:
 
 jobs:
   atualizar-dados:
@@ -32,4 +31,4 @@ jobs:
         with:
           commit_message: "🤖 Atualização automática do ciclo RPL via CGNA"
           branch: main
-          file_pattern: "*.txt" # Commit apenas nos arquivos TXT
+          file_pattern: "*.txt"
