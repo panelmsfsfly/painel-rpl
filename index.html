@@ -6,168 +6,226 @@
   <title>RPL Dispatch 7.4</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
 
   <style>
-    :root{
-      --bg:#0b111e; --card:#151e2d; --input:#0f1724;
-      --text:#f1f5f9; --muted:#94a3b8; --border:#233147;
-      --pri:#3b82f6; --cy:#06b6d4; --gr:#10b981; --or:#f59e0b; --pu:#8b5cf6; --rd:#ef4444;
-      --r:10px; --shadow:0 8px 20px rgba(0,0,0,.35);
+    /* VARIÁVEIS - TEMA CLARO INSPIRADO NA REFERÊNCIA */
+    :root {
+      --bg: #f4f7fb; 
+      --card: #ffffff; 
+      --input: #f1f5f9;
+      --text: #0f172a; 
+      --muted: #64748b; 
+      --border: #e2e8f0;
+      
+      --pri: #0ea5e9; /* Azul claro estilo botão principal */
+      --pri-hover: #0284c7;
+      --cy: #0284c7; 
+      --gr: #10b981; 
+      --or: #f59e0b; 
+      --pu: #8b5cf6; 
+      --rd: #ef4444;
+      
+      --r: 16px; /* Bordas mais arredondadas */
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.03);
     }
-    *{box-sizing:border-box}
-    body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui;}
-    .shell{max-width:1400px;margin:0 auto;padding:18px;display:flex;flex-direction:column;gap:14px;min-height:100vh}
-
-    .topbar{
-      background:linear-gradient(180deg, rgba(21,30,45,.92), rgba(21,30,45,.78));
-      border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);
-      padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+    
+    * { box-sizing: border-box; }
+    
+    body {
+      margin: 0;
+      background: var(--bg);
+      background-image: radial-gradient(circle at top right, #e0f2fe 0%, transparent 40%);
+      color: var(--text);
+      font-family: Inter, system-ui, sans-serif;
+      min-height: 100vh;
     }
-    .brand h1{margin:0;font-size:20px;font-weight:900;letter-spacing:-.4px}
-    .brand h1 span{color:var(--pri)}
-    .brand .sub{margin-top:4px;font-size:11px;font-weight:800;color:var(--cy);letter-spacing:1px;text-transform:uppercase}
-    .center{display:flex;flex-direction:column;align-items:center;gap:6px}
-    .cycle{
-      font-family:"JetBrains Mono";font-weight:800;font-size:12px;color:var(--gr);
-      background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);padding:4px 10px;border-radius:999px
-    }
-    .clock{font-family:"JetBrains Mono";font-weight:800;font-size:26px;color:var(--or)}
-    .clockSub{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:1px;text-align:right}
-
-    .tabs{
-      display:flex;gap:8px;flex-wrap:wrap;background:rgba(15,23,36,.65);
-      border:1px solid var(--border);border-radius:999px;padding:8px;
-    }
-    .tab{
-      border:0;cursor:pointer;border-radius:999px;padding:10px 14px;font-weight:900;font-size:11px;letter-spacing:.8px;text-transform:uppercase;
-      background:transparent;color:var(--muted);display:flex;gap:8px;align-items:center;
-    }
-    .tab[aria-selected="true"]{
-      background:rgba(59,130,246,.18);border:1px solid rgba(59,130,246,.35);color:var(--text);
-    }
-
-    .panel{
-      display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);padding:16px;
-    }
-    .panel.active{display:block}
-
-    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    @media(max-width:950px){.grid2{grid-template-columns:1fr}}
-
-    .card{
-      background:rgba(15,23,36,.6);border:1px solid var(--border);border-radius:var(--r);padding:14px;
-    }
-    .card h3{margin:0 0 10px 0;font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.6px}
-    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
-    label{font-size:10px;font-weight:900;letter-spacing:.7px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px}
-    input{
-      background:var(--input);border:1px solid var(--border);border-radius:10px;
-      padding:10px 12px;color:var(--text);font-weight:800;min-width:180px
-    }
-    input::placeholder{color:#506079}
-
-    .btn{
-      border:1px solid transparent;cursor:pointer;border-radius:10px;padding:10px 12px;font-weight:900;font-size:11px;
-      text-transform:uppercase;letter-spacing:.7px;display:inline-flex;gap:8px;align-items:center;justify-content:center;
-    }
-    .btn.pri{background:var(--pri);color:#fff}
-    .btn.pu{background:var(--pu);color:#fff}
-    .btn.ghost{background:transparent;color:var(--text);border-color:var(--border)}
-    .btn.rd{background:rgba(239,68,68,.15);color:var(--rd);border-color:rgba(239,68,68,.35)}
-    .btn.gr{background:rgba(16,185,129,.15);color:var(--gr);border-color:rgba(16,185,129,.35)}
-    .btn.small{padding:6px 10px;font-size:10px;border-radius:6px}
-    .btn:hover{filter:brightness(1.15)}
-    .btn:active{transform:translateY(1px)}
-
-    .filter-wrapper{
-      display:flex;gap:5px;background:var(--input);padding:4px;border-radius:10px;border:1px solid var(--border);height:38px;
-    }
-    .btn-filter{
-      flex:1;background:transparent;color:var(--muted);padding:0 12px;font-size:11px;border:0;border-radius:6px;
-      cursor:pointer;font-weight:800;white-space:nowrap;
-    }
-    .btn-filter:hover{background:rgba(255,255,255,0.05)}
-    .btn-filter.active{background:#334155;color:white}
-    .btn-filter[data-cia="LATAM"].active{background:#1B0088;color:white;border:none}
-    .btn-filter[data-cia="GOL"].active{background:#FF5E00;color:white;border:none}
-    .btn-filter[data-cia="AZUL"].active{background:#0055A4;color:white;border:none}
-    .btn-filter[data-cia="ACN"].active{background:#009DE0;color:white;border:none}
-
-    .tableWrap{overflow:auto;border:1px solid var(--border);border-radius:var(--r)}
-    table{border-collapse:separate;border-spacing:0;min-width:1150px;width:100%}
-    th{
-      background:#0f172a;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:1px;
-      text-align:left;padding:12px 14px;border-bottom:2px solid var(--border)
-    }
-    td{
-      background:var(--card);padding:12px 14px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle;
-    }
-    tr:last-child td{border-bottom:none}
-    tr:hover td{background:#1e293b}
-
-    .mono{font-family:"JetBrains Mono";font-weight:900}
-    .empty{padding:30px;text-align:center;color:var(--muted);font-style:italic}
-
-    .col-flight{font-family:'JetBrains Mono',monospace;font-weight:800;color:var(--cy);font-size:14px;cursor:pointer}
-    .col-flight:hover{text-decoration:underline;color:#fff}
-    .cia-badge{
-      padding:4px 8px;border-radius:4px;color:white;font-weight:800;font-size:9px;text-transform:uppercase;letter-spacing:.5px;display:inline-block;
-    }
-    .time-pill{
-      display:inline-flex;flex-direction:column;align-items:center;justify-content:center;
-      background:var(--input);color:var(--pri);border:1px solid var(--border);
-      padding:6px 10px;border-radius:6px;min-width:75px;text-align:center;
-    }
-    .time-pill.arr{color:var(--gr);border-color:rgba(16,185,129,.2)}
-    .tp-utc{font-size:9px;opacity:.8;font-family:'JetBrains Mono';margin-bottom:2px;color:var(--muted)}
-    .tp-local{font-size:14px;font-weight:800;font-family:'JetBrains Mono';line-height:1}
-    .col-fl{
-      font-family:'JetBrains Mono';font-weight:700;color:var(--pu);
-      background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.2);padding:4px 8px;border-radius:4px;font-size:11px;text-align:center
+    
+    .shell {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
 
-    .status-pill{
-      display:inline-flex;align-items:center;justify-content:center;padding:5px 9px;border-radius:999px;
-      font-size:10px;font-weight:900;letter-spacing:.7px;text-transform:uppercase;border:1px solid transparent;
+    /* TOPBAR - Header mais limpo e branco */
+    .topbar {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      box-shadow: var(--shadow);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
     }
-    .status-pill.programado{
-      background:rgba(16,185,129,.15);color:var(--gr);border-color:rgba(16,185,129,.35);
+    .brand h1 { margin: 0; font-size: 24px; font-weight: 900; letter-spacing: -0.5px; color: #1e293b; }
+    .brand h1 span { color: var(--pri); }
+    .brand .sub { margin-top: 4px; font-size: 11px; font-weight: 800; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+    .center { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .cycle {
+      font-family: "JetBrains Mono", monospace; font-weight: 800; font-size: 12px; color: var(--pri);
+      background: #e0f2fe; border: 1px solid #bae6fd; padding: 6px 14px; border-radius: 999px;
     }
-    .status-pill.na-escala{
-      background:rgba(59,130,246,.15);color:var(--pri);border-color:rgba(59,130,246,.35);
+    .clock { font-family: "JetBrains Mono", monospace; font-weight: 800; font-size: 26px; color: var(--text); letter-spacing: -1px; }
+    .clockSub { font-size: 11px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; text-align: right; }
+
+    /* NAVEGAÇÃO - Estilo 'Pills' da referência */
+    .tabs {
+      display: flex; gap: 10px; flex-wrap: wrap;
+      padding: 0;
+    }
+    .tab {
+      border: 1px solid var(--border); cursor: pointer; border-radius: 999px; padding: 10px 20px;
+      font-weight: 700; font-size: 12px; letter-spacing: 0.5px;
+      background: var(--card); color: var(--muted); display: flex; gap: 8px; align-items: center;
+      box-shadow: var(--shadow-sm); transition: all 0.2s;
+    }
+    .tab:hover { border-color: var(--pri); color: var(--pri); }
+    .tab[aria-selected="true"] {
+      background: var(--pri); border-color: var(--pri); color: #fff;
+      box-shadow: 0 4px 14px rgba(14, 165, 233, 0.25);
     }
 
-    .modal-overlay{
-      position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:2000;display:none;
-      justify-content:center;align-items:center;backdrop-filter:blur(5px);
-    }
-    .modal-content{
-      background:var(--card);padding:30px;border-radius:var(--r);width:90%;max-width:600px;border:1px solid var(--border);box-shadow:var(--shadow);
-    }
-    .modal-header{
-      display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:15px;border-bottom:1px solid var(--border);
-    }
-    .modal-title{font-size:20px;font-weight:800;color:var(--text);font-family:'JetBrains Mono'}
-    .close-modal{font-size:24px;color:var(--muted);background:none;padding:0;border:none;cursor:pointer}
-    .close-modal:hover{color:var(--rd)}
-    .detail-row{display:flex;padding:12px 0;border-bottom:1px dashed var(--border)}
-    .detail-label{width:140px;font-weight:700;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.5px}
-    .detail-val{flex:1;font-family:'JetBrains Mono';font-weight:700;color:var(--cy)}
+    /* PAINÉIS E CARDS */
+    .panel { display: none; }
+    .panel.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-    .site-footer{
-      text-align:center;padding:20px 0;margin-top:auto;color:var(--muted);font-size:11px;font-weight:700;
-      border-top:1px dashed var(--border);letter-spacing:1px;text-transform:uppercase;
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media(max-width: 950px) { .grid2 { grid-template-columns: 1fr; } }
+
+    .card {
+      background: var(--card); border: 1px solid var(--border); border-radius: var(--r);
+      box-shadow: var(--shadow); padding: 24px;
+    }
+    .card h3 { margin: 0 0 16px 0; font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #1e293b; }
+    .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: end; }
+    
+    label { font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 8px; }
+    input {
+      background: var(--input); border: 1px solid transparent; border-radius: 12px;
+      padding: 12px 16px; color: var(--text); font-weight: 600; font-size: 13px; min-width: 180px;
+      transition: all 0.2s; font-family: Inter, sans-serif;
+    }
+    input:focus { outline: none; border-color: var(--pri); background: #fff; box-shadow: 0 0 0 4px #e0f2fe; }
+    input::placeholder { color: #94a3b8; font-weight: 500; }
+
+    /* BOTÕES */
+    .btn {
+      border: 1px solid transparent; cursor: pointer; border-radius: 12px; padding: 12px 18px;
+      font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;
+      display: inline-flex; gap: 8px; align-items: center; justify-content: center;
+      transition: all 0.2s; font-family: Inter, sans-serif;
+    }
+    .btn.pri { background: var(--pri); color: #fff; box-shadow: 0 4px 12px rgba(14, 165, 233, 0.25); }
+    .btn.pri:hover { background: var(--pri-hover); transform: translateY(-1px); }
+    .btn.pu { background: var(--pu); color: #fff; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25); }
+    .btn.ghost { background: var(--input); color: var(--text); border-color: transparent; }
+    .btn.ghost:hover { background: #e2e8f0; }
+    .btn.rd { background: #fee2e2; color: var(--rd); border-color: #fecaca; }
+    .btn.gr { background: #d1fae5; color: #059669; border-color: #a7f3d0; }
+    .btn.small { padding: 8px 12px; font-size: 11px; border-radius: 8px; }
+    .btn:active { transform: translateY(1px); box-shadow: none; }
+
+    /* FILTROS (Semelhante às tags da imagem) */
+    .filter-wrapper {
+      display: flex; gap: 6px; background: var(--input); padding: 6px; border-radius: 12px; border: 1px solid var(--border);
+    }
+    .btn-filter {
+      flex: 1; background: transparent; color: var(--muted); padding: 6px 14px; font-size: 11px;
+      border: 1px solid transparent; border-radius: 8px; cursor: pointer; font-weight: 700; white-space: nowrap; transition: all 0.2s;
+    }
+    .btn-filter:hover { color: var(--text); background: #fff; box-shadow: var(--shadow-sm); }
+    .btn-filter.active { background: #fff; color: var(--text); border-color: var(--border); box-shadow: var(--shadow-sm); }
+    .btn-filter[data-cia="LATAM"].active { background: #1B0088; color: white; border-color: transparent; }
+    .btn-filter[data-cia="GOL"].active { background: #FF5E00; color: white; border-color: transparent; }
+    .btn-filter[data-cia="AZUL"].active { background: #0055A4; color: white; border-color: transparent; }
+    .btn-filter[data-cia="ACN"].active { background: #009DE0; color: white; border-color: transparent; }
+
+    /* TABELAS PARA TEMA CLARO */
+    .tableWrap { overflow: auto; border: 1px solid var(--border); border-radius: 12px; background: var(--card); }
+    table { border-collapse: separate; border-spacing: 0; min-width: 1150px; width: 100%; }
+    th {
+      background: var(--input); color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+      text-align: left; padding: 16px; border-bottom: 2px solid var(--border); font-weight: 800;
+    }
+    td {
+      background: var(--card); padding: 14px 16px; border-bottom: 1px solid var(--border); font-size: 13px; vertical-align: middle; transition: background 0.2s;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #f8fafc; }
+
+    .mono { font-family: "JetBrains Mono", monospace; font-weight: 900; }
+    .empty { padding: 40px; text-align: center; color: var(--muted); font-weight: 500; font-size: 14px; }
+
+    /* ELEMENTOS DA TABELA */
+    .col-flight { font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--pri); font-size: 14px; cursor: pointer; text-decoration: none; }
+    .col-flight:hover { text-decoration: underline; color: var(--pri-hover); }
+    
+    .cia-badge {
+      padding: 6px 10px; border-radius: 6px; color: white; font-weight: 800; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .time-pill {
+      display: inline-flex; flex-direction: column; align-items: center; justify-content: center;
+      background: var(--input); color: var(--text); border: 1px solid transparent;
+      padding: 8px 12px; border-radius: 10px; min-width: 80px; text-align: center;
+    }
+    .time-pill.arr { background: #ecfdf5; color: #065f46; }
+    .tp-utc { font-size: 10px; font-weight: 600; font-family: 'JetBrains Mono'; margin-bottom: 2px; color: var(--muted); }
+    .tp-local { font-size: 14px; font-weight: 800; font-family: 'JetBrains Mono'; line-height: 1; }
+    
+    .col-fl {
+      font-family: 'JetBrains Mono'; font-weight: 700; color: var(--pu);
+      background: #f3e8ff; border: 1px solid #e9d5ff; padding: 6px 10px; border-radius: 8px; font-size: 11px; text-align: center;
     }
 
-    .tutorial-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:12px;margin-top:12px}
-    .tut-card{background:rgba(15,23,36,.4);border:1px solid var(--border);padding:16px;border-radius:var(--r);border-left:3px solid var(--pri)}
-    .tut-card h4{margin:0 0 8px 0;color:var(--text);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.5px}
-    .tut-card p{margin:0;font-size:11px;color:var(--muted);line-height:1.6;font-weight:600}
-    .tut-card:nth-child(2){border-left-color:var(--pu)}
-    .tut-card:nth-child(3){border-left-color:var(--cy)}
-    .tut-card:nth-child(4){border-left-color:var(--gr)}
+    .status-pill {
+      display: inline-flex; align-items: center; justify-content: center; padding: 6px 12px; border-radius: 999px;
+      font-size: 10px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; border: 1px solid transparent;
+    }
+    .status-pill.programado { background: #d1fae5; color: #059669; border-color: #a7f3d0; }
+    .status-pill.na-escala { background: #e0f2fe; color: #0369a1; border-color: #bae6fd; }
+
+    /* MODAL CLARO */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); z-index: 2000; display: none;
+      justify-content: center; align-items: center; backdrop-filter: blur(4px);
+    }
+    .modal-content {
+      background: var(--card); padding: 32px; border-radius: var(--r); width: 90%; max-width: 600px; border: none; box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+    }
+    .modal-header {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border);
+    }
+    .modal-title { font-size: 22px; font-weight: 800; color: var(--text); font-family: 'JetBrains Mono'; display: flex; align-items: center; }
+    .close-modal { font-size: 28px; color: var(--muted); background: none; padding: 0; border: none; cursor: pointer; line-height: 1; }
+    .close-modal:hover { color: var(--text); }
+    .detail-row { display: flex; padding: 14px 0; border-bottom: 1px dashed var(--border); align-items: center; }
+    .detail-label { width: 150px; font-weight: 700; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .detail-val { flex: 1; font-family: 'JetBrains Mono'; font-weight: 700; color: var(--text); font-size: 14px; }
+
+    /* FOOTER */
+    .site-footer {
+      text-align: center; padding: 24px 0; margin-top: auto; color: var(--muted); font-size: 12px; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase;
+    }
+
+    /* TUTORIAIS */
+    .tutorial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-top: 16px; }
+    .tut-card { background: var(--input); padding: 20px; border-radius: 16px; border-left: 4px solid var(--pri); transition: transform 0.2s; }
+    .tut-card:hover { transform: translateY(-2px); }
+    .tut-card h4 { margin: 0 0 10px 0; color: var(--text); font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .tut-card p { margin: 0; font-size: 12px; color: var(--muted); line-height: 1.6; font-weight: 500; }
+    .tut-card:nth-child(2) { border-left-color: var(--pu); }
+    .tut-card:nth-child(3) { border-left-color: var(--or); }
+    .tut-card:nth-child(4) { border-left-color: var(--gr); }
   </style>
 </head>
 
@@ -205,15 +263,15 @@
         <div class="card">
           <h3>Status do Sistema</h3>
           <div class="row">
-            <div class="card" style="flex:1">
-              <div style="font-size:10px;color:var(--muted);font-weight:900;text-transform:uppercase;letter-spacing:.8px">Banco RPL</div>
-              <div class="mono" id="db-status" style="font-size:18px;margin-top:8px;color:var(--gr)">ONLINE</div>
+            <div class="card" style="flex:1; background: var(--input); border:none; box-shadow:none;">
+              <div style="font-size:11px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:0.5px">Banco RPL</div>
+              <div class="mono" id="db-status" style="font-size:20px;margin-top:8px;color:var(--gr)">ONLINE</div>
             </div>
 
-            <div class="card" style="flex:3; display:flex; flex-direction:column; justify-content:center;">
-              <div style="font-size:10px;color:var(--muted);font-weight:900;text-transform:uppercase;letter-spacing:.8px; margin-bottom:12px;">Voo Sugerido</div>
+            <div class="card" style="flex:3; display:flex; flex-direction:column; justify-content:center; background: var(--input); border:none; box-shadow:none;">
+              <div style="font-size:11px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:0.5px; margin-bottom:12px;">Voo Sugerido</div>
               <div id="suggested-flight-container">
-                <div class="mono" style="font-size:13px; color:var(--cy);">Sincronizando...</div>
+                <div class="mono" style="font-size:14px; color:var(--pri);">Sincronizando...</div>
               </div>
             </div>
           </div>
@@ -221,7 +279,7 @@
 
         <div class="card">
           <h3>Acesso rápido</h3>
-          <div class="row" style="gap:15px;">
+          <div class="row" style="gap:16px;">
             <button class="btn pri" onclick="switchTab('board')">📋 Buscar Voos</button>
             <button class="btn pu" onclick="switchTab('roster')">📅 Ver Escala</button>
             <button class="btn ghost" onclick="switchTab('hangar')">✈️ Meu HUB</button>
@@ -230,7 +288,7 @@
         </div>
       </div>
 
-      <div class="card" style="margin-top:14px;">
+      <div class="card" style="margin-top:16px;">
         <h3>Guia Rápido do Sistema</h3>
         <div class="tutorial-grid">
           <div class="tut-card">
@@ -257,7 +315,7 @@
       <div class="grid2">
         <div class="card">
           <h3>Filtros Avançados e Escalas</h3>
-          <div class="row">
+          <div class="row" style="gap:20px;">
             <div>
               <label>Companhia Aérea (Multi-Seleção)</label>
               <div class="filter-wrapper" id="cia-filter-group">
@@ -301,7 +359,7 @@
               <input id="search-input" placeholder="Ex: 1234" style="width:120px; min-width:auto;" onkeydown="if(event.key==='Enter') manualSearch()"/>
             </div>
           </div>
-          <div class="row" style="margin-top:15px;">
+          <div class="row" style="margin-top:20px;">
             <button class="btn pu" onclick="searchFlights()">🔎 Buscar Voos</button>
             <button class="btn pri" onclick="manualSearch()">Buscar por Nº Voo</button>
             <button class="btn ghost" onclick="resetPanel()">🧹 Limpar</button>
@@ -309,7 +367,7 @@
         </div>
       </div>
 
-      <div class="card" style="margin-top:12px">
+      <div class="card" style="margin-top:16px">
         <h3>Quadro de voos disponíveis</h3>
         <div class="tableWrap">
           <table>
@@ -337,10 +395,10 @@
 
     <section class="panel" id="tab-roster" role="tabpanel">
       <div class="card">
-        <h3>Minha Escala <span id="roster-badge" style="background:var(--cy); color:#000; padding:2px 8px; border-radius:10px; font-size:12px; margin-left:10px;">0</span></h3>
+        <h3>Minha Escala <span id="roster-badge" style="background:var(--pri); color:#fff; padding:4px 10px; border-radius:12px; font-size:13px; margin-left:10px;">0</span></h3>
 
-        <div id="roster-notice" class="card" style="margin-bottom:12px; display:none; border-left:4px solid var(--gr);">
-          <div id="roster-notice-text" style="font-size:12px; font-weight:800; color:var(--text);"></div>
+        <div id="roster-notice" class="card" style="margin-bottom:16px; display:none; border-left:4px solid var(--gr); background:#ecfdf5; padding: 16px;">
+          <div id="roster-notice-text" style="font-size:13px; font-weight:700; color:#065f46;"></div>
         </div>
 
         <div class="tableWrap">
@@ -371,7 +429,7 @@
     <section class="panel" id="tab-hangar" role="tabpanel">
       <div class="card">
         <h3>Adicionar ao HUB</h3>
-        <div class="row">
+        <div class="row" style="align-items: flex-end;">
           <div>
             <label>Cia Aérea</label>
             <input id="hangar-cia" placeholder="Ex: AZUL" style="text-transform:uppercase"/>
@@ -384,11 +442,11 @@
             <label>Local (ICAO)</label>
             <input id="hangar-loc" placeholder="Ex: SBSP" style="text-transform:uppercase"/>
           </div>
-          <button class="btn pri" onclick="addAircraftToHangar()" style="height:38px;">➕ Adicionar Aeronave</button>
+          <button class="btn pri" onclick="addAircraftToHangar()" style="height: 42px;">➕ Adicionar Aeronave</button>
         </div>
       </div>
 
-      <div class="card" style="margin-top:12px">
+      <div class="card" style="margin-top:16px">
         <h3>Minha Frota Estacionada</h3>
         <div class="tableWrap">
           <table>
@@ -410,7 +468,7 @@
     <section class="panel" id="tab-hangar-roster" role="tabpanel">
       <div class="card">
         <h3>Gerador de Escala Baseado no HUB</h3>
-        <p style="font-size:11px; color:var(--muted); margin-top:0; margin-bottom:12px; font-weight:600;">
+        <p style="font-size:13px; color:var(--muted); margin-top:0; margin-bottom:16px; font-weight:500;">
           Sorteia uma aeronave estacionada no seu HUB e cria uma jornada aleatória respeitando Companhia, Localização atual, Equipamento e 45 min de solo.
         </p>
         <div class="row">
@@ -421,8 +479,8 @@
         </div>
       </div>
 
-      <div class="card" style="margin-top:12px">
-        <h3>Jornada Sorteada <span id="hangar-acft-info" style="color:var(--cy); font-family:'JetBrains Mono'; margin-left:10px; font-size:12px;"></span></h3>
+      <div class="card" style="margin-top:16px">
+        <h3>Jornada Sorteada <span id="hangar-acft-info" style="color:var(--pri); font-family:'JetBrains Mono'; margin-left:10px; font-size:13px;"></span></h3>
         <div class="tableWrap">
           <table>
             <thead>
@@ -452,16 +510,16 @@
         <div class="card">
           <h3>Estatísticas</h3>
           <div class="row">
-            <div class="card" style="flex:1">
-              <div style="font-size:10px;color:var(--muted);font-weight:900;text-transform:uppercase;letter-spacing:.8px">Total de Voos</div>
-              <div class="mono" id="stats-count" style="font-size:22px;margin-top:8px; color:var(--cy)">0</div>
+            <div class="card" style="flex:1; background:var(--input); border:none; box-shadow:none;">
+              <div style="font-size:11px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:0.5px">Total de Voos</div>
+              <div class="mono" id="stats-count" style="font-size:26px;margin-top:8px; color:var(--pri)">0</div>
             </div>
-            <div class="card" style="flex:1">
-              <div style="font-size:10px;color:var(--muted);font-weight:900;text-transform:uppercase;letter-spacing:.8px">Horas Voadas</div>
-              <div class="mono" id="stats-hours" style="font-size:22px;margin-top:8px;color:var(--gr)">00h 00m</div>
+            <div class="card" style="flex:1; background:var(--input); border:none; box-shadow:none;">
+              <div style="font-size:11px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:0.5px">Horas Voadas</div>
+              <div class="mono" id="stats-hours" style="font-size:26px;margin-top:8px;color:var(--gr)">00h 00m</div>
             </div>
           </div>
-          <div class="row" style="margin-top:15px">
+          <div class="row" style="margin-top:20px">
             <input type="file" id="backup-file-input" style="display:none" onchange="restoreLogbook(event)" />
             <button class="btn ghost" onclick="backupLogbook()">⬇️ Fazer Backup</button>
             <button class="btn ghost" onclick="document.getElementById('backup-file-input').click()">⬆️ Restaurar</button>
@@ -495,18 +553,18 @@
     <section class="panel" id="tab-settings" role="tabpanel">
       <div class="card">
         <h3>Configurações de Integração</h3>
-        <div class="row">
+        <div class="row" style="align-items: flex-start;">
           <div>
             <label>SimBrief ID</label>
             <input id="sb-id" placeholder="Ex: 123456" oninput="saveSBID()" />
           </div>
-          <div class="card" style="flex:1; background: var(--input);">
-            <div style="font-size:11px;color:var(--muted);font-weight:800;line-height:1.6">
-              ✅ <b>Regra:</b> o sistema envia Rota, Callsign, Equipamento e FL extraídos do RPL.<br/>
-              ✅ <b>Horários:</b> o SimBrief recebe horários UTC processados automaticamente.<br/>
-              ✅ <b>Novo fluxo:</b> clicar em <b>SimBrief</b> adiciona o voo à Escala como <b>PROGRAMADO</b>.<br/>
-              ✅ <b>Companhias:</b> Latam, Gol, Azul e Azul Conecta integradas.<br/>
-              ✅ <b>Dica:</b> para carregar os TXT com <code>fetch()</code>, abra via <b>localhost</b>.
+          <div class="card" style="flex:1; background: var(--input); border:none; box-shadow:none;">
+            <div style="font-size:13px;color:var(--text);font-weight:500;line-height:1.7">
+              <span style="font-weight:800; color:#1e293b;">✅ Regra:</span> o sistema envia Rota, Callsign, Equipamento e FL extraídos do RPL.<br/>
+              <span style="font-weight:800; color:#1e293b;">✅ Horários:</span> o SimBrief recebe horários UTC processados automaticamente.<br/>
+              <span style="font-weight:800; color:#1e293b;">✅ Novo fluxo:</span> clicar em <b>SimBrief</b> adiciona o voo à Escala como <b>PROGRAMADO</b>.<br/>
+              <span style="font-weight:800; color:#1e293b;">✅ Companhias:</span> Latam, Gol, Azul e Azul Conecta integradas.<br/>
+              <span style="font-weight:800; color:#1e293b;">✅ Dica:</span> para carregar os TXT com <code>fetch()</code>, abra via <b>localhost</b>.
             </div>
           </div>
         </div>
@@ -523,19 +581,19 @@
       <div class="modal-header">
         <div class="modal-title">
           <span id="modal-cia-badge" class="cia-badge" style="font-size:14px;">CIA</span>
-          <span id="modal-flight-num" style="margin-left:10px;">VOO 1234</span>
+          <span id="modal-flight-num" style="margin-left:12px;">VOO 1234</span>
         </div>
         <button class="close-modal" aria-label="Fechar" onclick="closeModal()">×</button>
       </div>
 
       <div id="modal-body">
         <div class="detail-row"><span class="detail-label">Aeronave</span> <span class="detail-val" id="md-acft"></span></div>
-        <div class="detail-row"><span class="detail-label">Rota Completa</span> <span class="detail-val" id="md-route" style="font-size:12px;"></span></div>
+        <div class="detail-row"><span class="detail-label">Rota Completa</span> <span class="detail-val" id="md-route" style="font-size:13px; font-weight:500; font-family:Inter, sans-serif;"></span></div>
         <div class="detail-row"><span class="detail-label">Trecho</span> <span class="detail-val" id="md-deparr"></span></div>
         <div class="detail-row"><span class="detail-label">Tempo Estimado</span> <span class="detail-val" id="md-eet"></span></div>
         <div class="detail-row"><span class="detail-label">Nível (FL)</span> <span class="detail-val" id="md-fl"></span></div>
         <div class="detail-row"><span class="detail-label">Dias de Operação</span> <span class="detail-val" id="md-days" style="color:var(--text);"></span></div>
-        <div class="detail-row" style="border-bottom:none;"><span class="detail-label">Observações</span> <span class="detail-val" id="md-obs" style="color:var(--muted); font-size:11px;"></span></div>
+        <div class="detail-row" style="border-bottom:none;"><span class="detail-label">Observações</span> <span class="detail-val" id="md-obs" style="color:var(--muted); font-size:12px; font-weight:500; font-family:Inter, sans-serif;"></span></div>
       </div>
     </div>
   </div>
@@ -815,7 +873,7 @@
       candidates = candidates.filter(f => f.sortMins >= 30);
 
       if (candidates.length === 0) {
-        container.innerHTML = `<div class="mono" style="font-size:13px; color:var(--or);">Sem voos nas próximas horas.</div>`;
+        container.innerHTML = `<div class="mono" style="font-size:14px; color:var(--or);">Sem voos nas próximas horas.</div>`;
         return;
       }
 
@@ -829,54 +887,54 @@
       const durStr = (h > 0 ? `${h} h ` : '') + `${m} min`;
 
       container.innerHTML = `
-        <div style="display:flex; flex-direction:column; gap:12px; width:100%;">
+        <div style="display:flex; flex-direction:column; gap:16px; width:100%;">
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-            <div style="display:flex; align-items:center; gap:8px;">
+            <div style="display:flex; align-items:center; gap:10px;">
               <span class="cia-badge" style="background-color:${escapeHtml(f.airline.color)}; margin:0;">${escapeHtml(f.airline.name)}</span>
-              <span class="col-flight" style="font-size:15px; margin:0;" onclick="openModalWithFlight(currentSuggestedFlight)">${escapeHtml(f.ident)}</span>
-              <span style="border:1px solid var(--gr); color:var(--gr); padding:2px 6px; border-radius:4px; font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; background:rgba(16,185,129,0.05);">Programado</span>
+              <span class="col-flight" style="font-size:16px; margin:0;" onclick="openModalWithFlight(currentSuggestedFlight)">${escapeHtml(f.ident)}</span>
+              <span style="border:1px solid var(--gr); color:var(--gr); padding:4px 8px; border-radius:6px; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; background:#ecfdf5;">Programado</span>
             </div>
-            <div style="font-size:10px; color:var(--cy); font-weight:800; text-transform:uppercase;">
+            <div style="font-size:11px; color:var(--pri); font-weight:800; text-transform:uppercase;">
               Partida em ${escapeHtml(f.sortMins)} min
             </div>
           </div>
 
-          <div style="display:flex; align-items:center; justify-content:space-between; background:var(--input); padding:16px 20px; border-radius:12px; border:1px solid var(--border);">
+          <div style="display:flex; align-items:center; justify-content:space-between; background:#fff; padding:20px 24px; border-radius:12px; border:1px solid var(--border); box-shadow:var(--shadow-sm);">
             <div style="text-align:left; min-width:60px;">
-              <div style="font-size:32px; font-weight:400; font-family:'Inter', sans-serif; color:var(--text); line-height:1;">${escapeHtml(f.origin)}</div>
+              <div style="font-size:36px; font-weight:800; font-family:'JetBrains Mono', monospace; color:var(--text); line-height:1;">${escapeHtml(f.origin)}</div>
             </div>
 
-            <div style="flex:1; margin:0 15px; position:relative; display:flex; flex-direction:column; justify-content:center;">
-              <div style="text-align:center; font-size:14px; color:var(--text); font-weight:400; margin-bottom:6px; font-family:'Inter', sans-serif;">${escapeHtml(durStr)}</div>
+            <div style="flex:1; margin:0 20px; position:relative; display:flex; flex-direction:column; justify-content:center;">
+              <div style="text-align:center; font-size:13px; color:var(--muted); font-weight:600; margin-bottom:8px; font-family:'Inter', sans-serif;">${escapeHtml(durStr)}</div>
               <div style="display:flex; align-items:center; width:100%;">
-                <svg fill="var(--gr)" width="20" height="20" viewBox="0 0 24 24" style="transform: rotate(90deg); margin-right:4px; flex-shrink:0;"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
-                <div style="flex:1; height:1px; background-color:#475569;"></div>
+                <svg fill="var(--pri)" width="20" height="20" viewBox="0 0 24 24" style="transform: rotate(90deg); margin-right:4px; flex-shrink:0;"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+                <div style="flex:1; height:2px; background-color:#cbd5e1;"></div>
               </div>
             </div>
 
             <div style="text-align:right; min-width:60px;">
-              <div style="font-size:32px; font-weight:400; font-family:'Inter', sans-serif; color:var(--text); line-height:1;">${escapeHtml(f.dest)}</div>
+              <div style="font-size:36px; font-weight:800; font-family:'JetBrains Mono', monospace; color:var(--text); line-height:1;">${escapeHtml(f.dest)}</div>
             </div>
           </div>
 
           <div style="display:flex; justify-content:space-between; margin-top:4px; padding:0 4px;">
             <div style="text-align:left;">
-              <div style="font-size:11px; color:var(--muted); font-weight:600; margin-bottom:4px;">Partida programada:</div>
-              <div style="font-size:18px; font-weight:600; color:var(--gr); font-family:'JetBrains Mono';">${escapeHtml(f.depDisplay)}</div>
+              <div style="font-size:12px; color:var(--muted); font-weight:600; margin-bottom:4px;">Partida programada:</div>
+              <div style="font-size:18px; font-weight:800; color:var(--text); font-family:'JetBrains Mono';">${escapeHtml(f.depDisplay)}</div>
             </div>
             <div style="text-align:right;">
-              <div style="font-size:11px; color:var(--muted); font-weight:600; margin-bottom:4px;">Chegada programada:</div>
-              <div style="font-size:18px; font-weight:600; color:var(--gr); font-family:'JetBrains Mono';">
+              <div style="font-size:12px; color:var(--muted); font-weight:600; margin-bottom:4px;">Chegada programada:</div>
+              <div style="font-size:18px; font-weight:800; color:var(--text); font-family:'JetBrains Mono';">
                 ${escapeHtml(f.arrDisplay)} ${f.isNextDay ? '<span style="font-size:12px; color:var(--or);">(+1)</span>' : ''}
               </div>
             </div>
           </div>
 
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-top:8px;">
-            <div style="font-family:'JetBrains Mono'; font-size:11px; font-weight:700; color:var(--muted);">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-top:12px;">
+            <div style="font-family:'JetBrains Mono'; font-size:12px; font-weight:800; color:var(--muted);">
               EQPT: <span style="color:var(--text);">${acftType}</span>
             </div>
-            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
               <button class="btn ghost small" onclick="renderSuggestedFlight()">🔄 Outro</button>
               <button class="btn pri small" onclick="scheduleSuggestedFlight()">➕ Escala</button>
               <button class="btn pu small" onclick="dispatchSuggestedFlight()">SimBrief ↗</button>
@@ -1295,14 +1353,14 @@
       chain.forEach((f, index) => {
         const tr = document.createElement('tr');
 
-        const arrHtml = f.isNextDay ? `<span style="color:var(--or); font-size:9px; display:block; margin-top:2px;">(+1)</span>` : '';
+        const arrHtml = f.isNextDay ? `<span style="color:var(--or); font-size:9px; display:block; margin-top:2px; font-weight:700;">(+1)</span>` : '';
         const depCell = `<div class="time-pill">${f.depPrefix || ''}<div class="tp-utc">${escapeHtml(f.depDisplayUTC)}z</div><div class="tp-local">${escapeHtml(f.depDisplay)}</div></div>`;
         const arrCell = `<div class="time-pill arr"><div class="tp-utc">${escapeHtml(f.arrDisplayUTC)}z</div><div class="tp-local">${escapeHtml(f.arrDisplay)}</div>${arrHtml}</div>`;
         const acftType = escapeHtml(f.type.split('/')[0]);
 
         tr.innerHTML = `
           <td>
-            <div style="display:flex; gap:5px; justify-content:center; flex-wrap:wrap;">
+            <div style="display:flex; gap:6px; justify-content:center; flex-wrap:wrap;">
               <button class="btn pu small" title="Abrir no SimBrief" onclick="dispatchHangarFlight(${index}, '${String(acft.id)}')">SimBrief ↗</button>
               <button class="btn gr small" title="Concluir voo e mover aeronave" onclick="completeHangarFlight(${index}, '${String(acft.id)}')">✅</button>
               <button class="btn pri small" title="Agendar na escala" onclick="scheduleHangarFlight(${index}, '${String(acft.id)}')">➕ Escala</button>
@@ -1377,8 +1435,8 @@
       let nextDay = arrMinBRT < depMinBRT;
 
       let depPrefix = "";
-      if (flight.offsetDay === 1) depPrefix = `<span style="color:var(--or); font-size:9px; display:block; margin-bottom:2px; font-weight:800; letter-spacing:1px;">AMANHÃ</span>`;
-      else if (flight.offsetDay > 1) depPrefix = `<span style="color:var(--or); font-size:9px; display:block; margin-bottom:2px; font-weight:800; letter-spacing:1px;">+${flight.offsetDay} DIAS</span>`;
+      if (flight.offsetDay === 1) depPrefix = `<span style="color:var(--or); font-size:10px; display:block; margin-bottom:2px; font-weight:800; letter-spacing:1px;">AMANHÃ</span>`;
+      else if (flight.offsetDay > 1) depPrefix = `<span style="color:var(--or); font-size:10px; display:block; margin-bottom:2px; font-weight:800; letter-spacing:1px;">+${flight.offsetDay} DIAS</span>`;
 
       return {
         ...flight,
@@ -1398,14 +1456,14 @@
       flights.forEach((f, index) => {
         const tr = document.createElement('tr');
 
-        const arrHtml = f.isNextDay ? `<span style="color:var(--or); font-size:9px; display:block; margin-top:2px;">(+1)</span>` : '';
+        const arrHtml = f.isNextDay ? `<span style="color:var(--or); font-size:9px; display:block; margin-top:2px; font-weight:700;">(+1)</span>` : '';
         const depCell = `<div class="time-pill">${f.depPrefix || ''}<div class="tp-utc">${escapeHtml(f.depDisplayUTC)}z</div><div class="tp-local">${escapeHtml(f.depDisplay)}</div></div>`;
         const arrCell = `<div class="time-pill arr"><div class="tp-utc">${escapeHtml(f.arrDisplayUTC)}z</div><div class="tp-local">${escapeHtml(f.arrDisplay)}</div>${arrHtml}</div>`;
         const acftType = escapeHtml(f.type.split('/')[0]);
 
         tr.innerHTML = `
           <td>
-            <div style="display:flex; gap:5px; justify-content:center; flex-wrap:wrap;">
+            <div style="display:flex; gap:6px; justify-content:center; flex-wrap:wrap;">
               <button class="btn pu small" title="Abrir no SimBrief" onclick="openSimBriefFromIndex(${index})">SimBrief ↗</button>
               <button class="btn gr small" title="Concluir voo" onclick="completeFlightFromBoard(${index})">✅</button>
               <button class="btn pri small" title="Agendar na escala" onclick="scheduleFlight(${index})">➕</button>
@@ -1476,14 +1534,14 @@
         const statusClass = entry.status === 'programado' ? 'programado' : 'na-escala';
         const statusLabel = entry.status === 'programado' ? 'PROGRAMADO' : 'NA ESCALA';
 
-        const arrHtml = f.isNextDay ? `<span style="color:var(--or); font-size:9px; display:block; margin-top:2px;">(+1)</span>` : '';
+        const arrHtml = f.isNextDay ? `<span style="color:var(--or); font-size:9px; display:block; margin-top:2px; font-weight:700;">(+1)</span>` : '';
         const depCell = `<div class="time-pill">${f.depPrefix || ''}<div class="tp-utc">${escapeHtml(f.depDisplayUTC)}z</div><div class="tp-local">${escapeHtml(f.depDisplay)}</div></div>`;
         const arrCell = `<div class="time-pill arr"><div class="tp-utc">${escapeHtml(f.arrDisplayUTC)}z</div><div class="tp-local">${escapeHtml(f.arrDisplay)}</div>${arrHtml}</div>`;
         const acftType = escapeHtml(f.type.split('/')[0]);
 
         tr.innerHTML = `
           <td>
-            <div style="display:flex; gap:5px; justify-content:center; flex-wrap:wrap;">
+            <div style="display:flex; gap:6px; justify-content:center; flex-wrap:wrap;">
               <button class="btn pu small" title="Abrir no SimBrief" onclick="dispatchRosterFlight('${String(entry.id)}')">SimBrief ↗</button>
               <button class="btn gr small" title="Concluir voo" onclick="completeRosterFlight('${String(entry.id)}')">✅</button>
               <button class="btn rd small" title="Remover da Escala" onclick="deleteRosterEntry('${String(entry.id)}')">✕</button>
@@ -1571,11 +1629,11 @@
 
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td><span class="cia-badge" style="background-color:${escapeHtml(badgeColor)}; padding:6px 12px; font-size:11px;">${escapeHtml(displayCia)}</span></td>
+          <td><span class="cia-badge" style="background-color:${escapeHtml(badgeColor)}; padding:8px 14px; font-size:11px;">${escapeHtml(displayCia)}</span></td>
           <td style="font-weight:800; font-size:15px; font-family:'JetBrains Mono';">${escapeHtml(acft.type)}</td>
-          <td style="font-weight:800; font-size:15px; font-family:'JetBrains Mono'; color:var(--cy);">${escapeHtml(acft.loc)}</td>
+          <td style="font-weight:800; font-size:15px; font-family:'JetBrains Mono'; color:var(--pri);">${escapeHtml(acft.loc)}</td>
           <td>
-            <div style="display:flex; gap:5px; justify-content:center; flex-wrap:wrap;">
+            <div style="display:flex; gap:6px; justify-content:center; flex-wrap:wrap;">
               <button class="btn pri small" title="Procurar voos saindo daqui" onclick="flyFromHangar('${String(acft.loc)}', '${String(displayCia)}', '${String(acft.type)}')">🛫 Voar daqui</button>
               <button class="btn rd small" title="Remover do HUB" onclick="removeAircraftFromHangar('${String(acft.id)}')">🗑️</button>
             </div>
@@ -1720,14 +1778,14 @@
       logbook.forEach(entry => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td style="color:var(--muted);">${escapeHtml(entry.date)}</td>
-          <td style="font-weight:800; color:var(--cy); font-family:'JetBrains Mono';">${escapeHtml(entry.callsign)}</td>
-          <td style="font-family:'JetBrains Mono'; font-weight:700;">${escapeHtml(entry.dep)}</td>
-          <td style="font-family:'JetBrains Mono'; font-weight:700;">${escapeHtml(entry.arr)}</td>
+          <td style="color:var(--muted); font-weight:500;">${escapeHtml(entry.date)}</td>
+          <td style="font-weight:800; color:var(--pri); font-family:'JetBrains Mono'; font-size:14px;">${escapeHtml(entry.callsign)}</td>
+          <td style="font-family:'JetBrains Mono'; font-weight:700; font-size:14px;">${escapeHtml(entry.dep)}</td>
+          <td style="font-family:'JetBrains Mono'; font-weight:700; font-size:14px;">${escapeHtml(entry.arr)}</td>
           <td style="color:var(--gr); font-weight:700;">${escapeHtml(entry.time)}</td>
           <td style="font-weight:700;">${escapeHtml(entry.acft)}</td>
           <td>
-            <div style="display:flex; gap:5px; justify-content:center; flex-wrap:wrap;">
+            <div style="display:flex; gap:6px; justify-content:center; flex-wrap:wrap;">
               <button class="btn ghost small" title="Estacionar aeronave no HUB" onclick='parkFromLogbook(${JSON.stringify(entry.callsign)}, ${JSON.stringify(entry.acft)}, ${JSON.stringify(entry.arr)})'>🅿️ HUB</button>
               <button class="btn rd small" title="Apagar Registro" onclick="deleteLogbookEntry('${String(entry.id)}')">🗑️</button>
             </div>
@@ -1869,7 +1927,7 @@
         renderSuggestedFlight();
       } else {
         dbStatus.innerText = "Sincronizando...";
-        dbStatus.style.color = "var(--cy)";
+        dbStatus.style.color = "var(--pri)";
       }
     }
 
@@ -1877,7 +1935,7 @@
       allFlightsDB = [];
       const dbStatus = document.getElementById('db-status');
       dbStatus.innerText = "Sincronizando...";
-      dbStatus.style.color = "var(--cy)";
+      dbStatus.style.color = "var(--pri)";
 
       try {
         const promises = airlineConfig.map(async (airline) => {
